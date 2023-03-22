@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "209911816588",
+    "project_id": "workers-app-ac119",
+    "storage_bucket": "workers-app-ac119.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209911816588:android:3d691a09706cb8c8c136a9",
+        "android_client_info": {
+          "package_name": "com.workersapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209911816588-3kinb66cdogotk5k5kkfl7nu32eonb4n.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEkx4UdcdIxqsmzPfFpK-JciaAR-bz35o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209911816588-3kinb66cdogotk5k5kkfl7nu32eonb4n.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
