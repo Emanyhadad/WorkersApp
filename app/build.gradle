@@ -5,8 +5,10 @@ plugins {
 
 android {
     namespace 'com.example.workersapp'
-    compileSdk 32
-
+    compileSdk 33
+    buildFeatures{
+        viewBinding true
+    }
     defaultConfig {
         applicationId "com.workersapp"
         minSdk 21
@@ -30,8 +32,15 @@ android {
 }
 
 dependencies {
+    //firebase
     implementation platform('com.google.firebase:firebase-bom:31.2.3')
+    implementation 'com.google.firebase:firebase-auth'
     implementation 'com.google.firebase:firebase-analytics'
+
+    //intuit
+    implementation 'com.intuit.sdp:sdp-android:1.0.6'
+    implementation 'com.intuit.ssp:ssp-android:1.0.6'
+
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'

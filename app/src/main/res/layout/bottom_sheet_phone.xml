@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@drawable/dialog_bg"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tvBottomSheetMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:text="أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك."
+        android:textColor="#B3B3B3"
+        android:textSize="@dimen/_15ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/verificationLayout" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_50sdp"
+        android:orientation="horizontal"
+        android:padding="@dimen/_10sdp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvBottomSheetMessage">
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCode1"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/et_bg"
+            android:gravity="center"
+            android:inputType="number"
+            android:paddingStart="@dimen/_48sdp"
+            android:textColor="@color/black"
+            android:textColorHint="#CFCFCF"
+            android:textSize="@dimen/_16ssp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCode2"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/et_bg"
+            android:gravity="center"
+            android:inputType="number"
+            android:paddingStart="@dimen/_48sdp"
+            android:textColor="@color/black"
+            android:textColorHint="#CFCFCF"
+            android:textSize="@dimen/_16ssp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCode3"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/et_bg"
+            android:gravity="center"
+            android:inputType="number"
+            android:paddingStart="@dimen/_48sdp"
+            android:textColor="@color/black"
+            android:textColorHint="#CFCFCF"
+            android:textSize="@dimen/_16ssp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCode4"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/et_bg"
+            android:inputType="number"
+            android:gravity="center"
+            android:paddingStart="@dimen/_48sdp"
+            android:textColor="@color/black"
+            android:textColorHint="#CFCFCF"
+            android:textSize="@dimen/_16ssp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/etCode5"
+            android:layout_width="@dimen/_50sdp"
+            android:layout_height="@dimen/_70sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:background="@drawable/et_bg"
+            android:gravity="center"
+            android:inputType="number"
+            android:paddingStart="@dimen/_48sdp"
+            android:textColor="@color/black"
+            android:textColorHint="#CFCFCF"
+            android:textSize="@dimen/_16ssp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_30sdp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout">
+
+        <ImageView
+            android:id="@+id/imgTimer"
+            android:layout_width="@dimen/_23sdp"
+            android:layout_height="@dimen/_23sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/timer_clock" />
+
+        <TextView
+            android:id="@+id/tvTimer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:text="00:30"
+            android:textColor="#646464"
+            android:textSize="@dimen/_18ssp"
+            app:layout_constraintEnd_toStartOf="@+id/imgVerification"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_55sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:backgroundTint="@color/white"
+        android:text="دخول"
+        android:textAllCaps="false"
+        android:textColor="#0E2E3B"
+        android:textSize="@dimen/_18ssp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+        app:strokeColor="#0E2E3B"
+        app:strokeWidth="@dimen/_1sdp" />
+
+    <LinearLayout
+        android:id="@+id/verificationLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/_20sdp"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:layout_marginTop="@dimen/_22sdp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvVerificationCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:text="كود التحقق"
+            android:textColor="#0E2E3B"
+            android:layout_margin="@dimen/_3sdp"
+            android:textSize="@dimen/_18ssp" />
+
+        <ImageView
+            android:id="@+id/imgVerification"
+            android:layout_width="@dimen/_30sdp"
+            android:layout_height="@dimen/_30sdp"
+            app:srcCompat="@drawable/verification" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
