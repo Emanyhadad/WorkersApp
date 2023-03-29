@@ -60,7 +60,7 @@
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_8sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
-                android:text="سجّل الدخول باستخدام رقم الجوال"
+                android:text="@string/tvLoginPhone"
                 android:textColor="#646464"
                 android:textSize="@dimen/_16ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -74,7 +74,7 @@
                 android:layout_marginStart="@dimen/_20sdp"
                 android:layout_marginTop="@dimen/_24sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
-                android:text="رقم الجوال"
+                android:text="@string/tvPhone"
                 android:textColor="#0E2E3B"
                 android:textSize="@dimen/_16ssp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -143,7 +143,7 @@
                 android:layout_marginTop="@dimen/_3sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:background="@drawable/et_bg"
-                android:hint="592 777 888"
+                android:hint="@string/etPhoneHint"
                 android:inputType="number"
                 android:paddingStart="@dimen/_48sdp"
                 android:textColor="@color/black"
@@ -161,7 +161,7 @@
                 android:layout_marginTop="@dimen/_73sdp"
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:backgroundTint="#0E2E3B"
-                android:text="دخول"
+                android:text="@string/btnLogin"
                 android:textAllCaps="false"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_18ssp"
@@ -180,28 +180,28 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/tvRegisterNow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="سجل الان"
+                    android:text="@string/tvRegisterNow"
                     android:textColor="#64A811"
                     android:textSize="@dimen/_14ssp" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tvDoNotHaveAnAccount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ليس لديك حساب؟"
+                    android:text="@string/tvDoNotHaveAnAccount"
                     android:textColor="#646464"
                     android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <TextView
-                android:id="@+id/textView5"
+                android:id="@+id/tvPalestinePhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/_8sdp"
-                android:text="+970"
+                android:text="@string/tvPalestinePhone"
                 android:textColor="#64A811"
                 android:textSize="@dimen/_16ssp"
                 android:textStyle="bold"

@@ -1,3 +1,17 @@
 <resources>
     <string name="app_name">Workers App</string>
+    <string name="tvPhone">رقم الجوال</string>
+    <string name="btnSendVerificationCode">ارسل كود التحقق</string>
+    <string name="tvPalestinePhone">+970</string>
+    <string name="btnLogin">دخول</string>
+    <string name="tvRegisterNow">سجل الان</string>
+    <string name="tvDoNotHaveAnAccount">ليس لديك حساب؟</string>
+    <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
+    <string name="etPhoneHint">592 777 888</string>
+    <string name="tvAccountType">نوع الحساب</string>
+    <string name="tvWorker">عامل</string>
+    <string name="tvWorkOwner">صاحب عمل</string>
+    <string name="resendCode">أعد ارسال الرمز</string>
+    <string name="tvVerificationCode">كود التحقق</string>
+    <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
 </resources>
