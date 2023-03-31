@@ -2,8 +2,9 @@ package com.example.workersapp.Utilities;
 
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+
+import org.jetbrains.annotations.Nullable;
 
 public class BaseActivity extends AppCompatActivity {
 

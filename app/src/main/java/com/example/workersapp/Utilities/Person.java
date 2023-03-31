@@ -1,6 +1,6 @@
 package com.example.workersapp.Utilities;
 
-public class User {
+public class Person {
     private String fullName;
     private String nickName;
     private String birth;
@@ -11,14 +11,14 @@ public class User {
     private String cv;
     private String work;
 
-    public User(String fullName, String nickName, String birth, String gender) {
+    public Person(String fullName, String nickName, String birth, String gender) {
         this.fullName = fullName;
         this.nickName = nickName;
         this.birth = birth;
         this.gender = gender;
     }
 
-    public User(String fullName, String nickName, String birth, String gender, String image) {
+    public Person(String fullName, String nickName, String birth, String gender, String image) {
         this.fullName = fullName;
         this.nickName = nickName;
         this.birth = birth;
@@ -26,13 +26,13 @@ public class User {
         this.image = image;
     }
 
-    public User(String title, String city) {
+    public Person(String title, String city) {
         this.title = title;
         this.city = city;
     }
 
 
-    public User() {
+    public Person() {
     }
 
     public String getFullName() {

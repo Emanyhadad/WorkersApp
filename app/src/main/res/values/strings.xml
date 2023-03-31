@@ -1,3 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Workers App</string>
+    <string name="register_full_name">name </string>
+    <String name="register_nick_name">nick</String>
+    <String name="register_birth"> birth</String>
+    <String name="register_gender"> gender</String>
+    <String name="register_female">female</String>
+    <String name="register_male">male</String>
+    <String name="register_next">next</String>
+
+    <String name="cv_work_category"> work</String>
+    <String name="cv_talk">  talk</String>
+
+    <string-array name="cities">
+        <item>gaza</item>
+        <item> gaza2</item>
+        <item>gaza3</item>
+        <item>gaza4</item>
+        <item>gaza5</item>
+        <item>gaza6</item>
+        <item>gaza7</item>
+    </string-array>
+
+    <string-array name="work">
+        <item>besan</item>
+        <item>besan2</item>
+        <item>besan3</item>
+        <item>besan4</item>
+        <item>besan5</item>
+        <item>besan6</item>
+    </string-array>
 </resources>

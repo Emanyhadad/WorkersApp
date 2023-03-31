@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bottom_sheet">
+
+    <!--<android:inputType="none"-->
+    <!-- عشان ما أقدر اكتب >-->
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:hint="المدينة"
+        android:layout_marginTop="@dimen/_31sdp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
+        <AutoCompleteTextView
+            android:id="@+id/sheetCity"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:textColorHint="@color/gray"
+            android:fontFamily="@font/cairo_regular"
+            android:textSize="@dimen/_11ssp"
+            android:layout_marginRight="@dimen/_23sdp"
+            android:layout_marginLeft="@dimen/_23sdp"
+            android:background="@drawable/border_et"
+            android:inputType="none" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:layout_marginTop="@dimen/_23sdp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/sheetTitle"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_35sdp"
+            android:hint="العنوان"
+            android:inputType="textPersonName"
+            android:textColorHint="@color/gray"
+            android:fontFamily="@font/cairo_regular"
+            android:layout_marginLeft="@dimen/_23sdp"
+            android:background="@drawable/border_et"
+            android:layout_marginRight="@dimen/_23sdp"
+            android:textSize="@dimen/_11ssp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/sheetBtnNext"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_35sdp"
+        android:text="التالي"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:background="@drawable/border_button"
+        android:fontFamily="@font/cairo_regular"
+        android:textSize="@dimen/_13ssp"
+        android:layout_marginLeft="@dimen/_23sdp"
+        android:layout_marginRight="@dimen/_23sdp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/_31sdp"/>
+
+
+</LinearLayout>

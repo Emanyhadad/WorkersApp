@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.appbar.AppBarLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:local="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/appBarLayout"
+    app:liftOnScrollColor="@color/design_default_color_on_primary"
+    local:elevation="0dp">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        local:layout_scrollFlags="scroll|enterAlways"
+        local:titleCentered="true"
+        app:title="البيانات الشخصية"
+        app:navigationIcon="@drawable/back_icon"
+        android:layout_marginStart="@dimen/_23sdp"
+        android:layout_marginTop="@dimen/_31sdp"
+        app:titleTextAppearance="@font/cairo_regular"/>
+
+<!--    <androidx.appcompat.widget.Toolbar-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?actionBarSize"-->
+<!--        local:layout_scrollFlags="scroll|enterAlways"-->
+<!--        >-->
+
+<!--        <TextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="البيانات الشخصية"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:fontFamily="@font/cairo_regular"-->
+<!--            android:textColor="@color/black2"-->
+<!--            android:textSize="@dimen/_14ssp"-->
+<!--            android:layout_marginLeft="@dimen/_54sdp"-->
+<!--            />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView2"-->
+<!--            android:layout_width="@dimen/_14sdp"-->
+<!--            android:layout_height="@dimen/_14sdp"-->
+<!--            app:srcCompat="@drawable/back_icon"-->
+<!--            android:layout_marginLeft="@dimen/_23sdp"/>-->
+<!--    </androidx.appcompat.widget.Toolbar>-->
+
+
+
+
+</com.google.android.material.appbar.AppBarLayout>
