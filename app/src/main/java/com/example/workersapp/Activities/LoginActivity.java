@@ -39,6 +39,8 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
 
+    private int age;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
