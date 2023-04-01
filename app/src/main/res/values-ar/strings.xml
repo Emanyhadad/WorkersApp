@@ -12,36 +12,8 @@
 <!--    <String name="cv_work_category">فئة العمل</String>-->
 <!--    <String name="cv_talk">تحدث عن نفسك</String>-->
 
-    <string name="register_full_name" tools:ignore="ExtraTranslation">الاسم </string>
-    <String name="register_nick_name" tools:ignore="ExtraTranslation">اللقب</String>
-    <String name="register_birth" tools:ignore="ExtraTranslation">تاريخ الميلاد</String>
-    <String name="register_gender" tools:ignore="ExtraTranslation"> الجنس</String>
-    <String name="register_female" tools:ignore="ExtraTranslation">أنثى</String>
-    <String name="register_male" tools:ignore="ExtraTranslation">ذكر</String>
-    <String name="register_next" tools:ignore="ExtraTranslation">التالي</String>
-
-    <String name="cv_work_category">فئة العمل</String>
-    <String name="cv_talk">تحدث عن نفسك</String>
 
 
-    <string-array name="cities" tools:ignore="ExtraTranslation">
-        <item>غزة</item>
-        <item>دير البلح</item>
-        <item>خانيونس</item>
-        <item>جباليا</item>
-        <item>رفح</item>
-        <item>بيت لاهيا</item>
-        <item>بيت حانون</item>
-    </string-array>
-
-    <string-array name="work" tools:ignore="ExtraTranslation">
-        <item>نجار</item>
-        <item>حداد</item>
-        <item>بناء</item>
-        <item>دهان</item>
-        <item>بليط</item>
-        <item>قصارة</item>
-    </string-array>
 
 
 </resources>

@@ -15,33 +15,34 @@
     <string name="resendCode">أعد ارسال الرمز</string>
     <string name="tvVerificationCode">كود التحقق</string>
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
-    <string name="register_full_name">name </string>
-    <String name="register_nick_name">nick</String>
-    <String name="register_birth"> birth</String>
-    <String name="register_gender"> gender</String>
-    <String name="register_female">female</String>
-    <String name="register_male">male</String>
-    <String name="register_next">next</String>
+    <string name="register_full_name">الاسم </string>
+    <String name="register_nick_name">اللقب</String>
+    <String name="register_birth">تاريخ الميلاد</String>
+    <String name="register_gender"> الجنس</String>
+    <String name="register_female">أنثى</String>
+    <String name="register_male">ذكر</String>
+    <String name="register_next">التالي</String>
 
-    <String name="cv_work_category"> work</String>
-    <String name="cv_talk">  talk</String>
+    <String name="cv_work_category">فئة العمل</String>
+    <String name="cv_talk">تحدث عن نفسك</String>
 
-    <string-array name="cities">
-        <item>gaza</item>
-        <item> gaza2</item>
-        <item>gaza3</item>
-        <item>gaza4</item>
-        <item>gaza5</item>
-        <item>gaza6</item>
-        <item>gaza7</item>
+    <string-array name="cities" >
+        <item>غزة</item>
+        <item>دير البلح</item>
+        <item>خانيونس</item>
+        <item>جباليا</item>
+        <item>رفح</item>
+        <item>بيت لاهيا</item>
+        <item>بيت حانون</item>
     </string-array>
 
-    <string-array name="work">
-        <item>besan</item>
-        <item>besan2</item>
-        <item>besan3</item>
-        <item>besan4</item>
-        <item>besan5</item>
-        <item>besan6</item>
+    <string-array name="work" >
+        <item>نجار</item>
+        <item>حداد</item>
+        <item>بناء</item>
+        <item>دهان</item>
+        <item>بليط</item>
+        <item>قصارة</item>
     </string-array>
+
 </resources>
