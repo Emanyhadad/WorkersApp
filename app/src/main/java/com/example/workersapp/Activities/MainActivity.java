@@ -14,5 +14,6 @@ ActivityMainBinding binding;
         binding=ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
     }
 }

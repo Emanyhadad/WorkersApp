@@ -30,68 +30,34 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBottomSheetMessage">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode1"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
+
+        <com.chaos.view.PinView
+            android:id="@+id/firstPinView"
+            style="@style/PinWidget.PinView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="smsOTPCode"
+            android:cursorVisible="true"
+            android:gravity="center"
             android:layout_gravity="center"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:text="1"
+            android:importantForAutofill="yes"
+            android:inputType="text"
             android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cursorColor="@color/black"
+            app:cursorWidth="2dp"
+            app:hideLineWhenFilled="false"
+            app:itemCount="6"
+            app:itemHeight="60dp"
+            app:itemRadius="4dp"
+            app:itemSpacing="12dp"
+            app:itemWidth="46dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode2"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:text="1"
-            android:inputType="number"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode3"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode4"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:inputType="number"
-            android:gravity="center"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode5"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
     </LinearLayout>
 
     <LinearLayout
