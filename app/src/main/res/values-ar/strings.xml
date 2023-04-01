@@ -1,0 +1,19 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="ExtraTranslation">Workers App</string>
+
+<!--    <String name="register_full_name">الاسم </String>-->
+<!--    <String name="register_nick_name">اللقب</String>-->
+<!--    <String name="register_birth">تاريخ الميلاد</String>-->
+<!--    <String name="register_gender"> الجنس</String>-->
+<!--    <String name="register_female">أنثى</String>-->
+<!--    <String name="register_male">ذكر</String>-->
+<!--    <String name="register_next">التالي</String>-->
+
+<!--    <String name="cv_work_category">فئة العمل</String>-->
+<!--    <String name="cv_talk">تحدث عن نفسك</String>-->
+
+
+
+
+
+</resources>

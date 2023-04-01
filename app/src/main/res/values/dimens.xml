@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <dimen name="sdp_textSize_10">@dimen/_9ssp</dimen>
     <dimen name="sdp_textSize_12">@dimen/_10ssp</dimen>
     <dimen name="sdp_textSize_14">@dimen/_11ssp</dimen>
@@ -19,6 +18,8 @@
     <dimen name="sdp_20">@dimen/_15sdp</dimen>
     <dimen name="sdp_25">@dimen/_19sdp</dimen>
     <dimen name="sdp_30">@dimen/_23sdp</dimen>
+<!--    sdp_35-->
+    <dimen name="sdp_35">@dimen/_27sdp</dimen>
     <dimen name="sdp_40">@dimen/_31sdp</dimen>
     <dimen name="sdp_50">@dimen/_39sdp</dimen>
     <dimen name="sdp_60">@dimen/_46sdp</dimen>
@@ -28,4 +29,5 @@
     <dimen name="sdp_height_40">@dimen/_31sdp</dimen>
     <dimen name="sdp_45">@dimen/_35sdp</dimen>
     <dimen name="sdp_80">@dimen/_35sdp</dimen>
+
 </resources>

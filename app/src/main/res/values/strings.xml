@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Workers App</string>
     <string name="tvPhone">رقم الجوال</string>
@@ -14,4 +15,34 @@
     <string name="resendCode">أعد ارسال الرمز</string>
     <string name="tvVerificationCode">كود التحقق</string>
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
+    <string name="register_full_name">الاسم </string>
+    <String name="register_nick_name">اللقب</String>
+    <String name="register_birth">تاريخ الميلاد</String>
+    <String name="register_gender"> الجنس</String>
+    <String name="register_female">أنثى</String>
+    <String name="register_male">ذكر</String>
+    <String name="register_next">التالي</String>
+
+    <String name="cv_work_category">فئة العمل</String>
+    <String name="cv_talk">تحدث عن نفسك</String>
+
+    <string-array name="cities" >
+        <item>غزة</item>
+        <item>دير البلح</item>
+        <item>خانيونس</item>
+        <item>جباليا</item>
+        <item>رفح</item>
+        <item>بيت لاهيا</item>
+        <item>بيت حانون</item>
+    </string-array>
+
+    <string-array name="work" >
+        <item>نجار</item>
+        <item>حداد</item>
+        <item>بناء</item>
+        <item>دهان</item>
+        <item>بليط</item>
+        <item>قصارة</item>
+    </string-array>
+
 </resources>
