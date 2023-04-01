@@ -2,7 +2,6 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/dialog_bg"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -13,7 +12,7 @@
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_8sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:text="أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك."
+        android:text="@string/tvBottomSheetMessage"
         android:textColor="#B3B3B3"
         android:textSize="@dimen/_15ssp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -26,75 +25,39 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_50sdp"
         android:orientation="horizontal"
-        android:padding="@dimen/_10sdp"
+        android:padding="@dimen/_5sdp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBottomSheetMessage">
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode1"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:paddingStart="@dimen/_48sdp"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode2"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
+        <com.chaos.view.PinView
+            android:id="@+id/firstPinView"
+            style="@style/PinWidget.PinView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autofillHints="smsOTPCode"
+            android:cursorVisible="true"
             android:gravity="center"
-            android:inputType="number"
-            android:paddingStart="@dimen/_48sdp"
+            android:layout_gravity="center"
+            android:importantForAutofill="yes"
+            android:inputType="text"
             android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cursorColor="@color/black"
+            app:cursorWidth="2dp"
+            app:hideLineWhenFilled="false"
+            app:itemCount="6"
+            app:itemHeight="60dp"
+            app:itemRadius="4dp"
+            app:itemSpacing="12dp"
+            app:itemWidth="46dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode3"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:paddingStart="@dimen/_48sdp"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode4"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:inputType="number"
-            android:gravity="center"
-            android:paddingStart="@dimen/_48sdp"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
-
-        <androidx.appcompat.widget.AppCompatEditText
-            android:id="@+id/etCode5"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_70sdp"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:background="@drawable/et_bg"
-            android:gravity="center"
-            android:inputType="number"
-            android:paddingStart="@dimen/_48sdp"
-            android:textColor="@color/black"
-            android:textColorHint="#CFCFCF"
-            android:textSize="@dimen/_16ssp" />
     </LinearLayout>
 
     <LinearLayout
@@ -138,7 +101,7 @@
         android:layout_marginTop="@dimen/_55sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:backgroundTint="@color/white"
-        android:text="دخول"
+        android:text="@string/btnLogin"
         android:textAllCaps="false"
         android:textColor="#0E2E3B"
         android:textSize="@dimen/_18ssp"
@@ -166,7 +129,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/_10sdp"
-            android:text="كود التحقق"
+            android:text="@string/tvVerificationCode"
             android:textColor="#0E2E3B"
             android:layout_margin="@dimen/_3sdp"
             android:textSize="@dimen/_18ssp" />
