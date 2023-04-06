@@ -136,7 +136,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
                         .addOnCompleteListener( task -> {
                             // Todo loader_dialog.dismiss();
                             if ( task.isSuccessful( ) ) {
-                                Intent intent = new Intent( PhoneRegistrationActivity.this , MainActivity.class );
+                                Intent intent = new Intent( PhoneRegistrationActivity.this , RegisterActivity.class );
                                 startActivity( intent );
                                 finish( );
 

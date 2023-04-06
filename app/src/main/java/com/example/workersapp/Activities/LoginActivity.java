@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.workersapp.R;
-import com.example.workersapp.databinding.ActivityLoginBinding;
+import com.example.workersapp.databinding.ActivtyLoginBinding;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,23 +36,21 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
-    ActivityLoginBinding binding;
+    ActivtyLoginBinding binding;
     private CountDownTimer timer;
-
     FirebaseAuth auth;
     FirebaseUser currentUser;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     String verificationID;
-
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        binding = ActivityLoginBinding.inflate( getLayoutInflater( ) );
+        binding = ActivtyLoginBinding.inflate( getLayoutInflater( ) );
         setContentView( binding.getRoot( ) );
 
-        auth = FirebaseAuth.getInstance( );
+        auth = FirebaseAuth.getInstance();
 
-        setUnderline( binding.tvRegisterNow );
+        setUnderline(binding.tvRegisterNow);
         binding.tvRegisterNow.setOnClickListener( view -> showDialog( ) );
 
         binding.btnLogin.setOnClickListener( view -> {

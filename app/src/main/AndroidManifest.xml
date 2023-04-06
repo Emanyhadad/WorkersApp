@@ -7,7 +7,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -25,6 +25,7 @@
 
              To get one, follow the directions here:
 
+
                 https://developers.google.com/maps/documentation/android-sdk/get-api-key
 
              Once you have your API key (it starts with "AIza"), define a new property in your
@@ -32,34 +33,55 @@
              "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
         -->
         <meta-data
-            android:name="com.google.android.geo.API_KEY"
+            android:name=".API_KEY"
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
 
         <activity
-            android:name="com.example.workersapp.Activities.MapsActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.LoginActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.PhoneRegistrationActivity"
-            android:exported="false" />
-        <activity
-            android:name="com.example.workersapp.Activities.RegisterActivity"
+            android:name="com.example.workersapp.Activities.LoginActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.MapsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name="com.example.workersapp.Activities.PhoneRegistrationActivity"
+            android:exported="false">
+<!--                        <intent-filter>-->
+<!--                            <action android:name="android.intent.action.MAIN" />-->
+
+<!--                            <category android:name="android.intent.category.LAUNCHER" />-->
+<!--                        </intent-filter>-->
         </activity>
         <activity
+            android:name=".Activities.RegisterActivity"
+            android:exported="false"/>
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+<!--        </activity>-->
+
+        <activity
+            android:name=".Activities.CvActivity"
+            android:exported="false"/>
+
+<!--        </activity>-->
+        <activity
             android:name=".Activities.MainActivity"
-            android:exported="true">
+            android:exported="false"/>
+
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
-        </activity>
+<!--        </activity>-->
     </application>
 
 </manifest>

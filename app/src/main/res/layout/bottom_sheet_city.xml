@@ -9,14 +9,14 @@
     <!-- عشان ما أقدر اكتب >-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_height="@dimen/_45sdp"
         android:hint="المدينة"
-        android:layout_marginTop="@dimen/_31sdp"
+        android:layout_marginTop="@dimen/_33sdp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <AutoCompleteTextView
             android:id="@+id/sheetCity"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_35sdp"
+            android:layout_height="@dimen/_40sdp"
             android:textColorHint="@color/gray"
             android:fontFamily="@font/cairo_regular"
             android:textSize="@dimen/_11ssp"
@@ -28,7 +28,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_height="@dimen/_39sdp"
         android:layout_marginTop="@dimen/_23sdp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
@@ -48,7 +48,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sheetBtnNext"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_35sdp"
+        android:layout_height="60dp"
         android:text="التالي"
         android:textAllCaps="false"
         android:textColor="@color/white"
