@@ -10,8 +10,8 @@
 
     <ScrollView
         android:layout_width="match_parent"
-        android:fillViewport="true"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -27,6 +27,18 @@
             <!--                app:layout_constraintStart_toStartOf="parent"-->
             <!--                app:layout_constraintTop_toTopOf="parent"-->
             <!--                app:srcCompat="@drawable/logo" />-->
+
+            <ProgressBar
+                android:id="@+id/progressBarLogin"
+                style="?android:attr/progressBarStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.515"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
                 android:id="@+id/tv"
@@ -47,10 +59,10 @@
                 android:id="@+id/tvLine"
                 android:layout_width="@dimen/_116sdp"
                 android:layout_height="@dimen/_1sdp"
-                android:layout_marginTop="7dp"
-                android:layout_marginEnd="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:layout_marginStart="@dimen/_20sdp"
                 android:background="#0E4C75"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv" />
 
             <TextView
@@ -145,7 +157,7 @@
                 android:background="@drawable/et_bg"
                 android:hint="@string/etPhoneHint"
                 android:inputType="number"
-                android:paddingStart="@dimen/_48sdp"
+                android:paddingStart="@dimen/_50sdp"
                 android:textColor="@color/black"
                 android:textColorHint="#CFCFCF"
                 android:textSize="@dimen/_16ssp"
@@ -170,6 +182,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/etPhone" />
 
             <LinearLayout
+                android:id="@+id/linearLayout3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_30sdp"
@@ -180,6 +193,14 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <TextView
+                    android:id="@+id/tvDoNotHaveAnAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/tvDoNotHaveAnAccount"
+                    android:textColor="#646464"
+                    android:textSize="@dimen/_14ssp" />
+
+                <TextView
                     android:id="@+id/tvRegisterNow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -187,13 +208,6 @@
                     android:textColor="#64A811"
                     android:textSize="@dimen/_14ssp" />
 
-                <TextView
-                    android:id="@+id/tvDoNotHaveAnAccount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/tvDoNotHaveAnAccount"
-                    android:textColor="#646464"
-                    android:textSize="@dimen/_14ssp" />
             </LinearLayout>
 
             <TextView

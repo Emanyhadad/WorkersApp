@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@drawable/dialog_bg"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg">
 
     <TextView
         android:id="@+id/tvBottomSheetMessage"
@@ -25,7 +25,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_50sdp"
         android:orientation="horizontal"
-        android:padding="@dimen/_5sdp"
+        android:padding="@dimen/_10sdp"
+        android:gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvBottomSheetMessage">
@@ -34,29 +35,26 @@
         <com.chaos.view.PinView
             android:id="@+id/firstPinView"
             style="@style/PinWidget.PinView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:autofillHints="smsOTPCode"
             android:cursorVisible="true"
             android:gravity="center"
-            android:layout_gravity="center"
             android:importantForAutofill="yes"
-            android:inputType="text"
+            android:inputType="number"
             android:textColor="@color/black"
             android:textSize="18sp"
             android:textStyle="bold"
             app:cursorColor="@color/black"
-            app:cursorWidth="2dp"
+            app:lineColor="#CFCFCF"
+            app:cursorWidth="@dimen/_1sdp"
             app:hideLineWhenFilled="false"
             app:itemCount="6"
-            app:itemHeight="60dp"
-            app:itemRadius="4dp"
-            app:itemSpacing="12dp"
-            app:itemWidth="46dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:itemHeight="@dimen/_60sdp"
+            app:itemRadius="@dimen/sdp_5"
+            app:itemSpacing="@dimen/sdp_10"
+            app:itemWidth="@dimen/_35sdp" />
 
     </LinearLayout>
 
@@ -116,29 +114,30 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_20sdp"
-        android:layout_marginEnd="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_22sdp"
-        android:gravity="end"
+        android:layout_marginEnd="@dimen/_20sdp"
+        android:gravity="start"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
-
-        <TextView
-            android:id="@+id/tvVerificationCode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/_10sdp"
-            android:text="@string/tvVerificationCode"
-            android:textColor="#0E2E3B"
-            android:layout_margin="@dimen/_3sdp"
-            android:textSize="@dimen/_18ssp" />
 
         <ImageView
             android:id="@+id/imgVerification"
             android:layout_width="@dimen/_30sdp"
             android:layout_height="@dimen/_30sdp"
             app:srcCompat="@drawable/verification" />
+
+        <TextView
+            android:id="@+id/tvVerificationCode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_3sdp"
+            android:layout_marginEnd="@dimen/_10sdp"
+            android:text="@string/tvVerificationCode"
+            android:textColor="#0E2E3B"
+            android:textSize="@dimen/_18ssp" />
+
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

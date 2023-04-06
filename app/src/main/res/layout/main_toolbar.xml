@@ -8,17 +8,17 @@
     app:liftOnScrollColor="@color/design_default_color_on_primary"
     local:elevation="0dp">
 
-    <com.google.android.material.appbar.MaterialToolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
-        local:layout_scrollFlags="scroll|enterAlways"
-        local:titleCentered="true"
-        app:title="البيانات الشخصية"
-        app:navigationIcon="@drawable/back_icon"
-        android:layout_marginStart="@dimen/_23sdp"
-        android:layout_marginTop="@dimen/_31sdp"
-        app:titleTextAppearance="@font/cairo_regular"/>
+<!--    <com.google.android.material.appbar.MaterialToolbar-->
+<!--        android:id="@+id/toolbar"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="?actionBarSize"-->
+<!--        local:layout_scrollFlags="scroll|enterAlways"-->
+<!--        local:titleCentered="true"-->
+<!--        app:title="البيانات الشخصية"-->
+<!--        app:navigationIcon="@drawable/back_icon"-->
+<!--        android:layout_marginStart="@dimen/_23sdp"-->
+<!--        android:layout_marginTop="@dimen/_31sdp"-->
+<!--        app:titleTextAppearance="@font/cairo_regular"/>-->
 
 <!--    <androidx.appcompat.widget.Toolbar-->
 <!--        android:layout_width="match_parent"-->
