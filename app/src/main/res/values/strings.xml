@@ -8,13 +8,20 @@
     <string name="tvRegisterNow">سجل الان</string>
     <string name="tvDoNotHaveAnAccount">ليس لديك حساب؟</string>
     <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
-    <string name="etPhoneHint"> 592 777 888 </string>
+    <string name="etPhoneHint">592 777 888</string>
     <string name="tvAccountType">نوع الحساب</string>
     <string name="tvWorker">عامل</string>
     <string name="tvWorkOwner">صاحب عمل</string>
     <string name="resendCode">أعد ارسال الرمز</string>
     <string name="tvVerificationCode">كود التحقق</string>
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
+    <string name="register_full_name">الاسم </string>
+    <String name="register_nick_name">اللقب</String>
+    <String name="register_birth">تاريخ الميلاد</String>
+    <String name="register_gender"> الجنس</String>
+    <String name="register_female">أنثى</String>
+    <String name="register_male">ذكر</String>
+    <String name="register_next">التالي</String>
 
 <!--    <string name="register_full_name">الاسم </string>-->
 <!--    <String name="register_nick_name">اللقب</String>-->

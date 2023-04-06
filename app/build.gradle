@@ -6,6 +6,7 @@ plugins {
 
 android {
     namespace 'com.example.workersapp'
+    //noinspection GradleCompatible
     compileSdk 33
     buildFeatures {
         viewBinding true

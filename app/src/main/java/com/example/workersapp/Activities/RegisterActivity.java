@@ -19,7 +19,9 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -32,7 +34,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
@@ -44,21 +49,25 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class RegisterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     ActivityRegisterBinding binding;
     FirebaseFirestore db;
     FirebaseStorage storage;
+
+    FirebaseAuth firebaseAuth;
+    FirebaseUser firebaseUser;
+
     private static final int REQUEST_CODE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
-    DatePickerDialog dpd;
-    String age, fullName, nickName, birth, gender;
+    String fullName, nickName, birth, gender;
     int genderId;
     private Uri imageUri;
     String profileImageUrlNow;
-    private FusedLocationProviderClient mFusedLocationClient;
 
     @SuppressLint("MissingPermission")
 
@@ -66,9 +75,10 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot() ) ;
+        setContentView(binding.getRoot());
 
-
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
@@ -104,29 +114,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 }
             });
         }
-
-        // Initialize FusedLocationProviderClient
-        mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-
-        mFusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        if (location != null) {
-                            // User's location retrieved successfully, do something with it
-                            double latitude = location.getLatitude();
-                            double longitude = location.getLongitude();
-
-                            // Pass the user's location to the location screen
-                            Intent intent = new Intent(getBaseContext(), MapsActivity.class);
-                            intent.putExtra("latitude", latitude);
-                            intent.putExtra("longitude", longitude);
-                            startActivity(intent);
-                        } else {
-                            // Location is null, handle the error
-                        }
-                    }
-                });
         binding.personBirth.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -201,7 +188,24 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                                     User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
 
                                     if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
-                                        db.collection("person")
+                                        db.collection("user").document("worker").collection(firebaseUser.getUid())
+                                                .add(user)
+                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                                                    @Override
+                                                    public void onSuccess(DocumentReference documentReference) {
+                                                        Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
+                                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                })
+                                                .addOnFailureListener(new OnFailureListener() {
+                                                    @Override
+                                                    public void onFailure(@NonNull Exception e) {
+                                                        Log.w("PersonalField", e.getMessage());
+                                                        Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                    }
+                                                });
+
+                                        db.collection("user").document("customer").collection(firebaseUser.getUid())
                                                 .add(user)
                                                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                                     @Override
@@ -235,52 +239,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             });
         }
     }
-
-//    @SuppressLint({"MissingSuperCall", "MissingPermission"})
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_LOCATION: {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    // permission was granted, proceed to get the user's location
-//                    FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-//                    client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            if (location != null) {
-//                                // save the location on Firestore
-//                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-////                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-////                                if (currentUser != null) {
-////                                    String userId = currentUser.getUid();
-//                                Map<String, Object> locationMap = new HashMap<>();
-//                                locationMap.put("latitude", location.getLatitude());
-//                                locationMap.put("longitude", location.getLongitude());
-//
-//                                db.collection("users").document("user1")
-//                                        .set(locationMap)
-//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                            @Override
-//                                            public void onSuccess(Void aVoid) {
-//                                                // location saved successfully
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                // error occurred while saving the location
-//                                            }
-//                                        });
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    // permission denied, inform the user and handle the case
-//                }
-//                return;
-//            }
-//        }
-//    }
 
     private void showDatePickerDialog() {
         Calendar calendar = null;

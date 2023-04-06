@@ -146,6 +146,8 @@ public class LoginActivity extends AppCompatActivity {
 //        PhoneAuthProvider.verifyPhoneNumber( options );
 //        auth.useAppLanguage( );
 //
+//        String code = verificationCode1 + verificationCode2 + verificationCode3 +
+//                verificationCode4 + verificationCode5;
 //        button.setOnClickListener( view -> {
 //            PhoneAuthCredential credential = PhoneAuthProvider.getCredential( verificationID , code );
 //

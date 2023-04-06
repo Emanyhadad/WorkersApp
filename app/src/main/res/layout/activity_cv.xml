@@ -7,35 +7,9 @@
     android:orientation="vertical"
     tools:context=".Activities.CvActivity">
 
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/titlePageLinear"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:layout_marginTop="30dp"-->
-    <!--        android:orientation="horizontal">-->
-
-    <!--        <ImageView-->
-    <!--            android:id="@+id/personImgBack"-->
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="30dp"-->
-    <!--            app:srcCompat="@drawable/ic_baseline_arrow_back_ios_24" />-->
-
-    <!--        <TextView-->
-    <!--            android:id="@+id/personTitlePage"-->
-    <!--            android:layout_width="match_parent"-->
-    <!--            android:layout_height="match_parent"-->
-    <!--            android:gravity="center"-->
-    <!--            android:text="البيانات الشخصية"-->
-    <!--            android:textColor="@color/black"-->
-    <!--            android:textSize="18sp"-->
-    <!--            android:textStyle="bold" />-->
-    <!--    </LinearLayout>-->
-
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
 
         <!--<android:inputType="none"-->
         <!-- عشان ما أقدر اكتب >-->
@@ -44,16 +18,45 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_20sdp"
+                android:layout_marginTop="@dimen/_31sdp"
+                android:layout_marginEnd="@dimen/_20sdp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/back_icon" />
+
+                <TextView
+                    android:id="@+id/tvBasicInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:text="البيانات الشخصية"
+                    android:textColor="@color/black"
+                    android:fontFamily="@font/cairo_regular"
+                    android:textSize="@dimen/_14ssp" />
+            </LinearLayout>
+
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                android:layout_marginTop="@dimen/_23sdp"
+                android:layout_height="@dimen/_45sdp"
+                android:layout_marginTop="@dimen/_46sdp"
                 android:hint="فئة العمل">
                 <AutoCompleteTextView
                     android:id="@+id/CvWork"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_35sdp"
+                    android:layout_height="@dimen/_40sdp"
                     android:layout_marginLeft="@dimen/_23sdp"
                     android:background="@drawable/border_et"
                     android:layout_marginRight="@dimen/_23sdp"
@@ -65,12 +68,12 @@
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_100sdp"
-                android:layout_marginTop="@dimen/_35sdp">
+                android:layout_height="@dimen/_120sdp"
+                android:layout_marginTop="@dimen/_31sdp">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/Cv"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_100sdp"
+                    android:layout_height="@dimen/_110sdp"
                     android:layout_marginLeft="@dimen/_23sdp"
                     android:layout_marginRight="@dimen/_23sdp"
                     android:gravity="top"
@@ -85,22 +88,23 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/CvNext"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="60dp"
                 android:layout_marginLeft="@dimen/_23sdp"
                 android:layout_marginRight="@dimen/_23sdp"
-                android:background="@color/blue"
+                android:background="@drawable/border_button"
                 android:text="التالي"
                 android:textColor="@color/white"
                 android:textSize="@dimen/_13ssp"
                 android:fontFamily="@font/cairo_regular"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_180sdp"/>
         </LinearLayout>
 
         <ImageView
             android:id="@+id/imageView2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_90sdp"
+            android:layout_marginTop="@dimen/_100sdp"
             android:alpha="0.1"
             app:srcCompat="@drawable/img_background" />
 
