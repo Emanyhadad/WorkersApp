@@ -15,6 +15,14 @@
     <string name="resendCode">أعد ارسال الرمز</string>
     <string name="tvVerificationCode">كود التحقق</string>
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
+    <string name="register_full_name">الاسم </string>
+    <String name="register_nick_name">اللقب</String>
+    <String name="register_birth">تاريخ الميلاد</String>
+    <String name="register_gender"> الجنس</String>
+    <String name="register_female">أنثى</String>
+    <String name="register_male">ذكر</String>
+    <String name="register_next">التالي</String>
+
 <!--    <string name="register_full_name">الاسم </string>-->
 <!--    <String name="register_nick_name">اللقب</String>-->
 <!--    <String name="register_birth">تاريخ الميلاد</String>-->

@@ -9,7 +9,10 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.text.Editable;
 import android.text.SpannableString;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.UnderlineSpan;
 import android.util.Log;
 import android.view.Gravity;
@@ -22,8 +25,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.chaos.view.PinView;
 import com.example.workersapp.R;
-import com.example.workersapp.databinding.ActivtyLoginBinding;
+import com.example.workersapp.databinding.ActivityLoginBinding;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
@@ -36,94 +41,101 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
-    ActivtyLoginBinding binding;
+    ActivityLoginBinding binding;
     private CountDownTimer timer;
+
     FirebaseAuth auth;
     FirebaseUser currentUser;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
+    PhoneAuthProvider.ForceResendingToken forceResendingToken;
+
     String verificationID;
+
     @Override
-    protected void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        binding = ActivtyLoginBinding.inflate( getLayoutInflater( ) );
-        setContentView( binding.getRoot( ) );
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityLoginBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
         auth = FirebaseAuth.getInstance();
 
         setUnderline(binding.tvRegisterNow);
-        binding.tvRegisterNow.setOnClickListener( view -> showDialog( ) );
+        binding.tvRegisterNow.setOnClickListener(view -> showDialog());
 
-        binding.btnLogin.setOnClickListener( view -> {
-            String phone = binding.etPhone.getText( ).toString( ).trim( );
-            showPhoneDialog( phone );
-        } );
-        mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks( ) {
-            @Override
-            public void onVerificationCompleted( @NonNull PhoneAuthCredential phoneAuthCredential ) {
-                // تم التحقق من رمز التحقق بنجاح، وتم تسجيل الدخول إلى Firebase Authentication
-                final String code = phoneAuthCredential.getSmsCode( );
-                if ( code != null ) {
-                    // Use the verification code to sign in
-//                    signInWithPhoneAuthCredential(phoneAuthCredential);
-                }
-            }
-
-            @Override
-            public void onCodeSent( @NonNull String s , @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken ) {
-                super.onCodeSent( s , forceResendingToken );
-                // تم إرسال رمز التحقق بنجاح، ويمكنك تخزين الـ verification ID للاستخدام في الخطوة التالية
-                verificationID = s;
-                Toast.makeText( LoginActivity.this , s , Toast.LENGTH_SHORT ).show( );
-                Log.d( "codeLogin" , s );
-                //timer,resent
-            }
-
-            @Override
-            public void onVerificationFailed( @NonNull FirebaseException e ) {
-                // This callback is invoked in an invalid request for verification is made,
-                // for instance if the the phone number format is not valid.
-                //  Log.w(TAG, "onVerificationFailed", e);
-
-                // فشل التحقق من رمز التحقق، يمكنك تحديد الإجراء المناسب هنا
-
-                if ( e instanceof FirebaseAuthInvalidCredentialsException ) {
-                    // Invalid request
-                } else if ( e instanceof FirebaseTooManyRequestsException ) {
-                    // The SMS quota for the project has been exceeded
-                }
-                // Show a message and update the UI
-            }
-        };
-
+        binding.btnLogin.setOnClickListener(view -> sendCodeVerification());
 
     }
-//Todo:
+
+    //Todo:
     // 1-تحقق هل الرقم موجود في الفير بيز ام لا
     //في حال كان موجود يتم ارسال كود التحقق
     //غير موجود يظهر ايرور ارشادي لتسجيل مستخدم جديد
-    
-    private void showPhoneDialog( String phone ) {
-        final Dialog dialog = new Dialog( this );
-        dialog.requestWindowFeature( Window.FEATURE_NO_TITLE );
-        dialog.setContentView( R.layout.bottom_sheet_phone );
+    private void sendCodeVerification() {
 
-        TextView tvTimer = dialog.findViewById( R.id.tvTimer );
-        Button btn = dialog.findViewById( R.id.btnLogin );
-        ImageView imgTimer = dialog.findViewById( R.id.imgTimer );
-//        EditText code1 = dialog.findViewById( R.id.etCode1 );
-//        EditText code2 = dialog.findViewById( R.id.etCode2 );
-//        EditText code3 = dialog.findViewById( R.id.etCode3 );
-//        EditText code4 = dialog.findViewById( R.id.etCode4 );
-//        EditText code5 = dialog.findViewById( R.id.etCode5 );
-//        Button button = dialog.findViewById( R.id.btnLogin );
-//
-//
-//        String verificationCode1 = code1.getText( ).toString( ).trim( );
-//        String verificationCode2 = code2.getText( ).toString( ).trim( );
-//        String verificationCode3 = code3.getText( ).toString( ).trim( );
-//        String verificationCode4 = code4.getText( ).toString( ).trim( );
-//        String verificationCode5 = code5.getText( ).toString( ).trim( );
-//
+        String phone = binding.etPhone.getText().toString().trim();
+        if (TextUtils.isEmpty(phone)) {
+            Toast.makeText(this, "Enter your phone", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        if (phone.startsWith("0")) {
+            phone = phone.substring(1);
+        }
+        binding.progressBarLogin.setVisibility(View.VISIBLE);
+
+//        if (){}else{}
+
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                "+970" + phone,
+                60,
+                TimeUnit.SECONDS,
+                LoginActivity.this,
+                mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                    @Override
+                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                        Log.e("FirebaseException", "is send");
+                    }
+
+                    @Override
+                    public void onVerificationFailed(@NonNull FirebaseException e) {
+                        Log.e("FirebaseException", e.toString());
+                    }
+
+                    @Override
+                    public void onCodeSent(@NonNull String mVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                        super.onCodeSent(mVerificationId, token);
+                        binding.progressBarLogin.setVisibility(View.GONE);
+                        verificationID = mVerificationId; //لكل كود ID
+                        forceResendingToken = token;
+                        showPhoneDialog();
+                    }
+                });
+    }
+
+    private void showPhoneDialog() {
+        Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottom_sheet_phone);
+        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+
+        TextView tvTimer = dialog.findViewById(R.id.tvTimer);
+        ImageView imgTimer = dialog.findViewById(R.id.imgTimer);
+        Button btn = dialog.findViewById(R.id.btnLogin);
+        PinView pinView = dialog.findViewById(R.id.firstPinView);
+        tvTimer.setEnabled(false);
+
+        String phone = binding.etPhone.getText().toString().trim();
+        tvTimer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (tvTimer.isEnabled()) {
+                    resendVerificationCode(phone, forceResendingToken);
+                    timer.start();
+                    tvTimer.setEnabled(false);
+                    imgTimer.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+
 //        PhoneAuthOptions options =
 //                PhoneAuthOptions.newBuilder( auth )
 //                        .setPhoneNumber( "+970" + phone )      // Phone number to verify
@@ -153,80 +165,137 @@ public class LoginActivity extends AppCompatActivity {
 
 
         //كل متى ينفذ الكود الي في ال interval : onTick
-        timer = new CountDownTimer( 40000 , 1000 ) {
+        timer = new CountDownTimer(60000, 1000) {
+                    @Override
+                    public void onTick(long l) {
+                        //الوقت المتبقي للانتهاء : l
+                        tvTimer.setText("00:" + l / 1000);
+                    }
+
+                    @Override
+                    public void onFinish() {
+                        tvTimer.setText(R.string.resendCode);
+                        imgTimer.setVisibility(View.GONE);
+                        tvTimer.setEnabled(true);
+                        timer.cancel();
+                    }
+                }.start();
+
+        pinView.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onTick( long l ) {
-                //الوقت المتبقي للانتهاء : l
-                tvTimer.setText( "00:" + l / 1000 );
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
             }
 
             @Override
-            public void onFinish( ) {
-                tvTimer.setText( R.string.resendCode );
-                imgTimer.setVisibility( View.GONE );
-                timer.cancel( );
-                btn.setBackgroundColor( Color.parseColor( "#0E2E3B" ) );
-                btn.setTextColor( Color.WHITE );
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                pinView.setLineColor(Color.parseColor("#64A811"));
+                btn.setBackgroundColor(Color.parseColor("#0E2E3B"));
+                btn.setTextColor(Color.WHITE);
             }
-        }.start( );
 
-        dialog.show( );
-        Window window = dialog.getWindow( );
-        window.setLayout( ViewGroup.LayoutParams.MATCH_PARENT ,
-                ViewGroup.LayoutParams.WRAP_CONTENT );
-        window.setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
-        window.getAttributes( ).windowAnimations = R.style.DialogAnimation;
-        window.setGravity( Gravity.BOTTOM );
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        Window window = dialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.getAttributes().windowAnimations = R.style.DialogAnimation;
+        window.setGravity(Gravity.BOTTOM);
+
+        btn.setOnClickListener(view -> {
+            if (pinView.getText().toString().trim().isEmpty()) {
+                Toast.makeText(this, "code empty", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            String code = pinView.getText().toString();
+            if (verificationID != null) {
+                binding.progressBarLogin.setVisibility(View.VISIBLE);
+                PhoneAuthCredential phoneAuthCredential = PhoneAuthProvider.getCredential(
+                        verificationID, code);
+                FirebaseAuth.getInstance().signInWithCredential(phoneAuthCredential)
+                        .addOnCompleteListener(task -> {
+                            binding.progressBarLogin.setVisibility(View.GONE);
+                            if (task.isSuccessful()) {
+                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                startActivity(intent);
+                                finish();
+
+                            } else {
+                                Toast.makeText(LoginActivity.this, "Verification Code Invalid", Toast.LENGTH_SHORT).show();
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            }});
+        dialog.show();
     }
 
-    private void showDialog( ) {
-        final Dialog dialog = new Dialog( this );
-        dialog.requestWindowFeature( Window.FEATURE_NO_TITLE );
-        dialog.setContentView( R.layout.bottom_sheet_account_type );
+    // إعادة إرسال رمز التحقق
+    private void resendVerificationCode(String phone, PhoneAuthProvider.ForceResendingToken token) {
+        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                phone, // رقم الهاتف المسجل
+                60, // فترة صلاحية الرمز بالثواني
+                TimeUnit.SECONDS, // وحدة فترة صلاحية الرمز
+                this, // النشاط الحالي
+                mCallbacks, // مجموعة مستمعي الاتصال
+                token // رمز إعادة الإرسال الذي تم توليده من قبل
+        );
+    }
 
-        View workerLayout = dialog.findViewById( R.id.workerLayout );
-        View workOwnerLayout = dialog.findViewById( R.id.workOwnerLayout );
+    private void showDialog() {
+        final Dialog dialog = new Dialog(this);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.bottom_sheet_account_type);
+
+        View workerLayout = dialog.findViewById(R.id.workerLayout);
+        View workOwnerLayout = dialog.findViewById(R.id.workOwnerLayout);
 
 
-        dialog.show( );
-        Window window = dialog.getWindow( );
-        window.setLayout( ViewGroup.LayoutParams.MATCH_PARENT ,
-                ViewGroup.LayoutParams.WRAP_CONTENT );
-        window.setBackgroundDrawable( new ColorDrawable( Color.TRANSPARENT ) );
-        window.getAttributes( ).windowAnimations = R.style.DialogAnimation;
-        window.setGravity( Gravity.BOTTOM );
+        dialog.show();
 
-        workerLayout.setOnClickListener( view -> {
+        Window window = dialog.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT);
+        window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        window.getAttributes().windowAnimations = R.style.DialogAnimation;
+        window.setGravity(Gravity.BOTTOM);
+
+        workerLayout.setOnClickListener(view -> {
             String accountType = "worker";
-            Intent intent = new Intent( getBaseContext( ) , PhoneRegistrationActivity.class );
-            startActivity( intent );
-        } );
-        workOwnerLayout.setOnClickListener( view -> {
+            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+            startActivity(intent);
+        });
+        workOwnerLayout.setOnClickListener(view -> {
             String accountType = "work owner";
-            Intent intent = new Intent( getBaseContext( ) , PhoneRegistrationActivity.class );
-            startActivity( intent );
-        } );
+            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+            startActivity(intent);
+        });
 
     }
 
-    private void setUnderline( TextView tv ) {
-        String text = tv.getText( ).toString( );
-        SpannableString content = new SpannableString( text );
-        content.setSpan( new UnderlineSpan( ) , 0 , text.length( ) , 0 );
-        tv.setText( content );
+    private void setUnderline(TextView tv) {
+        String text = tv.getText().toString();
+        SpannableString content = new SpannableString(text);
+        content.setSpan(new UnderlineSpan(), 0, text.length(), 0);
+        tv.setText(content);
     }
 
-    private void verifyCode( String code ) {
-
-    }
 
     @Override
-    protected void onStart( ) {
-        super.onStart( );
-        currentUser = auth.getCurrentUser( );
-        if ( currentUser != null ) {
-            startActivity( new Intent( getBaseContext( ) , MainActivity.class ) );
-            finish( );
+    protected void onStart() {
+        super.onStart();
+        currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            startActivity(new Intent(getBaseContext(), MainActivity.class));
+            finish();
         }
 
     }
