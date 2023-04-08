@@ -20,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,12 +29,9 @@ import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.FirebaseTooManyRequestsException;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.concurrent.TimeUnit;
@@ -166,20 +162,20 @@ public class LoginActivity extends AppCompatActivity {
 
         //كل متى ينفذ الكود الي في ال interval : onTick
         timer = new CountDownTimer(60000, 1000) {
-                    @Override
-                    public void onTick(long l) {
-                        //الوقت المتبقي للانتهاء : l
-                        tvTimer.setText("00:" + l / 1000);
-                    }
+            @Override
+            public void onTick(long l) {
+                //الوقت المتبقي للانتهاء : l
+                tvTimer.setText("00:" + l / 1000);
+            }
 
-                    @Override
-                    public void onFinish() {
-                        tvTimer.setText(R.string.resendCode);
-                        imgTimer.setVisibility(View.GONE);
-                        tvTimer.setEnabled(true);
-                        timer.cancel();
-                    }
-                }.start();
+            @Override
+            public void onFinish() {
+                tvTimer.setText(R.string.resendCode);
+                imgTimer.setVisibility(View.GONE);
+                tvTimer.setEnabled(true);
+                timer.cancel();
+            }
+        }.start();
 
         pinView.addTextChangedListener(new TextWatcher() {
             @Override
@@ -234,7 +230,8 @@ public class LoginActivity extends AppCompatActivity {
                                 Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
                         });
-            }});
+            }
+        });
         dialog.show();
     }
 
@@ -250,31 +247,45 @@ public class LoginActivity extends AppCompatActivity {
         );
     }
 
+    Dialog dialogAccountType = null;
+
     private void showDialog() {
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.bottom_sheet_account_type);
 
-        View workerLayout = dialog.findViewById(R.id.workerLayout);
-        View workOwnerLayout = dialog.findViewById(R.id.workOwnerLayout);
+        dialogAccountType = new Dialog(this);
+        dialogAccountType.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialogAccountType.setContentView(R.layout.bottom_sheet_account_type);
+        dialogAccountType.setCanceledOnTouchOutside(false);
 
+//        if (dialogAccountType == null) {
+//            dialogAccountType = new Dialog(this);
+//            dialogAccountType.requestWindowFeature(Window.FEATURE_NO_TITLE);
+//            dialogAccountType.setContentView(R.layout.bottom_sheet_account_type);
+//            dialogAccountType.setCanceledOnTouchOutside(false);
+//
+//
+//            dialogAccountType.show();
+//        }
 
-        dialog.show();
+        View workerLayout = dialogAccountType.findViewById(R.id.workerLayout);
+        View workOwnerLayout = dialogAccountType.findViewById(R.id.workOwnerLayout);
 
-        Window window = dialog.getWindow();
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT);
+        Window window = dialogAccountType.getWindow();
+        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.getAttributes().windowAnimations = R.style.DialogAnimation;
         window.setGravity(Gravity.BOTTOM);
 
+        dialogAccountType.show();
+
         workerLayout.setOnClickListener(view -> {
             String accountType = "worker";
+            dialogAccountType.dismiss();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
         });
         workOwnerLayout.setOnClickListener(view -> {
             String accountType = "work owner";
+            dialogAccountType.dismiss();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
         });
@@ -299,4 +310,9 @@ public class LoginActivity extends AppCompatActivity {
         }
 
     }
+//    @Override
+//    public void onBackPressed() {
+//        super.onBackPressed();
+//        dialogAccountType=null;
+//    }
 }

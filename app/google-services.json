@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "209911816588",
+    "firebase_url": "https://workers-app-ac119-default-rtdb.firebaseio.com",
     "project_id": "workers-app-ac119",
     "storage_bucket": "workers-app-ac119.appspot.com"
   },
@@ -13,6 +14,14 @@
         }
       },
       "oauth_client": [
+        {
+          "client_id": "209911816588-1d393r3micdrt1pp367gasvr7ppaf0pm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.workersapp",
+            "certificate_hash": "a82ed8f566144ca155027743315f2db0c3c12e34"
+          }
+        },
         {
           "client_id": "209911816588-3kinb66cdogotk5k5kkfl7nu32eonb4n.apps.googleusercontent.com",
           "client_type": 3
