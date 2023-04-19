@@ -48,14 +48,11 @@ public class CvActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         list = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
-        binding.CvWork.setAdapter(adapter);
 
+        insertData();
         binding.CvNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
-                insertData();
 
                 String work = binding.CvWork.getText().toString();
                 String cv = binding.Cv.getText().toString();
@@ -65,17 +62,15 @@ public class CvActivity extends AppCompatActivity {
                     data.put("work", work);
                     data.put("cv", cv);
 
+                    String workerId = getIntent().getStringExtra("workerId");
+
                     db.collection("user").document("worker").collection(firebaseUser.getUid())
-                            .add(data)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            .document(workerId)
+                            .update(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    Toast.makeText(CvActivity.this, "success add city and title", Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(CvActivity.this, "success add Cv and work", Toast.LENGTH_SHORT).show();
 
                                 }
                             });
@@ -88,52 +83,39 @@ public class CvActivity extends AppCompatActivity {
     }
     
     public void insertData(){
-
-        Map<String, Object> category = new HashMap<>();
-        category.put("category1", "نجار");
-        category.put("category2", "دهان");
-        category.put("category3", "بناء");
-        category.put("category4", "حداد");
-        category.put("category6", "بليط");
-        category.put("category7", "قصارة");
-        category.put("category8", "سباك");
-        category.put("category9", "كهربائي");
-
-        // Save the cities to Firestore
-        db.collection("categories")
-                .document()
-                .collection(firebaseUser.getUid())
-                .add(category)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        db.collection("category")
+                .document("dipdTXxKmbylQIJJhC0v")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        if (documentSnapshot.exists()) {
+                            // تحميل البيانات وإضافتها إلى ArrayList
+                            ArrayList<String> category = new ArrayList<>();
+                            category.add(documentSnapshot.getString("category1"));
+                            category.add(documentSnapshot.getString("category2"));
+                            category.add(documentSnapshot.getString("category3"));
+                            category.add(documentSnapshot.getString("category4"));
+                            category.add(documentSnapshot.getString("category5"));
+                            category.add(documentSnapshot.getString("category6"));
+                            category.add(documentSnapshot.getString("category7"));
+                            category.add(documentSnapshot.getString("category8"));
+                            // وهكذا للحصول على بقية البيانات
 
+                            // إنشاء ArrayAdapter وتعيينه كبيانات مصدر لـ Spinner
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.drop_down_item, category);
+//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            binding.CvWork.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(CvActivity.this, "No such document", Toast.LENGTH_SHORT).show();
+//                            Log.d(TAG, "No such document");
+                        }
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-
-                    }
-                });
-        list.clear();
-        fetchData();
-        adapter.notifyDataSetChanged();
-        Toast.makeText(this, "Inserted successfully", Toast.LENGTH_SHORT).show();
-    }
-
-    public void fetchData() {
-        db.collection("categories")
-                .document()
-                .collection(firebaseUser.getUid())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
-                    @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                list.add(dc.getDocument().toString());
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
+                        Toast.makeText(CvActivity.this, "get failed with", Toast.LENGTH_SHORT).show();
+//                        Log.d(TAG, "get failed with ", e);
                     }
                 });
     }

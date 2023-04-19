@@ -28,6 +28,6 @@
     <dimen name="sdp_height_100">@dimen/_78sdp</dimen>
     <dimen name="sdp_height_40">@dimen/_31sdp</dimen>
     <dimen name="sdp_45">@dimen/_35sdp</dimen>
-    <dimen name="sdp_80">@dimen/_35sdp</dimen>
+    <dimen name="sdp_80">@dimen/_70sdp</dimen>
 
 </resources>

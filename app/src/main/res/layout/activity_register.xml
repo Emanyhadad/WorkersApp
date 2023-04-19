@@ -6,7 +6,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".Activities.RegisterActivity">
+    android:layoutDirection="rtl"
+    tools:context=".Activities.RegisterActivity"
+    android:background="@color/back_activity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -43,7 +50,6 @@
                 android:textSize="@dimen/_14ssp" />
         </LinearLayout>
 
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -55,7 +61,7 @@
                 android:layout_height="@dimen/_78sdp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="@dimen/_12sdp"
-                app:srcCompat="@drawable/user" />
+                app:srcCompat="@drawable/ic_launcher_foreground" />
 
             <ImageView
                 android:id="@+id/personAddImgUser"
@@ -64,7 +70,7 @@
                 android:layout_below="@id/imageView"
                 android:layout_alignStart="@+id/imageView"
                 android:layout_alignEnd="@+id/imageView"
-                android:layout_marginStart="@dimen/_50sdp"
+                android:layout_marginEnd="@dimen/_53sdp"
                 android:layout_marginTop="-25dp"
                 android:background="@drawable/circle_add_img"
                 android:paddingBottom="@dimen/_3sdp"
@@ -77,15 +83,13 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_39sdp"
-            android:layout_marginTop="@dimen/_35sdp">
+            android:layout_height="@dimen/_46sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personFullName"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="@dimen/_39sdp"
                 android:layout_marginLeft="@dimen/_23sdp"
                 android:layout_marginRight="@dimen/_23sdp"
-                android:background="@drawable/border_et"
                 android:fontFamily="@font/cairo_regular"
                 android:hint="الاسم"
                 android:inputType="textPersonName"
@@ -96,38 +100,36 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_39sdp"
+            android:layout_height="@dimen/_46sdp"
             android:layout_marginTop="@dimen/_31sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personNickName"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="@dimen/_39sdp"
                 android:layout_marginLeft="@dimen/_23sdp"
                 android:layout_marginRight="@dimen/_23sdp"
                 android:hint="اللقب"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/gray"
                 android:fontFamily="@font/cairo_regular"
-                android:background="@drawable/border_et"
                 android:textSize="@dimen/_11ssp" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_39sdp"
+            android:layout_height="@dimen/_46sdp"
             android:layout_marginTop="@dimen/_31sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personBirth"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
+                android:layout_height="@dimen/_39sdp"
                 android:layout_marginLeft="@dimen/_23sdp"
                 android:layout_marginRight="@dimen/_23sdp"
-                android:drawableStart="@drawable/ic_calendar"
+                android:drawableEnd="@drawable/ic_calendar"
                 android:hint="تاريخ الميلاد"
                 android:textColorHint="@color/gray"
                 android:fontFamily="@font/cairo_regular"
-                android:background="@drawable/border_et"
                 android:textSize="@dimen/_11ssp" />
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,7 +137,7 @@
         <LinearLayout
             android:layout_width="191dp"
             android:layout_height="65dp"
-            android:layout_gravity="end"
+            android:layout_gravity="start"
             android:layout_marginTop="@dimen/_8sdp"
             android:layout_marginRight="@dimen/_23sdp"
             android:orientation="vertical">
@@ -143,7 +145,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="end"
+                android:layout_gravity="start"
                 android:layout_marginRight="@dimen/_4sdp"
                 android:text="الجنس"
                 android:fontFamily="@font/cairo_regular"
@@ -160,7 +162,7 @@
                     android:id="@+id/personFemale"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_marginRight="@dimen/_42sdp"
+                    android:layout_marginLeft="@dimen/_42sdp"
                     android:layout_weight="1"
                     android:text="أنثى"
                     android:fontFamily="@font/cairo_regular"
@@ -171,7 +173,6 @@
                     android:id="@+id/personMale"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
-                    android:layout_gravity="end"
                     android:layout_weight="1"
                     android:checked="true"
                     android:fontFamily="@font/cairo_regular"
@@ -197,4 +198,5 @@
 
     </LinearLayout>
 
+    </ScrollView>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
