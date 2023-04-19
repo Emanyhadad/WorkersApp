@@ -69,6 +69,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     private Uri imageUri;
     String profileImageUrlNow;
 
+    String workerId,ownerId;
     @SuppressLint("MissingPermission")
 
     @Override
@@ -81,6 +82,8 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+
+        Toast.makeText(this, LoginActivity.sp.getString("accountType", ""), Toast.LENGTH_SHORT).show();
 
         // التحقق مما إذا كان التطبيق يملك إذن الوصول إلى معرض الصور أم لا
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -95,8 +98,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         File file = new File(getFilesDir(), "my_image.jpg");
         if (file.exists()) {
             // If the image exists, load it into the ImageView
-            Glide.with(this).load(file).centerCrop()
-                    .error(R.drawable.user).into(binding.imageView);
+            Glide.with(this).load(file).centerCrop().into(binding.imageView);
         } else {
             // If the image does not exist, download it from Firebase Storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -109,8 +111,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // If the image is downloaded successfully, load it into the ImageView
-                    Glide.with(getBaseContext()).load(localFile).centerCrop()
-                            .error(R.drawable.user).into(binding.imageView);
+                    Glide.with(getBaseContext()).load(localFile).centerCrop().into(binding.imageView);
                 }
             });
         }
@@ -125,6 +126,81 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             @Override
             public void onClick(View v) {
                 openGallery();
+            }
+        });
+
+        binding.personBtnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                fullName = binding.personFullName.getText().toString();
+                nickName = binding.personNickName.getText().toString();
+                birth = binding.personBirth.getText().toString();
+                genderId = binding.personRadioGroup.getCheckedRadioButtonId();
+                gender = findViewById(genderId).toString();
+
+                if (binding.personMale.isChecked()) {
+                    gender = "ذكر";
+                } else {
+                    gender = "أنثى";
+                }
+
+                User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
+
+                if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, fullName.toString(), Toast.LENGTH_SHORT).show();
+
+
+                    if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
+                        workerId = db.collection("user").document("worker").collection(firebaseUser.getUid()).document().getId();
+
+                        db.collection("user").document("worker").collection(firebaseUser.getUid())
+                                .document(workerId)
+                                .set(user)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                        Intent intent = new Intent(getBaseContext(), MapsActivity2.class);
+                        intent.putExtra("workerId", workerId);
+                        startActivity(intent);
+
+                    } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
+                        ownerId = db.collection("user").document("work owner").collection(firebaseUser.getUid()).document().getId();
+
+                        db.collection("user").document("work owner").collection(firebaseUser.getUid())
+                                .document(ownerId)
+                                .set(user)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void unused) {
+                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+
+                                    }
+                                });
+                        Intent intent = new Intent(getBaseContext(), MapsActivity2.class);
+                        intent.putExtra("ownerId", ownerId);
+                        startActivity(intent);
+
+                    }
+                    Toast.makeText(RegisterActivity.this, "Done", Toast.LENGTH_SHORT).show();
+
+
+
+
+//                    startActivity(new Intent(getBaseContext(), MapsActivity2.class));
+                } else {
+                    if (fullName.isEmpty()) {
+                        binding.personFullName.setError("يرجى تعبئة هذا الحقل");
+                    } else if (nickName.isEmpty()) {
+                        binding.personNickName.setError("يرجى تعبئة هذا الحقل");
+                    } else if (birth.isEmpty()) {
+                        binding.personBirth.setError("يرجى تعبئة هذا الحقل");
+                    }
+                }
             }
         });
     }
@@ -166,73 +242,77 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                         @Override
                         public void onComplete(Task<Uri> task) {
                             profileImageUrlNow = task.getResult().toString();
-                            Glide.with(getBaseContext()).load(imageUri).centerCrop()
-                                    .error(R.drawable.user).into(binding.imageView);
+                            Glide.with(getBaseContext()).load(imageUri).centerCrop().into(binding.imageView);
 
-                            binding.personBtnNext.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View view) {
-
-                                    fullName = binding.personFullName.getText().toString();
-                                    nickName = binding.personNickName.getText().toString();
-                                    birth = binding.personBirth.getText().toString();
-                                    genderId = binding.personRadioGroup.getCheckedRadioButtonId();
-                                    gender = findViewById(genderId).toString();
-
-                                    if (binding.personMale.isChecked()) {
-                                        gender = "ذكر";
-                                    } else {
-                                        gender = "أنثى";
-                                    }
-
-                                    User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
-
-                                    if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
-                                        db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                                .add(user)
-                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                    @Override
-                                                    public void onSuccess(DocumentReference documentReference) {
-                                                        Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("PersonalField", e.getMessage());
-                                                        Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-
-                                        db.collection("user").document("customer").collection(firebaseUser.getUid())
-                                                .add(user)
-                                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                    @Override
-                                                    public void onSuccess(DocumentReference documentReference) {
-                                                        Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
-                                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                })
-                                                .addOnFailureListener(new OnFailureListener() {
-                                                    @Override
-                                                    public void onFailure(@NonNull Exception e) {
-                                                        Log.w("PersonalField", e.getMessage());
-                                                        Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                    }
-                                                });
-                                        startActivity(new Intent(getBaseContext(), MapsActivity.class));
-                                    } else {
-                                        if (fullName.isEmpty()) {
-                                            binding.personFullName.setError("يرجى تعبئة هذا الحقل");
-                                        } else if (nickName.isEmpty()) {
-                                            binding.personNickName.setError("يرجى تعبئة هذا الحقل");
-                                        } else if (birth.isEmpty()) {
-                                            binding.personBirth.setError("يرجى تعبئة هذا الحقل");
-                                        }
-                                    }
-                                }
-                            });
+//                            binding.personBtnNext.setOnClickListener(new View.OnClickListener() {
+//                                @Override
+//                                public void onClick(View view) {
+//
+//                                    fullName = binding.personFullName.getText().toString();
+//                                    nickName = binding.personNickName.getText().toString();
+//                                    birth = binding.personBirth.getText().toString();
+//                                    genderId = binding.personRadioGroup.getCheckedRadioButtonId();
+//                                    gender = findViewById(genderId).toString();
+//
+//                                    if (binding.personMale.isChecked()) {
+//                                        gender = "ذكر";
+//                                    } else {
+//                                        gender = "أنثى";
+//                                    }
+//
+//                                    User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
+//
+//                                    if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
+//                                        Toast.makeText(RegisterActivity.this, fullName.toString(), Toast.LENGTH_SHORT).show();
+//
+//                                        if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
+//                                            db.collection("user").document("worker").collection(firebaseUser.getUid())
+//                                                    .add(user)
+//                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                                        @Override
+//                                                        public void onSuccess(DocumentReference documentReference) {
+//                                                            Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
+//                                                            Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+//                                                        }
+//                                                    })
+//                                                    .addOnFailureListener(new OnFailureListener() {
+//                                                        @Override
+//                                                        public void onFailure(@NonNull Exception e) {
+//                                                            Log.w("PersonalField", e.getMessage());
+//                                                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                        }
+//                                                    });
+//                                        } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
+//                                            db.collection("user").document("wo  rkOwner").collection(firebaseUser.getUid())
+//                                                    .add(user)
+//                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+//                                                        @Override
+//                                                        public void onSuccess(DocumentReference documentReference) {
+//                                                            Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
+//                                                            Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
+//                                                        }
+//                                                    })
+//                                                    .addOnFailureListener(new OnFailureListener() {
+//                                                        @Override
+//                                                        public void onFailure(@NonNull Exception e) {
+//                                                            Log.w("PersonalField", e.getMessage());
+//                                                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                                                        }
+//                                                    });
+//                                        }
+//                                        Toast.makeText(RegisterActivity.this, "Done", Toast.LENGTH_SHORT).show();
+//                                        startActivity(new Intent(getBaseContext(), MapsActivity.class));
+//                                    } else {
+//                                        if (fullName.isEmpty()) {
+//                                            binding.personFullName.setError("يرجى تعبئة هذا الحقل");
+//                                        } else if (nickName.isEmpty()) {
+//                                            binding.personNickName.setError("يرجى تعبئة هذا الحقل");
+//                                        } else if (birth.isEmpty()) {
+//                                            binding.personBirth.setError("يرجى تعبئة هذا الحقل");
+//                                        }
+//                                    }
+//                                }
+//                            });
                         }
                     });
                 }

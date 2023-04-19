@@ -16,16 +16,55 @@
     <string name="tvVerificationCode">كود التحقق</string>
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
 
-    <string name="register_full_name">الاسم </string>
-    <string name="register_nick_name">اللقب</string>
-    <string name="register_birth">تاريخ الميلاد</string>
-    <string name="register_gender"> الجنس</string>
-    <string name="register_female">أنثى</string>
-    <string name="register_male">ذكر</string>
-    <string name="register_next">التالي</string>
 
-    <string name="cv_work_category">فئة العمل</string>
-    <string name="cv_talk">تحدث عن نفسك</string>
+    <string name="businessToolBar">نماذج الاعمال</string>
+    <string name="businessNumImages">1/3</string>
+    <string name="businessDescription">الصوفا الخشبية من سبع قطع :3كبير, 2 صغير،كرسي طاولة القهوة، طاولة جانبية، طاولة وسط ,وحدة تخزين. مصنوعة من الخشب الصلب الطبيعي, طاولة وسط ,وحدة تخزين. مصنوعة من الخشب الصلب الطبيعي.</string>
+    <string name="businessDateAch">تاريخ الإنجاز</string>
+    <string name="businessDate">12/3/2023</string>
+    <string name="businessCat1">خشب</string>
+    <string name="businessCat2">أثاث خشبي</string>
+    <string name="businessCat3">أثاث خشبي</string>
+    <string name="businessCat4">أثاث خشبي</string>
+    <string name="businessRateS">4.8</string>
+    <string name="businessUserNameS">عبدالله يوسف</string>
+    <string name="businessHurtNumS">5</string>
+    <string name="businessEyeNumS">12</string>
+
+
+    <string name="ProfileToolBar">البيانات الشخصية</string>
+    <string name="ProfileUserName">عبد الله يوسف</string>
+    <string name="ProfileNickName">(أبو عمر)</string>
+    <string name="ProfileJobName">نجار</string>
+    <string name="ProfileRate">4.8</string>
+    <string name="ProfileCurrent">الحالية</string>
+    <string name="ProfileCurrentNum">1</string>
+    <string name="ProfileEnd">المنتهية</string>
+    <string name="ProfileEndNum">2</string>
+    <string name="ProfileJobs">الوظائف</string>
+    <string name="ProfileJobNum">3</string>
+    <string name="ProfileCv">أعمل في منجزة منذ أعمل في منجرة أعمل في منجرة</string>
+    <string name="ProfileCvGray">السيرة الذاتية</string>
+    <string name="ProfileLocation">خانيونس</string>
+    <string name="ProfileMobile">+97059000000</string>
+    <string name="ProfileDate">21/3/2023ا</string>
+    <string name="ProfileJoinDate">تاريخ الانضمام:</string>
+
+    <string name="ArithmeticNav">حسابي</string>
+    <string name="myJobsNav">وظائفي</string>
+    <string name="PresenterNav">مقدم عليها</string>
+    <string name="CareersNav">وظائف</string>
+
+    <!--    <string name="register_full_name">الاسم </string>-->
+    <!--    <String name="register_nick_name">اللقب</String>-->
+    <!--    <String name="register_birth">تاريخ الميلاد</String>-->
+    <!--    <String name="register_gender"> الجنس</String>-->
+    <!--    <String name="register_female">أنثى</String>-->
+    <!--    <String name="register_male">ذكر</String>-->
+    <!--    <String name="register_next">التالي</String>-->
+
+    <!--    <String name="cv_work_category">فئة العمل</String>-->
+    <!--    <String name="cv_talk">تحدث عن نفسك</String>-->
 
     <string-array name="cities">
         <item>غزة</item>
@@ -45,5 +84,6 @@
         <item>بليط</item>
         <item>قصارة</item>
     </string-array>
+    <string name="title_activity_maps2">MapsActivity2</string>
 
 </resources>

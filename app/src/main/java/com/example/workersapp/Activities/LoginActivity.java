@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -47,11 +48,19 @@ public class LoginActivity extends AppCompatActivity {
 
     String verificationID;
 
+    //me
+    public static SharedPreferences sp;
+    public static SharedPreferences.Editor editor;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        sp = getSharedPreferences("Login", MODE_PRIVATE);
+        editor = sp.edit();
 
         auth = FirebaseAuth.getInstance();
 
@@ -159,7 +168,6 @@ public class LoginActivity extends AppCompatActivity {
 //                    } );
 //        } );
 
-
         //كل متى ينفذ الكود الي في ال interval : onTick
         timer = new CountDownTimer(60000, 1000) {
             @Override
@@ -217,7 +225,8 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             binding.progressBarLogin.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
-                                Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+                                ////////////////////////////////////////////////////////////////////////
+                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
                                 startActivity(intent);
                                 finish();
 
@@ -280,11 +289,18 @@ public class LoginActivity extends AppCompatActivity {
         workerLayout.setOnClickListener(view -> {
             String accountType = "worker";
             dialogAccountType.dismiss();
+
+            editor.putString("accountType","worker");
+            editor.apply();
+            Toast.makeText(this, sp.getString("accountTypeWorker",""), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
         });
         workOwnerLayout.setOnClickListener(view -> {
             String accountType = "work owner";
+
+            editor.putString("accountType","work owner");
+            editor.apply();
             dialogAccountType.dismiss();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
@@ -305,7 +321,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), MainActivity.class));
+            ////////////////////////////////////////////////////////////////
+            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
             finish();
         }
 

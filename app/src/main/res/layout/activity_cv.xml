@@ -4,15 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     android:orientation="vertical"
-    tools:context=".Activities.CvActivity">
+    tools:context=".Activities.CvActivity"
+    android:background="@color/back_activity">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<android:inputType="none"-->
-        <!-- عشان ما أقدر اكتب >-->
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_100sdp"
+            android:alpha="0.1"
+            android:scaleType="centerInside"
+            app:srcCompat="@drawable/img_background" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -50,15 +59,14 @@
             <com.google.android.material.textfield.TextInputLayout
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_45sdp"
+                android:layout_height="@dimen/_46sdp"
                 android:layout_marginTop="@dimen/_46sdp"
                 android:hint="فئة العمل">
                 <AutoCompleteTextView
                     android:id="@+id/CvWork"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/_40sdp"
+                    android:layout_height="@dimen/_39sdp"
                     android:layout_marginLeft="@dimen/_23sdp"
-                    android:background="@drawable/border_et"
                     android:layout_marginRight="@dimen/_23sdp"
                     android:inputType="none"
                     android:fontFamily="@font/cairo_regular"
@@ -80,7 +88,6 @@
                     android:hint="تحدث عن نفسك"
                     android:inputType="textPersonName"
                     android:textColorHint="@color/gray"
-                    android:background="@drawable/border_et"
                     android:fontFamily="@font/cairo_regular"
                     android:textSize="@dimen/_11ssp" />
             </com.google.android.material.textfield.TextInputLayout>
@@ -99,14 +106,6 @@
                 android:textStyle="bold"
                 android:layout_marginTop="@dimen/_180sdp"/>
         </LinearLayout>
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/_100sdp"
-            android:alpha="0.1"
-            app:srcCompat="@drawable/img_background" />
 
     </FrameLayout>
 

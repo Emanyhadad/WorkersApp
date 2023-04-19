@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/Careers"
+        android:icon="@drawable/baseline_search_24"
+        android:title="@string/CareersNav"/>
+
+    <item
+    android:id="@+id/Presenter"
+    android:icon="@drawable/write"
+    android:title="@string/PresenterNav"/>
+
+    <item
+        android:id="@+id/myJobs"
+        android:icon="@drawable/hammer"
+        android:title="@string/myJobsNav"/>
+
+    <item
+        android:id="@+id/Arithmetic"
+        android:icon="@drawable/profile"
+        android:title="@string/ArithmeticNav"/>
+</menu>

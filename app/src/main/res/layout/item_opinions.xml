@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layoutDirection="rtl"
+    android:orientation="vertical">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/_15sdp"
+        android:layout_marginRight="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_8sdp"
+        app:cardCornerRadius="@dimen/_14sdp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/_8sdp">
+
+            <ImageView
+                android:id="@+id/ItemImgUser"
+                android:layout_width="@dimen/_31sdp"
+                android:layout_height="@dimen/_31sdp"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/work_owner" />
+
+            <TextView
+                android:id="@+id/ItemUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:text="محمد سعد"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintStart_toEndOf="@+id/ItemImgUser"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ItemDescription"
+                android:layout_width="@dimen/_140sdp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="عبدالله نجار رائع أنصح بالتعامل معه"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_10ssp"
+                app:layout_constraintStart_toEndOf="@+id/ItemImgUser"
+                app:layout_constraintTop_toBottomOf="@+id/ItemUserName" />
+
+            <ImageView
+                android:id="@+id/ItemImgStar"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginEnd="@dimen/_8sdp"
+                android:layout_marginTop="@dimen/_9sdp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/baseline_star_24" />
+
+            <TextView
+                android:id="@+id/ItemRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_1sdp"
+                android:layout_marginTop="@dimen/_9sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="4.8"
+                android:textColor="@color/black2"
+                android:textSize="@dimen/_9ssp"
+                app:layout_constraintEnd_toStartOf="@+id/ItemImgStar"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ItemDetails"
+                android:layout_width="@dimen/_170sdp"
+                android:layout_height="@dimen/_15sdp"
+                android:layout_marginTop="@dimen/_4sdp"
+                android:layout_marginStart="@dimen/_8sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="أريد باب خشب طوله متربين وعرض ثلاث أمتار ...."
+                android:textColor="@color/gray_hint"
+                android:textSize="@dimen/_9sdp"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginBottom="@dimen/_8sdp"
+                app:layout_constraintTop_toBottomOf="@+id/ItemDescription" />
+
+            <TextView
+                android:id="@+id/ItemDetailsMore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_58sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="المزيد"
+                android:textColor="@color/gray_hint"
+                android:textSize="@dimen/_5ssp"
+                app:layout_constraintStart_toEndOf="@+id/ItemDetails"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/ItemDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12/2/2000"
+                android:textColor="@color/gray9A"
+                android:layout_marginEnd="@dimen/_8sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:fontFamily="@font/cairo_regular"
+                android:textSize="@dimen/_9ssp"
+                android:alpha="0.48"
+                app:layout_constraintEnd_toEndOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+</LinearLayout>
