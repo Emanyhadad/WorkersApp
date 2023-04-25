@@ -11,9 +11,12 @@
     <color name="blue">#0E2E3B</color>
     <color name="gray">#CFCFCF</color>
     <color name="gray9">#999999</color>
+    <color name="gray1">#FAFAFA</color>
     <color name="black2">#000000</color>
     <color name="gray_border">#707070</color>
     <color name="gray_hint">#646464</color>
+    <color name="blue_dark">#0E2E3B</color>
+    <color name="blue_1">#0E4C75</color>
     <color name="gray9A">#9A9A9A</color>
     <color name="yellow">#FEC136</color>
     <color name="back_activity">#FAFAFA</color>

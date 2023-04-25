@@ -208,7 +208,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
     // إعادة إرسال رمز التحقق
     private void resendVerificationCode(String phone, PhoneAuthProvider.ForceResendingToken token) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                phone, // رقم الهاتف المسجل
+                "+970"+phone, // رقم الهاتف المسجل
                 60, // فترة صلاحية الرمز بالثواني
                 TimeUnit.SECONDS, // وحدة فترة صلاحية الرمز
                 this, // النشاط الحالي

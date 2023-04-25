@@ -66,6 +66,18 @@
     <!--    <String name="cv_work_category">فئة العمل</String>-->
     <!--    <String name="cv_talk">تحدث عن نفسك</String>-->
 
+    <string name="tvJobDescription">وصف العمل</string>
+    <string name="etDescriptionHint">أضف وصفا دقيقا يوضح ميزات العمل.</string>
+    <string name="tvPicture">صور وملفات العمل</string>
+    <string name="tvJobType">فئة العمل</string>
+    <string name="btnAddPost">إضافة</string>
+    <string name="tvProjectedBudget">الميزانية المتوقعة</string>
+    <string name="tvExpectedWorkDuration">مدة العمل المتوقعة</string>
+    <string name="tvJobLocation">حدد موقع العمل</string>
+    <string name="tvWorkTitle">عنوان العمل</string>
+    <string name="etWorkTitleHint">أدرج عنوانا موجزا يصف مشروعك بشكل دقيق.</string>
+    <string name="tvOptional">اختياري</string>
+
     <string-array name="cities">
         <item>غزة</item>
         <item>دير البلح</item>

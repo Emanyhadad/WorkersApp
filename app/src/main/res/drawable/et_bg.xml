@@ -4,7 +4,7 @@
     <solid android:color="@color/white" />
     <size
         android:width="@dimen/_280sdp"
-        android:height="@dimen/_50sdp" />
+        android:height="@dimen/sdp_50" />
     <corners android:radius="@dimen/_5sdp" />
     <stroke
         android:width="@dimen/_1sdp"
