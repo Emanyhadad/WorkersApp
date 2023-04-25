@@ -34,6 +34,15 @@ android {
 }
 
 dependencies {
+
+    //card slider
+//    implementation 'com.github.IslamKhSh:CardSlider:1.0.1'
+
+
+    //flexbox
+    implementation 'com.google.android.flexbox:flexbox:3.0.0'
+
+    
     //pinView
     implementation 'io.github.chaosleung:pinview:1.4.4'
 
