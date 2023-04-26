@@ -25,12 +25,15 @@ import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.FragmentNewJobBinding;
-//import com.google.android.flexbox.FlexboxLayout;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 
 import java.util.ArrayList;
@@ -42,13 +45,14 @@ public class NewJobFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
     FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
+     FirebaseStorage firebaseStorage;
     List<Uri> uriList = new ArrayList<>();
     String budget;
     String duration;
     ImageAdapter imageAdapter;
     JobCategoryAdapter jobCategoryAdapter;
     List<String> jobCategory = new ArrayList<>();
-
+    List<String> categoriesListF = new ArrayList<>();
 
     private String mParam1;
     private String mParam2;
@@ -144,7 +148,6 @@ public class NewJobFragment extends Fragment {
                         binding.rcImg.setAdapter(imageAdapter);
                     }
                 });
-
         binding.imgAddImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -158,23 +161,30 @@ public class NewJobFragment extends Fragment {
             }
         });
 
-        firebaseFirestore.collection("workCategoryAuto").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()){
-                 List<String> l =task.getResult();
-                }
-            }
-        });
-        String[] suggestions = {"قائمة 1", "قائمة 2", "قائمة 3", "قائمة 4", "قائمة 5"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, suggestions);
-        binding.etoJobType.setAdapter(adapter);
+
+        firebaseFirestore.collection("workCategoryAuto").document("category").get().
+                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            categoriesListF = (List<String>) task.getResult().get("categories");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+                            binding.etoJobType.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
 
         binding.etoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                jobCategory.add(suggestions[i]);
+                if (categoriesListF.size() != 0) {
+                    jobCategory.add(categoriesListF.get(i));
+                }
+
                 binding.etoJobType.setText("");
                 if (jobCategory.size() != 0) {
                     jobCategoryAdapter = new JobCategoryAdapter(jobCategory, new DeleteListener() {
@@ -195,25 +205,54 @@ public class NewJobFragment extends Fragment {
         });
 
         //التحقق و التخزين
-        binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String workTitle = binding.etWorkTitle.getText().toString();
-                String description = binding.etDescription.getText().toString();
-                if (!TextUtils.isEmpty(workTitle) && !TextUtils.isEmpty(description)
-                        && !TextUtils.isEmpty(budget) && !TextUtils.isEmpty(duration)) {
-                    if (uriList.size() != 0) {
-                        //نرفع الصور ونخزنهم
-                    }
-                    if (jobCategory.size() != 0) {
-                        //تخزين الكل
-                    } else {
-                        Toast.makeText(getContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-            }
-        });
+//        binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String workTitle = binding.etWorkTitle.getText().toString();
+//                String description = binding.etDescription.getText().toString();
+//                if (!TextUtils.isEmpty(workTitle) && !TextUtils.isEmpty(description)
+//                        && !TextUtils.isEmpty(budget) && !TextUtils.isEmpty(duration)) {
+//                    if (uriList.size() != 0) {
+//                        for (int i = 0; i <uriList.size() ; i++) {
+//                            StorageReference reference = firebaseStorage.getReference("posts/" + "+970595560706"+ "/" +""+ uriList.get(i).getLastPathSegment());
+//                            UploadTask uploadTask = reference.putFile(uri);
+//                            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+//                                @Override
+//                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+//                                    if (!task.isSuccessful()) {
+//                                        throw task.getException();
+//                                    }
+//                                    return reference.getDownloadUrl();
+//                                }
+//                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<Uri> task) {
+//                                    if (task.isSuccessful()) {
+//
+//                                        String uriString = task.getResult().toString();
+//
+//                                        if (uriString.isEmpty()) {
+//                                            updateUserInfo(user);
+//                                        }
+//
+//                                    } else {
+//                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                                    }
+//                                }
+//                            });
+//                        }
+//                        //نرفع الصور ونخزنهم
+//                    }
+//                    if (jobCategory.size() != 0) {
+//                        //تخزين الكل
+//                    } else {
+//                        Toast.makeText(getContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
+//                    }
+//                } else {
+//                    Toast.makeText(getContext(), "قم بملء جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
         return binding.getRoot();
     }

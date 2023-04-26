@@ -290,16 +290,16 @@ public class LoginActivity extends AppCompatActivity {
             String accountType = "worker";
             dialogAccountType.dismiss();
 
-            editor.putString("accountType","worker");
+            editor.putString("accountType", "worker");
             editor.apply();
-            Toast.makeText(this, sp.getString("accountTypeWorker",""), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, sp.getString("accountTypeWorker", ""), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
         });
         workOwnerLayout.setOnClickListener(view -> {
             String accountType = "work owner";
 
-            editor.putString("accountType","work owner");
+            editor.putString("accountType", "work owner");
             editor.apply();
             dialogAccountType.dismiss();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
@@ -316,17 +316,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        currentUser = auth.getCurrentUser();
-        if (currentUser != null) {
-            ////////////////////////////////////////////////////////////////
-            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
-            finish();
-        }
-
-    }
+//    @Override
+//    protected void onStart() {
+//        super.onStart();
+//        currentUser = auth.getCurrentUser();
+//        if (currentUser != null) {
+//            ////////////////////////////////////////////////////////////////
+//            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
+//            finish();
+//        }
+//
+//    }
 //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
