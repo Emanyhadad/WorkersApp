@@ -55,15 +55,6 @@
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
 
         <activity
-            android:name="com.example.workersapp.Activities.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-        <activity
             android:name="com.example.workersapp.Activities.BusinessModelsActivity"
             android:exported="false" /> <!-- <intent-filter> -->
         <!-- <action android:name="android.intent.action.MAIN" /> -->
@@ -85,21 +76,35 @@
             <!-- </intent-filter> -->
         </activity>
         <activity
-            android:name="com.example.workersapp.Activities.RegisterActivity"
-            android:exported="false" /> <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-        <activity
             android:name="com.example.workersapp.Activities.CvActivity"
-            android:exported="false" /> <!-- </activity> -->
+            android:exported="false"></activity>
         <activity
             android:name="com.example.workersapp.Activities.MainActivity"
             android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.ProfileWorker"
             android:exported="false" />
+        <activity
+            android:name="com.example.workersapp.Activities.WorkOwnerProfileActivity"
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
+        <activity
+            android:name="com.example.workersapp.Activities.LoginActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.workersapp.Activities.RegisterActivity"
+            android:exported="false">
+
+        </activity>
 
         <meta-data
             android:name="android.app.lib_name"
