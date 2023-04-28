@@ -316,17 +316,17 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        currentUser = auth.getCurrentUser();
-//        if (currentUser != null) {
-//            ////////////////////////////////////////////////////////////////
-//            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
-//            finish();
-//        }
-//
-//    }
+    @Override
+    protected void onStart() {
+        super.onStart();
+        currentUser = auth.getCurrentUser();
+        if (currentUser != null) {
+            ////////////////////////////////////////////////////////////////
+            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
+            finish();
+        }
+
+    }
 //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();

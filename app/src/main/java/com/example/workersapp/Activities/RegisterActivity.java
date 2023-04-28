@@ -1,5 +1,6 @@
 package com.example.workersapp.Activities;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -10,6 +11,7 @@ import android.app.DatePickerDialog;
 import android.app.Person;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.icu.util.Calendar;
@@ -25,6 +27,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.User;
 import com.example.workersapp.databinding.ActivityRegisterBinding;
@@ -36,23 +39,26 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FileDownloadTask;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
     ActivityRegisterBinding binding;
@@ -64,12 +70,13 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
 
     private static final int REQUEST_CODE = 1;
     private static final int PICK_IMAGE_REQUEST = 1;
-    String fullName, nickName, birth, gender;
+    String fullName, nickName, birth, gender,accountType;
     int genderId;
     private Uri imageUri;
     String profileImageUrlNow;
 
-    String workerId,ownerId;
+    String workerId, ownerId;
+
     @SuppressLint("MissingPermission")
 
     @Override
@@ -78,12 +85,13 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        Toast.makeText(this, LoginActivity.sp.getString("accountType", ""), Toast.LENGTH_SHORT).show();
+//        Toast.makeText(this, LoginActivity.sp.getString("accountType", ""), Toast.LENGTH_SHORT).show();
 
         // التحقق مما إذا كان التطبيق يملك إذن الوصول إلى معرض الصور أم لا
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -98,12 +106,12 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         File file = new File(getFilesDir(), "my_image.jpg");
         if (file.exists()) {
             // If the image exists, load it into the ImageView
-            Glide.with(this).load(file).centerCrop().into(binding.imageView);
+            Glide.with(this).load(file).centerCrop().into(binding.personImgUser);
         } else {
             // If the image does not exist, download it from Firebase Storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference imageRef = storageRef.child("images/my_image.jpg");
+            StorageReference imageRef = storageRef.child("images/ " + firebaseUser.getUid() + " my_image.jpg");
 
             // Download the image into internal storage
             File localFile = new File(getFilesDir(), "my_image.jpg");
@@ -111,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 @Override
                 public void onSuccess(FileDownloadTask.TaskSnapshot taskSnapshot) {
                     // If the image is downloaded successfully, load it into the ImageView
-                    Glide.with(getBaseContext()).load(localFile).centerCrop().into(binding.imageView);
+                    Glide.with(getBaseContext()).load(localFile).centerCrop().into(binding.personImgUser);
                 }
             });
         }
@@ -138,6 +146,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 birth = binding.personBirth.getText().toString();
                 genderId = binding.personRadioGroup.getCheckedRadioButtonId();
                 gender = findViewById(genderId).toString();
+                accountType = LoginActivity.sp.getString("accountType", "");
 
                 if (binding.personMale.isChecked()) {
                     gender = "ذكر";
@@ -148,50 +157,18 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
 
                 if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
-                    Toast.makeText(RegisterActivity.this, fullName.toString(), Toast.LENGTH_SHORT).show();
 
-
-                    if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-                        workerId = db.collection("user").document("worker").collection(firebaseUser.getUid()).document().getId();
-
-                        db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                .document(workerId)
-                                .set(user)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                        Intent intent = new Intent(getBaseContext(), MapsActivity2.class);
-                        intent.putExtra("workerId", workerId);
-                        startActivity(intent);
-
-                    } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-                        ownerId = db.collection("user").document("work owner").collection(firebaseUser.getUid()).document().getId();
-
-                        db.collection("user").document("work owner").collection(firebaseUser.getUid())
-                                .document(ownerId)
-                                .set(user)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                        Intent intent = new Intent(getBaseContext(), MapsActivity2.class);
-                        intent.putExtra("ownerId", ownerId);
-                        startActivity(intent);
-
-                    }
-                    Toast.makeText(RegisterActivity.this, "Done", Toast.LENGTH_SHORT).show();
-
-
-
-
-//                    startActivity(new Intent(getBaseContext(), MapsActivity2.class));
+                    db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                            .set(user)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            Toast.makeText(RegisterActivity.this, "success phone", Toast.LENGTH_SHORT).show();
+                                            Intent intent = new Intent(getBaseContext(),MapsActivity2.class);
+                                            intent.putExtra("accountType",accountType);
+                                            startActivity(intent);
+                                        }
+                                    });
                 } else {
                     if (fullName.isEmpty()) {
                         binding.personFullName.setError("يرجى تعبئة هذا الحقل");
@@ -233,7 +210,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             // Upload the image to Firebase Storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
-            StorageReference imageRef = storageRef.child("images/my_image.jpg");
+            StorageReference imageRef = storageRef.child("images/ " + firebaseUser.getUid() + " my_image.jpg");
             UploadTask uploadTask = imageRef.putFile(imageUri);
             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override
@@ -242,77 +219,8 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                         @Override
                         public void onComplete(Task<Uri> task) {
                             profileImageUrlNow = task.getResult().toString();
-                            Glide.with(getBaseContext()).load(imageUri).centerCrop().into(binding.imageView);
+                            Glide.with(getBaseContext()).load(imageUri).centerCrop().into(binding.personImgUser);
 
-//                            binding.personBtnNext.setOnClickListener(new View.OnClickListener() {
-//                                @Override
-//                                public void onClick(View view) {
-//
-//                                    fullName = binding.personFullName.getText().toString();
-//                                    nickName = binding.personNickName.getText().toString();
-//                                    birth = binding.personBirth.getText().toString();
-//                                    genderId = binding.personRadioGroup.getCheckedRadioButtonId();
-//                                    gender = findViewById(genderId).toString();
-//
-//                                    if (binding.personMale.isChecked()) {
-//                                        gender = "ذكر";
-//                                    } else {
-//                                        gender = "أنثى";
-//                                    }
-//
-//                                    User user = new User(fullName, nickName, birth, gender, profileImageUrlNow);
-//
-//                                    if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
-//                                        Toast.makeText(RegisterActivity.this, fullName.toString(), Toast.LENGTH_SHORT).show();
-//
-//                                        if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-//                                            db.collection("user").document("worker").collection(firebaseUser.getUid())
-//                                                    .add(user)
-//                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                        @Override
-//                                                        public void onSuccess(DocumentReference documentReference) {
-//                                                            Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
-//                                                            Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    })
-//                                                    .addOnFailureListener(new OnFailureListener() {
-//                                                        @Override
-//                                                        public void onFailure(@NonNull Exception e) {
-//                                                            Log.w("PersonalField", e.getMessage());
-//                                                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    });
-//                                        } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-//                                            db.collection("user").document("wo  rkOwner").collection(firebaseUser.getUid())
-//                                                    .add(user)
-//                                                    .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                        @Override
-//                                                        public void onSuccess(DocumentReference documentReference) {
-//                                                            Log.d("PersonalSuccess", "DocumentSnapshot written with ID: " + documentReference.getId());
-//                                                            Toast.makeText(RegisterActivity.this, "Success", Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    })
-//                                                    .addOnFailureListener(new OnFailureListener() {
-//                                                        @Override
-//                                                        public void onFailure(@NonNull Exception e) {
-//                                                            Log.w("PersonalField", e.getMessage());
-//                                                            Toast.makeText(RegisterActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                                                        }
-//                                                    });
-//                                        }
-//                                        Toast.makeText(RegisterActivity.this, "Done", Toast.LENGTH_SHORT).show();
-//                                        startActivity(new Intent(getBaseContext(), MapsActivity.class));
-//                                    } else {
-//                                        if (fullName.isEmpty()) {
-//                                            binding.personFullName.setError("يرجى تعبئة هذا الحقل");
-//                                        } else if (nickName.isEmpty()) {
-//                                            binding.personNickName.setError("يرجى تعبئة هذا الحقل");
-//                                        } else if (birth.isEmpty()) {
-//                                            binding.personBirth.setError("يرجى تعبئة هذا الحقل");
-//                                        }
-//                                    }
-//                                }
-//                            });
                         }
                     });
                 }

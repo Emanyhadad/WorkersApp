@@ -57,6 +57,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallback {
 
@@ -72,6 +73,8 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
     ArrayAdapter<String> adapter;
     ArrayList<String> list;
 
+    List<String> categoriesListF = new ArrayList<>();
+
     AutoCompleteTextView mySpinner;
 
     @Override
@@ -81,7 +84,7 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         setContentView(binding.getRoot());
 
 
-        Toast.makeText(this,"account: "+ LoginActivity.sp.getString("accountType", ""), Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "account: " + LoginActivity.sp.getString("accountType", ""), Toast.LENGTH_SHORT).show();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
@@ -140,43 +143,24 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
             public void onClick(View view) {
                 String title = sheet.getText().toString();
                 String city = mySpinner.getText().toString();
+                String accountType = getIntent().getStringExtra("accountType");
 
                 if (!title.isEmpty() && !city.isEmpty()) {
 
                     Map<String, Object> data = new HashMap<>();
                     data.put("city", city);
                     data.put("title", title);
+                    data.put("accountType", accountType);
 
-                    if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-                        String workerId = getIntent().getStringExtra("workerId");
-
-                        db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                .document(workerId)
-                                .update(data)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                        startActivity(new Intent(getBaseContext(), CvActivity.class));
-
-                    } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-
-                        String ownerId = getIntent().getStringExtra("ownerId");
-                        db.collection("user").document("work owner").collection(firebaseUser.getUid())
-                                .document(ownerId)
-                                .update(data)
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void unused) {
-                                        Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-
-                                    }
-                                });
-                        startActivity(new Intent(getBaseContext(), CvActivity.class));
-                    }
+                    db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                            .update(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(MapsActivity2.this, "success city and title", Toast.LENGTH_SHORT).show();
+                                    startActivity(new Intent(getBaseContext(), CvActivity.class));
+                                }
+                            });
                 } else if (title.isEmpty()) {
                     sheet.setError("يرجى تعبئة هذا الحقل");
                 }
@@ -208,63 +192,15 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
                                 userLocation.put("latitude", location.getLatitude());
                                 userLocation.put("longitude", location.getLongitude());
 
-                                if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-                                    String workerId = getIntent().getStringExtra("workerId");
-                                    db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                            .document(workerId)
-                                            .update(userLocation)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
+                                db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                                        .update(userLocation)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(MapsActivity2.this, "success lat and long", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
-                                                }
-                                            });
-
-                                } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-                                    String ownerId = getIntent().getStringExtra("ownerId");
-                                    db.collection("user").document("work owner").collection(firebaseUser.getUid())
-                                            .document(ownerId)
-                                            .update(userLocation)
-                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                @Override
-                                                public void onSuccess(Void unused) {
-                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-
-                                                }
-                                            });
-                                }
-//
-//
-//                                if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-//                                    db.collection("user").document("worker").collection(firebaseUser.getUid())
-//                                            .add(userLocation)
-//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onSuccess(DocumentReference documentReference) {
-//                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }).addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(Exception e) {
-//
-//                                                }
-//                                            });
-//                                } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-//                                    db.collection("user").document("work owner").collection(firebaseUser.getUid())
-//                                            .add(userLocation)
-//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onSuccess(DocumentReference documentReference) {
-//                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }).addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(Exception e) {
-//
-//                                                }
-//                                            });
-//                                }
                             }
                         }
                     });
@@ -274,122 +210,23 @@ public class MapsActivity2 extends FragmentActivity implements OnMapReadyCallbac
         showDialog();
     }
 
-    public void fetchData(){
-        db.collection("city")
-                .document("QguJvTTXU6qm1LYco10m")
+    public void fetchData() {
+        db.collection("city").document("QguJvTTXU6qm1LYco10m")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            // تحميل البيانات وإضافتها إلى ArrayList
-                            ArrayList<String> cityNames = new ArrayList<>();
-                            cityNames.add(documentSnapshot.getString("city1"));
-                            cityNames.add(documentSnapshot.getString("city2"));
-                            cityNames.add(documentSnapshot.getString("city3"));
-                            cityNames.add(documentSnapshot.getString("city4"));
-                            cityNames.add(documentSnapshot.getString("city5"));
-                            cityNames.add(documentSnapshot.getString("city6"));
-                            cityNames.add(documentSnapshot.getString("city7"));
-                            cityNames.add(documentSnapshot.getString("city8"));
-
-                            // إنشاء ArrayAdapter وتعيينه كبيانات مصدر لـ Spinner
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), R.layout.drop_down_item, cityNames);
-//                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            categoriesListF = (List<String>) task.getResult().get("cities");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             mySpinner.setAdapter(adapter);
                         } else {
-                            Toast.makeText(MapsActivity2.this, "No such document", Toast.LENGTH_SHORT).show();
-//                            Log.d(TAG, "No such document");
+                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(MapsActivity2.this, "get failed with", Toast.LENGTH_SHORT).show();
-//                        Log.d(TAG, "get failed with ", e);
                     }
                 });
 
     }
 
-
-
-
-
-
-//    @SuppressLint({"MissingSuperCall", "MissingPermission"})
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_LOCATION: {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    // permission was granted, proceed to get the user's location
-//                    FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-//                    client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            if (location != null) {
-//                                // save the location on Firestore
-//                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-////                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-////                                if (currentUser != null) {
-////                                    String userId = currentUser.getUid();
-//                                Map<String, Object> locationMap = new HashMap<>();
-//                                locationMap.put("latitude", location.getLatitude());
-//                                locationMap.put("longitude", location.getLongitude());
-//
-//                                if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
-//                                    db.collection("user").document("worker").collection(firebaseUser.getUid())
-//                                            .add(locationMap)
-//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onSuccess(DocumentReference documentReference) {
-//                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }).addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(Exception e) {
-//
-//                                                }
-//                                            });
-//                                } else if (LoginActivity.sp.getString("accountType", "").equals("work owner")) {
-//                                    db.collection("user").document("work owner").collection(firebaseUser.getUid())
-//                                            .add(locationMap)
-//                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                                @Override
-//                                                public void onSuccess(DocumentReference documentReference) {
-//                                                    Toast.makeText(MapsActivity2.this, "success add city and title", Toast.LENGTH_SHORT).show();
-//                                                }
-//                                            }).addOnFailureListener(new OnFailureListener() {
-//                                                @Override
-//                                                public void onFailure(Exception e) {
-//
-//                                                }
-//                                            });
-//                                }
-////                                db.collection("users").document("user1")
-////                                        .set(locationMap)
-////                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                            @Override
-////                                            public void onSuccess(Void aVoid) {
-////                                                // location saved successfully
-////                                            }
-////                                        })
-////                                        .addOnFailureListener(new OnFailureListener() {
-////                                            @Override
-////                                            public void onFailure(@NonNull Exception e) {
-////                                                // error occurred while saving the location
-////                                            }
-////                                        });
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    // permission denied, inform the user and handle the case
-//                }
-//                return;
-//            }
-//        }
-//    }
 
 }
