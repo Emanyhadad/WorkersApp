@@ -1,6 +1,8 @@
 package com.example.workersapp.Utilities;
 
-public class User {
+import java.util.Map;
+
+public class User{
     private String fullName;
     private String nickName;
     private String birth;
@@ -11,11 +13,22 @@ public class User {
     private String cv;
     private String work;
 
+    private String accountType;
+
     public User(String fullName, String nickName, String birth, String gender) {
         this.fullName = fullName;
         this.nickName = nickName;
         this.birth = birth;
         this.gender = gender;
+    }
+
+    public User(String fullName, String nickName, String birth, String gender, String image, String accountType) {
+        this.fullName = fullName;
+        this.nickName = nickName;
+        this.birth = birth;
+        this.gender = gender;
+        this.image = image;
+        this.accountType = accountType;
     }
 
     public User(String fullName, String nickName, String birth, String gender, String image) {

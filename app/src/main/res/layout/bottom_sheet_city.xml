@@ -12,7 +12,9 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/_46sdp"
         android:hint="المدينة"
-        android:layout_marginTop="@dimen/_33sdp"
+        android:layout_marginTop="@dimen/_34sdp"
+        android:layout_marginLeft="@dimen/_23sdp"
+        android:layout_marginRight="@dimen/_23sdp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <AutoCompleteTextView
             android:id="@+id/sheetCity"
@@ -21,17 +23,15 @@
             android:textColorHint="@color/gray"
             android:fontFamily="@font/cairo_regular"
             android:textSize="@dimen/_11ssp"
-            android:layout_marginRight="@dimen/_23sdp"
-            android:layout_marginLeft="@dimen/_23sdp"
             android:inputType="none" />
     </com.google.android.material.textfield.TextInputLayout>
-
-
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/_46sdp"
         android:layout_marginTop="@dimen/_23sdp"
+        android:layout_marginLeft="@dimen/_23sdp"
+        android:layout_marginRight="@dimen/_23sdp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/sheetTitle"
@@ -41,15 +41,13 @@
             android:inputType="textPersonName"
             android:textColorHint="@color/gray"
             android:fontFamily="@font/cairo_regular"
-            android:layout_marginLeft="@dimen/_23sdp"
-            android:layout_marginRight="@dimen/_23sdp"
             android:textSize="@dimen/_11ssp" />
     </com.google.android.material.textfield.TextInputLayout>
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/sheetBtnNext"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="@dimen/_46sdp"
         android:text="التالي"
         android:textAllCaps="false"
         android:textColor="@color/white"
@@ -60,6 +58,5 @@
         android:layout_marginRight="@dimen/_23sdp"
         android:textStyle="bold"
         android:layout_marginTop="@dimen/_31sdp"/>
-
 
 </LinearLayout>
