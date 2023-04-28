@@ -11,8 +11,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_15sdp"
         android:text="@string/tvAccountType"
+        android:fontFamily="@font/cairo_semi_bold"
         android:textColor="@color/black"
-        android:textSize="@dimen/_18ssp"
+        android:textSize="@dimen/sdp_textSize_21"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -50,8 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:text="عامل"
+                android:fontFamily="@font/cairo_semi_bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp" />
+                android:textSize="@dimen/sdp_textSize_16" />
         </LinearLayout>
 
 
@@ -76,8 +78,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/_3sdp"
                 android:text="@string/tvWorkOwner"
+                android:fontFamily="@font/cairo_semi_bold"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_16ssp" />
+                android:textSize="@dimen/sdp_textSize_16" />
         </LinearLayout>
 
     </LinearLayout>

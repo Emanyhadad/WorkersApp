@@ -3,7 +3,9 @@ package com.example.workersapp.Activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -28,21 +30,28 @@ import android.widget.Toast;
 import com.chaos.view.PinView;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityLoginBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
     private CountDownTimer timer;
-
+    String phoneNum;
     FirebaseAuth auth;
     FirebaseUser currentUser;
+    FirebaseFirestore firestore;
+
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     PhoneAuthProvider.ForceResendingToken forceResendingToken;
 
@@ -63,6 +72,7 @@ public class LoginActivity extends AppCompatActivity {
         editor = sp.edit();
 
         auth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
 
         setUnderline(binding.tvRegisterNow);
         binding.tvRegisterNow.setOnClickListener(view -> showDialog());
@@ -77,43 +87,75 @@ public class LoginActivity extends AppCompatActivity {
     //غير موجود يظهر ايرور ارشادي لتسجيل مستخدم جديد
     private void sendCodeVerification() {
 
-        String phone = binding.etPhone.getText().toString().trim();
-        if (TextUtils.isEmpty(phone)) {
+        phoneNum = binding.etPhone.getText().toString().trim();
+        if (TextUtils.isEmpty(phoneNum)) {
             Toast.makeText(this, "Enter your phone", Toast.LENGTH_SHORT).show();
             return;
-        }
-        if (phone.startsWith("0")) {
-            phone = phone.substring(1);
+        } else {
+            if (phoneNum.startsWith("0")) {
+                phoneNum = phoneNum.substring(1);
+            }
         }
         binding.progressBarLogin.setVisibility(View.VISIBLE);
 
-//        if (){}else{}
+        firestore.collection("users").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    for (QueryDocumentSnapshot document : task.getResult()) {
+//                        Log.d("TAG", document.getId() + " => " + document.getData());
+                        if (document.getId().equals("+970" + phoneNum)) {
+                            binding.progressBarLogin.setVisibility(View.VISIBLE);
+                            PhoneAuthProvider.getInstance().verifyPhoneNumber(
+                                    "+970" + phoneNum,
+                                    60,
+                                    TimeUnit.SECONDS,
+                                    LoginActivity.this,
+                                    mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+                                        @Override
+                                        public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
+                                            Log.e("FirebaseException", "is send");
+                                        }
 
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+970" + phone,
-                60,
-                TimeUnit.SECONDS,
-                LoginActivity.this,
-                mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-                    @Override
-                    public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-                        Log.e("FirebaseException", "is send");
-                    }
+                                        @Override
+                                        public void onVerificationFailed(@NonNull FirebaseException e) {
+                                            Log.e("FirebaseException", e.toString());
+                                        }
 
-                    @Override
-                    public void onVerificationFailed(@NonNull FirebaseException e) {
-                        Log.e("FirebaseException", e.toString());
+                                        @Override
+                                        public void onCodeSent(@NonNull String mVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
+                                            super.onCodeSent(mVerificationId, token);
+                                            binding.progressBarLogin.setVisibility(View.GONE);
+                                            verificationID = mVerificationId; //لكل كود ID
+                                            forceResendingToken = token;
+                                            showPhoneDialog();
+                                        }
+                                    });
+                        } else {
+                            binding.progressBarLogin.setVisibility(View.GONE);
+                            new AlertDialog.Builder(LoginActivity.this)
+                                    .setMessage("انت لست مسجل مسبق, قم بالتجسيل الان!")
+                                    .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                        }
+                                    })
+                                    .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+                                            intent.putExtra("phoneNum", phoneNum);
+                                            startActivity(intent);
+                                        }
+                                    })
+                                    .create().show();
+                        }
                     }
+                }
+            }
+        });
 
-                    @Override
-                    public void onCodeSent(@NonNull String mVerificationId, @NonNull PhoneAuthProvider.ForceResendingToken token) {
-                        super.onCodeSent(mVerificationId, token);
-                        binding.progressBarLogin.setVisibility(View.GONE);
-                        verificationID = mVerificationId; //لكل كود ID
-                        forceResendingToken = token;
-                        showPhoneDialog();
-                    }
-                });
+
     }
 
     private void showPhoneDialog() {
@@ -321,12 +363,12 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            ////////////////////////////////////////////////////////////////
-            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
+            startActivity(new Intent(getBaseContext(), MainActivity.class));
             finish();
         }
 
     }
+
 //    @Override
 //    public void onBackPressed() {
 //        super.onBackPressed();
