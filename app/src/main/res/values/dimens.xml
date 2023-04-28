@@ -3,9 +3,11 @@
     <dimen name="sdp_textSize_10">@dimen/_9ssp</dimen>
     <dimen name="sdp_textSize_12">@dimen/_10ssp</dimen>
     <dimen name="sdp_textSize_14">@dimen/_11ssp</dimen>
+    <dimen name="sdp_textSize_15">@dimen/_12ssp</dimen>
     <dimen name="sdp_textSize_16">@dimen/_13ssp</dimen>
     <dimen name="sdp_textSize_18">@dimen/_14ssp</dimen>
     <dimen name="sdp_textSize_20">@dimen/_15ssp</dimen>
+    <dimen name="sdp_textSize_21">@dimen/_16ssp</dimen>
     <dimen name="sdp_textSize_22">@dimen/_17ssp</dimen>
     <dimen name="sdp_textSize_30">@dimen/_22ssp</dimen>
 

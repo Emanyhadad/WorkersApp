@@ -27,31 +27,31 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
-//        binding.imageView3.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                new AlertDialog.Builder(MainActivity.this)
-//                        .setTitle("Logout")
-//                        .setMessage("You are about to log out of your account!")
-//                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//
-//                            }
-//                        })
-//                        .setPositiveButton("logout", new DialogInterface.OnClickListener() {
-//                            @Override
-//                            public void onClick(DialogInterface dialogInterface, int i) {
-//                                firebaseAuth.signOut();
-//
-//                                firebaseAuth = FirebaseAuth.getInstance();
-//
-//                                finish();
-//                            }
-//                        })
-//                        .create().show();
-//            }
-//        });
+        binding.btnLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                new AlertDialog.Builder(MainActivity.this)
+                        .setTitle("Logout")
+                        .setMessage("You are about to log out of your account!")
+                        .setNegativeButton("cancel", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+
+                            }
+                        })
+                        .setPositiveButton("logout", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                firebaseAuth.signOut();
+
+                                firebaseAuth = FirebaseAuth.getInstance();
+
+                                finish();
+                            }
+                        })
+                        .create().show();
+            }
+        });
 
     }
 }
