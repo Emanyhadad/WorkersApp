@@ -83,7 +83,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/et_bg"
-                    android:fontFamily="@font/cairo_regular"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:textSize="@dimen/sdp_textSize_12"
                     android:textColor="@color/blue_dark" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -130,7 +131,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/sdp_height_100"
                     android:background="@drawable/et_bg"
-                    android:fontFamily="@font/cairo_regular"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:textSize="@dimen/sdp_textSize_12"
                     android:maxHeight="@dimen/sdp_height_100"
                     android:textColor="@color/blue_dark" />
 
@@ -252,7 +254,8 @@
                     android:layout_height="@dimen/sdp_50"
                     android:background="@drawable/et_bg"
                     android:completionThreshold="1"
-                    android:fontFamily="@font/cairo_regular"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:textSize="@dimen/sdp_textSize_12"
                     android:paddingStart="@dimen/sdp_10"
                     android:textColor="@color/blue_dark"/>
 
@@ -304,8 +307,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/et_bg"
-                        android:fontFamily="@font/cairo_regular"
+                        android:fontFamily="@font/cairo_semi_bold"
                         android:inputType="none"
+                        android:textSize="@dimen/sdp_textSize_12"
                         android:textColor="@color/blue_dark" />
 
 
@@ -354,8 +358,9 @@
                         android:id="@+id/spProjectedBudget"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:textSize="@dimen/sdp_textSize_12"
                         android:background="@drawable/et_bg"
-                        android:fontFamily="@font/cairo_regular"
+                        android:fontFamily="@font/cairo_semi_bold"
                         android:inputType="none"
                         android:textColor="@color/blue_dark" />
 
