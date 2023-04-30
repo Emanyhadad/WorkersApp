@@ -4,10 +4,13 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Toast;
 
 import com.example.workersapp.databinding.ActivityMainBinding;
+import com.example.workersapp.databinding.ActivityWorkOwnerProfileBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -26,6 +29,8 @@ public class MainActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
+        String userPhoneNumber = user.getPhoneNumber();
+        Toast.makeText(this, userPhoneNumber, Toast.LENGTH_SHORT).show();
 
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,6 +57,11 @@ public class MainActivity extends AppCompatActivity {
                         .create().show();
             }
         });
-
+        binding.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+            }
+        });
     }
 }

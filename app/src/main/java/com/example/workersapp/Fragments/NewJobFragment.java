@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,14 +24,16 @@ import android.widget.Toast;
 import com.example.workersapp.Adapters.ImageAdapter;
 import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
-//import com.example.workersapp.R;
-//import com.example.workersapp.databinding.FragmentNewJobBinding;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentNewJobBinding;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -46,15 +49,19 @@ public class NewJobFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.getInstance();
-     FirebaseStorage firebaseStorage;
-    List<Uri> uriList = new ArrayList<>();
+    FirebaseFirestore firebaseFirestore;
+    FirebaseAuth auth;
+    FirebaseUser firebaseUser;
+    FirebaseStorage firebaseStorage;
+    List<Uri> uriList;
     String budget;
     String duration;
     ImageAdapter imageAdapter;
     JobCategoryAdapter jobCategoryAdapter;
-    List<String> jobCategory = new ArrayList<>();
-    List<String> categoriesListF = new ArrayList<>();
+    List<String> jobCategory;
+    List<String> categoriesListF;
+
+    List<String> uriFromStorage;
 
     private String mParam1;
     private String mParam2;
@@ -86,6 +93,13 @@ public class NewJobFragment extends Fragment {
                              Bundle savedInstanceState) {
 
         FragmentNewJobBinding binding = FragmentNewJobBinding.inflate(inflater, container, false);
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
+        firebaseUser = auth.getCurrentUser();
+        firebaseStorage = FirebaseStorage.getInstance();
+        uriList = new ArrayList<>();
+        jobCategory = new ArrayList<>();
+        categoriesListF = new ArrayList<>();
 
         String[] durationList = {"يوم", "يومين", "3 ايام", "4 ايام", "5 ايام", "اسبوع", "اسبوعين", "3 اسابيع", "شهر", "شهرين"};
         ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(requireContext(), R.layout.list_item, durationList);
@@ -183,11 +197,9 @@ public class NewJobFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
 
-                if (categoriesListF.size() != 0) {
-                    jobCategory.add(categoriesListF.get(i));
-                }
-
+                jobCategory.add(categoriesListF.get(i));
                 binding.etoJobType.setText("");
+
                 if (jobCategory.size() != 0) {
                     jobCategoryAdapter = new JobCategoryAdapter(jobCategory, new DeleteListener() {
                         @Override
@@ -202,61 +214,88 @@ public class NewJobFragment extends Fragment {
                 FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getContext());
                 binding.recyclerView.setLayoutManager(layoutManager);
                 binding.recyclerView.setAdapter(jobCategoryAdapter);
-
             }
         });
 
         //التحقق و التخزين
-//        binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String workTitle = binding.etWorkTitle.getText().toString();
-//                String description = binding.etDescription.getText().toString();
-//                if (!TextUtils.isEmpty(workTitle) && !TextUtils.isEmpty(description)
-//                        && !TextUtils.isEmpty(budget) && !TextUtils.isEmpty(duration)) {
-//                    if (uriList.size() != 0) {
-//                        for (int i = 0; i <uriList.size() ; i++) {
-//                            StorageReference reference = firebaseStorage.getReference("posts/" + "+970595560706"+ "/" +""+ uriList.get(i).getLastPathSegment());
-//                            UploadTask uploadTask = reference.putFile(uri);
-//                            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
-//                                @Override
-//                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
-//                                    if (!task.isSuccessful()) {
-//                                        throw task.getException();
-//                                    }
-//                                    return reference.getDownloadUrl();
-//                                }
-//                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
-//                                @Override
-//                                public void onComplete(@NonNull Task<Uri> task) {
-//                                    if (task.isSuccessful()) {
-//
-//                                        String uriString = task.getResult().toString();
-//
-//                                        if (uriString.isEmpty()) {
-//                                            updateUserInfo(user);
-//                                        }
-//
-//                                    } else {
-//                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                                    }
-//                                }
-//                            });
-//                        }
-//                        //نرفع الصور ونخزنهم
-//                    }
-//                    if (jobCategory.size() != 0) {
-//                        //تخزين الكل
-//                    } else {
-//                        Toast.makeText(getContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
-//                    }
-//                } else {
-//                    Toast.makeText(getContext(), "قم بملء جميع الحقول المطلوبة", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
+        binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String workTitle = binding.etWorkTitle.getText().toString();
+                String description = binding.etDescription.getText().toString();
+                if (TextUtils.isEmpty(workTitle)) {
+                    binding.etWorkTitle.setError("يجب ملء هذا الحقل");
+                } else if (TextUtils.isEmpty(description)) {
+                    binding.etDescription.setError("يجب ملء هذا الحقل");
+                } else if (TextUtils.isEmpty(duration)) {
+                    Toast.makeText(getContext(), "قم بتحديد مدة العمل المتوقعة", Toast.LENGTH_SHORT).show();
+                } else if (TextUtils.isEmpty(budget)) {
+                    Toast.makeText(getContext(), "قم بتحديد الميزانية المتوقعة", Toast.LENGTH_SHORT).show();
+                } else if (jobCategory.size() == 0) {
+                    Toast.makeText(getContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
+                } else {
+                    String uid = firebaseUser.getUid();
+                    long time = System.currentTimeMillis();
+                    String userPhoneNumber = firebaseUser.getPhoneNumber();
+                    if (uriList.size() != 0) {
+                        //نرفع الصور ونخزنهم
+                        for (int i = 0; i < uriList.size(); i++) {
+                            StorageReference reference = firebaseStorage.getReference("posts/" + userPhoneNumber + "/" + uid + time + "/" + "/" + uriList.get(i).getLastPathSegment());
+                            UploadTask uploadTask = reference.putFile(uriList.get(i));
+                            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
+                                @Override
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    return reference.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        String uriString = task.getResult().toString();
+                                        if (!uriString.isEmpty()) {
+                                            uriFromStorage = new ArrayList<>();
+                                            Toast.makeText(getContext(), "im not null", Toast.LENGTH_SHORT).show();
+                                            uriFromStorage.add(uriString);
+                                            for (int i = 0; i < uriFromStorage.size(); i++) {
+                                                Toast.makeText(getContext(), "im here" + i, Toast.LENGTH_SHORT).show();
+                                                Log.d("uriFromStorage", uriFromStorage.get(i));
+                                            }
+                                        }
+                                    } else {
+                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    //تخزين الكل
+                    Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
+                            budget, "", "مفتوح");
+                    addPost(post, uid + time);
+                }
+            }
+        });
 
         return binding.getRoot();
+    }
+
+
+    private void addPost(Post post, String documentName) {
+        firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
+                .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        } else {
+                            getActivity().finish();
+                        }
+                    }
+                });
+
     }
 
 
