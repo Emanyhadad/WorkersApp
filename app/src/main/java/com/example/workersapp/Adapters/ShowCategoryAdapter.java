@@ -11,10 +11,10 @@ import com.example.workersapp.databinding.ItemRvBinding;
 
 import java.util.ArrayList;
 
-public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.CategoryViewHolder> {
+public class ShowCategoryAdapter extends RecyclerView.Adapter< ShowCategoryAdapter.CategoryViewHolder> {
 
     ArrayList<String> categoryArrayList = new ArrayList<>();
-    public categoryAdapter(ArrayList<String> categoryArrayList) {
+    public ShowCategoryAdapter( ArrayList<String> categoryArrayList) {
         this.categoryArrayList = categoryArrayList;
     }
     @NonNull
