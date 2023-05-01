@@ -1,8 +1,6 @@
 package com.example.workersapp.Activities;
 
-import static android.content.ContentValues.TAG;
-
-import androidx.annotation.Nullable;
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
@@ -16,7 +14,6 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.location.Location;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,38 +34,37 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.firestore.DocumentChange;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.QuerySnapshot;
-
-import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+
     private GoogleMap mMap;
-     ActivityMapsBinding binding;
+    private ActivityMapsBinding binding;
+
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     //FusedLocationProviderClient: توفر الوصول إلى آخر موقع معروف للجهاز ويمكنها باستمرار تحديث الموقع في الوقت الفعلي.
     private FusedLocationProviderClient mFusedLocationClient;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    ArrayAdapter<String> adapter;
     ArrayList<String> list;
-    ValueEventListener listener;
 
-    @SuppressLint("MissingPermission")
+    List<String> categoriesListF = new ArrayList<>();
+
+    AutoCompleteTextView mySpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +76,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         db = FirebaseFirestore.getInstance();
 
         list = new ArrayList<>();
-        adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, list);
+
+        fetchData();
 
         // Initialize FusedLocationProviderClient
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
@@ -91,9 +88,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                     MY_PERMISSIONS_REQUEST_LOCATION);
         }
-        FusedLocationProviderClient fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
-        fusedLocationClient.getLastLocation()
+        // اخر موقع
+        mFusedLocationClient.getLastLocation()
                 .addOnSuccessListener(this, new OnSuccessListener<Location>() {
                     @Override
                     public void onSuccess(Location location) {
@@ -105,6 +102,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         }
                     }
                 });
+
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -115,20 +113,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_sheet_city);
+        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
 
         EditText sheet = dialog.findViewById(R.id.sheetTitle);
         Button next = dialog.findViewById(R.id.sheetBtnNext);
-        AutoCompleteTextView mySpinner = dialog.findViewById(R.id.sheetCity);
-
-        mySpinner.setAdapter(adapter);
-//        adapter = ArrayAdapter.createFromResource(
-//                this,
-//                R.array.cities,
-//                android.R.layout.simple_spinner_item
-//        );
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        mySpinner.setAdapter(adapter);
-        insertData();
+        mySpinner = dialog.findViewById(R.id.sheetCity);
 
         dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -141,42 +130,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onClick(View view) {
                 String title = sheet.getText().toString();
                 String city = mySpinner.getText().toString();
+                String accountType = getIntent().getStringExtra("accountType");
 
                 if (!title.isEmpty() && !city.isEmpty()) {
 
                     Map<String, Object> data = new HashMap<>();
                     data.put("city", city);
                     data.put("title", title);
+                    data.put("accountType", accountType);
 
-                    if (LoginActivity.sp.getString("accountTypeWorker", "").equals("worker")) {
-                        db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                .add(data)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(MapsActivity.this, "success add city and title", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(Exception e) {
-
-                                    }
-                                });
-                    } else if (LoginActivity.sp.getString("accountTypeOwner", "").equals("work owner")) {
-                        db.collection("user").document("workOwner").collection(firebaseUser.getUid())
-                                .add(data)
-                                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                    @Override
-                                    public void onSuccess(DocumentReference documentReference) {
-                                        Toast.makeText(MapsActivity.this, "success add city and title", Toast.LENGTH_SHORT).show();
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(Exception e) {
-
-                                    }
-                                });
-                    }
+                    db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                            .update(data)
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    Toast.makeText(MapsActivity.this, "success city and title", Toast.LENGTH_SHORT).show();
+                                }
+                            });
                     startActivity(new Intent(getBaseContext(), CvActivity.class));
                 } else if (title.isEmpty()) {
                     sheet.setError("يرجى تعبئة هذا الحقل");
@@ -204,54 +174,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location"));
                                 mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 15));
                                 // Save current location to Firebase Firestore
-                                FirebaseFirestore db = FirebaseFirestore.getInstance();
                                 Map<String, Object> userLocation = new HashMap<>();
                                 userLocation.put("latitude", location.getLatitude());
                                 userLocation.put("longitude", location.getLongitude());
 
-                                if (LoginActivity.sp.getString("accountTypeWorker", "").equals("worker")) {
-                                    db.collection("user").document("worker").collection(firebaseUser.getUid())
-                                            .add(userLocation)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Toast.makeText(MapsActivity.this, "success add city and title", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(Exception e) {
+                                db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                                        .update(userLocation)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(MapsActivity.this, "success lat and long", Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
 
-                                                }
-                                            });
-                                } else if (LoginActivity.sp.getString("accountTypeOwner", "").equals("work owner")) {
-                                    db.collection("user").document("workOwner").collection(firebaseUser.getUid())
-                                            .add(userLocation)
-                                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                                @Override
-                                                public void onSuccess(DocumentReference documentReference) {
-                                                    Toast.makeText(MapsActivity.this, "success add city and title", Toast.LENGTH_SHORT).show();
-                                                }
-                                            }).addOnFailureListener(new OnFailureListener() {
-                                                @Override
-                                                public void onFailure(Exception e) {
-
-                                                }
-                                            });
-                                }
-//                                db.collection("users").document("user1")
-//                                        .set(userLocation)
-//                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                            @Override
-//                                            public void onSuccess(Void aVoid) {
-////                                                Log.d(TAG, "DocumentSnapshot added with ID: " + documentReference.getId());
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@NonNull Exception e) {
-//                                                Log.w(TAG, "Error adding document", e);
-//                                            }
-//                                        });
                             }
                         }
                     });
@@ -261,131 +196,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         showDialog();
     }
 
-//    @SuppressLint({"MissingSuperCall", "MissingPermission"})
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-//        switch (requestCode) {
-//            case MY_PERMISSIONS_REQUEST_LOCATION: {
-//                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                    // permission was granted, proceed to get the user's location
-//                    FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
-//                    client.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
-//                        @Override
-//                        public void onSuccess(Location location) {
-//                            if (location != null) {
-//                                // save the location on Firestore
-//                                FirebaseFirestore db = FirebaseFirestore.getInstance();
-////                                FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-////                                if (currentUser != null) {
-////                                    String userId = currentUser.getUid();
-//                                Map<String, Object> locationMap = new HashMap<>();
-//                                locationMap.put("latitude", location.getLatitude());
-//                                locationMap.put("longitude", location.getLongitude());
-//
-//
-//                                db.collection("user").document("worker").collection(firebaseUser.getUid())
-//                                        .add(locationMap)
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@androidx.annotation.NonNull Exception e) {
-//
-//                                            }
-//                                        });
-//
-//                                db.collection("user").document("customer").collection(firebaseUser.getUid())
-//                                        .add(locationMap)
-//                                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-//                                            @Override
-//                                            public void onSuccess(DocumentReference documentReference) {
-//
-//                                            }
-//                                        })
-//                                        .addOnFailureListener(new OnFailureListener() {
-//                                            @Override
-//                                            public void onFailure(@androidx.annotation.NonNull Exception e) {
-//
-//                                            }
-//                                        });
-////                                db.collection("users").document("user1")
-////                                        .set(locationMap)
-////                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-////                                            @Override
-////                                            public void onSuccess(Void aVoid) {
-////                                                // location saved successfully
-////                                            }
-////                                        })
-////                                        .addOnFailureListener(new OnFailureListener() {
-////                                            @Override
-////                                            public void onFailure(@NonNull Exception e) {
-////                                                // error occurred while saving the location
-////                                            }
-////                                        });
-//                            }
-//                        }
-//                    });
-//                } else {
-//                    // permission denied, inform the user and handle the case
-//                }
-//                return;
-//            }
-//        }
-//    }
-    public void insertData() {
-
-        Map<String, Object> city = new HashMap<>();
-        city.put("city1", "غزة");
-        city.put("city2", "جباليا");
-        city.put("city3", "دير البلح");
-        city.put("city4", "رفح");
-        city.put("city6", "خانيونس");
-        city.put("city7", "بيت لاهيا");
-        city.put("city8", "بيت حانون");
-        city.put("city9", " البريج");
-        city.put("city10", " النصيرات");
-
-        // Save the cities to Firestore
-        db.collection("cities")
-                .document()
-                .collection(firebaseUser.getUid())
-                .add(city)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@androidx.annotation.NonNull Exception e) {
-
-                    }
-                });
-        list.clear();
-        fetchData();
-        adapter.notifyDataSetChanged();
-        Toast.makeText(this, "Inserted successfully", Toast.LENGTH_SHORT).show();
-    }
-
     public void fetchData() {
-        db.collection("cities")
-                .document()
-                .collection(firebaseUser.getUid())
-                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+        db.collection("city").document("city")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
-                    public void onEvent(@Nullable QuerySnapshot value, @Nullable FirebaseFirestoreException error) {
-                        for (DocumentChange dc : value.getDocumentChanges()) {
-                            if (dc.getType() == DocumentChange.Type.ADDED) {
-                                list.add(dc.getDocument().toString());
-                            }
-                            adapter.notifyDataSetChanged();
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            categoriesListF = (List<String>) task.getResult().get("cities");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+                            mySpinner.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
     }
+
 
 }

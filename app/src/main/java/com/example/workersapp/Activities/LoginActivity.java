@@ -363,7 +363,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), MainActivity.class));
+            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
             finish();
         }
 

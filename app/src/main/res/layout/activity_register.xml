@@ -85,8 +85,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_46sdp"
             android:layout_marginTop="@dimen/_35sdp"
-            android:layout_marginLeft="@dimen/_23sdp"
-            android:layout_marginRight="@dimen/_23sdp">
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personFullName"
                 android:layout_width="match_parent"
@@ -103,8 +103,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_46sdp"
             android:layout_marginTop="@dimen/_31sdp"
-            android:layout_marginLeft="@dimen/_23sdp"
-            android:layout_marginRight="@dimen/_23sdp">
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personNickName"
                 android:layout_width="match_parent"
@@ -121,8 +121,8 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/_46sdp"
             android:layout_marginTop="@dimen/_31sdp"
-            android:layout_marginLeft="@dimen/_23sdp"
-            android:layout_marginRight="@dimen/_23sdp">
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personBirth"
                 android:layout_width="match_parent"
@@ -131,7 +131,11 @@
                 android:hint="تاريخ الميلاد"
                 android:textColorHint="@color/gray"
                 android:fontFamily="@font/cairo_regular"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="@dimen/_11ssp"
+                android:inputType="none"
+                android:clickable="true"
+                android:focusable="false"
+                android:focusableInTouchMode="false"/>
         </com.google.android.material.textfield.TextInputLayout>
 
 
@@ -190,6 +194,7 @@
             android:layout_marginLeft="@dimen/_23sdp"
             android:layout_marginTop="@dimen/_31sdp"
             android:layout_marginRight="@dimen/_23sdp"
+            android:layout_marginBottom="@dimen/sdp_40"
             android:background="@drawable/border_button"
             android:text="التالي"
             android:fontFamily="@font/cairo_regular"

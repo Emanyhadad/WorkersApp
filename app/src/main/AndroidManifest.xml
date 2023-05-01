@@ -18,7 +18,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
-
+        <activity
+            android:name="com.example.workersapp.Activities.NewFormActivity"
+            android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -34,10 +36,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
 
-        <activity
-            android:name="com.example.workersapp.Activities.MapsActivity2"
-            android:exported="false"
-            android:label="@string/title_activity_maps2" />
+
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -56,55 +55,40 @@
 
         <activity
             android:name="com.example.workersapp.Activities.BusinessModelsActivity"
-            android:exported="false" /> <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
+            android:exported="false"/>
         <activity
             android:name="com.example.workersapp.Activities.MapsActivity"
             android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.PhoneRegistrationActivity"
-            android:exported="false">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:exported="false"/>
         <activity
             android:name="com.example.workersapp.Activities.CvActivity"
-            android:exported="false"></activity>
+            android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.MainActivity"
             android:exported="false" />
         <activity
-            android:name="com.example.workersapp.Activities.ProfileWorker"
+            android:name="com.example.workersapp.Activities.WorkerProfileActivity"
             android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.WorkOwnerProfileActivity"
             android:exported="true">
-            <!--            <intent-filter>-->
-            <!--                <action android:name="android.intent.action.MAIN" />-->
-            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
-            <!--            </intent-filter>-->
+
         </activity>
+
         <activity
             android:name="com.example.workersapp.Activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name="com.example.workersapp.Activities.RegisterActivity"
-            android:exported="false">
-
-        </activity>
+            android:exported="false"/>
 
         <meta-data
             android:name="android.app.lib_name"

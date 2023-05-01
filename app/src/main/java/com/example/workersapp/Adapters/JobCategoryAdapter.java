@@ -16,7 +16,6 @@ import java.util.List;
 
 
 public class JobCategoryAdapter extends RecyclerView.Adapter<JobCategoryAdapter.JobCategoryHolder> {
-
     List<String> jobCategoryList;
     DeleteListener listener;
 
