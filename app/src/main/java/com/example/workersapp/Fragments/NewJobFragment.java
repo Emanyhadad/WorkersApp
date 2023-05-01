@@ -44,7 +44,6 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class NewJobFragment extends Fragment {
 
     private static final String ARG_PARAM1 = "param1";
@@ -176,8 +175,6 @@ public class NewJobFragment extends Fragment {
                 al1.launch("image/*");
             }
         });
-
-
         firebaseFirestore.collection("workCategoryAuto").document("category").get().
                 addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override
@@ -281,7 +278,6 @@ public class NewJobFragment extends Fragment {
 
         return binding.getRoot();
     }
-
 
     private void addPost(Post post, String documentName) {
         firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())

@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.ProfileWorker"
+    tools:context=".Activities.WorkerProfileActivity"
     android:background="@color/back_activity">
 
     <ScrollView
@@ -316,7 +316,7 @@
                             app:srcCompat="@drawable/phone" />
 
                         <TextView
-                            android:id="@+id/pWorkerMobile"
+                            android:id="@+id/pWorkerPhone"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/ProfileMobile"

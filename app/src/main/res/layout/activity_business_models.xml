@@ -4,240 +4,263 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/back_activity"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.BusinessModelsActivity"
-    android:background="@color/back_activity">
+    tools:context=".Activities.BusinessModelsActivity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_marginStart="@dimen/_15sdp"
-        android:layout_marginEnd="@dimen/_15sdp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
         <LinearLayout
-            android:id="@+id/linearLayout4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_19sdp"
-            android:orientation="horizontal">
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:orientation="vertical"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <ImageView
-                android:id="@+id/imgBack"
-                android:layout_width="@dimen/_17sdp"
-                android:layout_height="@dimen/_17sdp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/back_icon" />
+            <LinearLayout
+                android:id="@+id/linearLayout4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_19sdp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imgBack"
+                    android:layout_width="@dimen/_17sdp"
+                    android:layout_height="@dimen/_17sdp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/next_icon" />
+
+                <TextView
+                    android:id="@+id/tvBasicInformation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:gravity="center"
+                    android:text="@string/businessToolBar"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14ssp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/businessRvImg"
+                    android:layout_width="match_parent"
+                    android:layoutDirection="ltr"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
+
+                <TextView
+                    android:id="@+id/businessNumImg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/businessNumImages"
+                    android:textColor="@color/gray9"
+                    android:layout_gravity="end"
+                    android:textSize="@dimen/_10ssp" />
+            </LinearLayout>
+
+            <!--        <ImageView-->
+            <!--            android:id="@+id/businessImg"-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="@dimen/_208sdp"-->
+            <!--            android:background="@drawable/back_img_border"-->
+            <!--            android:backgroundTint="@color/white"-->
+            <!--            app:srcCompat="@drawable/ic_launcher_foreground" />-->
+
+            <!--        <LinearLayout-->
+            <!--            android:layout_width="match_parent"-->
+            <!--            android:layout_height="wrap_content"-->
+            <!--            android:orientation="horizontal">-->
+            <!--            <LinearLayout-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_weight="1"-->
+            <!--                android:gravity="center"-->
+            <!--                android:layout_marginTop="@dimen/_10sdp"-->
+            <!--                android:orientation="horizontal">-->
+
+            <!--                <TextView-->
+            <!--                    android:id="@+id/businessImgCircle2"-->
+            <!--                    android:layout_width="@dimen/_8sdp"-->
+            <!--                    android:layout_height="@dimen/_8sdp"-->
+            <!--                    android:background="@drawable/circle_img" />-->
+            <!--                <TextView-->
+            <!--                    android:id="@+id/businessImgCircle3"-->
+            <!--                    android:layout_width="@dimen/_8sdp"-->
+            <!--                    android:layout_marginRight="@dimen/_7sdp"-->
+            <!--                    android:layout_marginLeft="@dimen/_7sdp"-->
+            <!--                    android:layout_height="@dimen/_8sdp"-->
+            <!--                    android:background="@drawable/circle_img"/>-->
+
+            <!--                <ImageView-->
+            <!--                    android:id="@+id/businessImgCircle1"-->
+            <!--                    android:layout_width="wrap_content"-->
+            <!--                    android:layout_height="wrap_content"-->
+            <!--                    android:layout_marginRight="@dimen/_4sdp"-->
+            <!--                    app:srcCompat="@drawable/greypoint" />-->
+            <!--            </LinearLayout>-->
+            <!--            <TextView-->
+            <!--                android:id="@+id/businessNumImg"-->
+            <!--                android:layout_width="wrap_content"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:fontFamily="@font/cairo_regular"-->
+            <!--                android:text="@string/businessNumImages"-->
+            <!--                android:textColor="@color/gray9"-->
+            <!--                android:textSize="@dimen/_10ssp"/>-->
+
+            <!--        </LinearLayout>-->
 
             <TextView
-                android:id="@+id/tvBasicInformation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
+                android:id="@+id/businessDetails"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_78sdp"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:fontFamily="@font/cairo_regular"
-                android:gravity="center"
-                android:text="@string/businessToolBar"
-                android:textColor="@color/black"
-                android:textSize="@dimen/_14ssp" />
-        </LinearLayout>
+                android:text="@string/businessDescription"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_10ssp" />
 
-        <ImageView
-            android:id="@+id/businessImg"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_208sdp"
-            android:background="@drawable/back_img_border"
-            android:backgroundTint="@color/white"
-            app:srcCompat="@drawable/ic_launcher_foreground" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:layout_marginTop="@dimen/_10sdp"
+                android:layout_gravity="start"
                 android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/businessImgCircle2"
-                    android:layout_width="@dimen/_8sdp"
-                    android:layout_height="@dimen/_8sdp"
-                    android:background="@drawable/circle_img" />
-                <TextView
-                    android:id="@+id/businessImgCircle3"
-                    android:layout_width="@dimen/_8sdp"
-                    android:layout_marginRight="@dimen/_7sdp"
-                    android:layout_marginLeft="@dimen/_7sdp"
-                    android:layout_height="@dimen/_8sdp"
-                    android:background="@drawable/circle_img"/>
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/businessDateAch"
+                    android:textColor="@color/gray9"
+                    android:textSize="@dimen/_10ssp" />
 
-                <ImageView
-                    android:id="@+id/businessImgCircle1"
+                <TextView
+                    android:id="@+id/businessDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="@dimen/_4sdp"
-                    app:srcCompat="@drawable/greypoint" />
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/businessDate"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_10ssp" />
+
             </LinearLayout>
-            <TextView
-                android:id="@+id/businessNumImg"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/businessNumImages"
-                android:textColor="@color/gray9"
-                android:textSize="@dimen/_10ssp"/>
 
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/businessDetails"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_78sdp"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/_10ssp"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:fontFamily="@font/cairo_regular"
-            android:text="@string/businessDescription"/>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/businessDateAch"
-                android:textColor="@color/gray9"
-                android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/cairo_regular"/>
-
-            <TextView
-                android:id="@+id/businessDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/businessDate"
-                android:layout_marginRight="@dimen/_4sdp"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_10ssp"
-                android:fontFamily="@font/cairo_regular"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/_15sdp"
-            android:layout_marginBottom="@dimen/_15sdp"
-            android:layout_height="wrap_content">
-
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/businessRv"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"/>
+                android:layout_marginTop="@dimen/_15sdp"
+                android:layout_marginBottom="@dimen/_15sdp"
+                android:orientation="vertical">
 
-        </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_23sdp"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_gravity="start">
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/businessRv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal" />
 
-            <ImageView
-                android:id="@+id/businessImgUser"
-                android:layout_width="@dimen/_23sdp"
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="@dimen/_23sdp"
-                app:srcCompat="@drawable/worker" />
+                android:layout_gravity="start"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/businessImgUser"
+                    android:layout_width="@dimen/_23sdp"
+                    android:layout_height="@dimen/_23sdp"
+                    app:srcCompat="@drawable/worker" />
 
 
-            <TextView
-                android:id="@+id/businessUserName"
+                <TextView
+                    android:id="@+id/businessUserName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_bold"
+                    android:text="@string/businessUserNameS"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_9ssp" />
+
+                <TextView
+                    android:id="@+id/businessRate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/businessRateS"
+                    android:textColor="@color/black2"
+                    android:textSize="@dimen/_8ssp" />
+
+                <ImageView
+                    android:id="@+id/businessStar"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    app:srcCompat="@drawable/baseline_star_24" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/businessUserNameS"
-                android:textSize="@dimen/_9ssp"
-                android:fontFamily="@font/cairo_bold"
-                android:textColor="@color/blue"
-                android:layout_marginRight="@dimen/_4sdp"
-                android:layout_marginLeft="@dimen/_8sdp"/>
+                android:layout_height="@dimen/_20sdp"
+                android:layout_gravity="end"
+                android:layout_marginTop="@dimen/_45sdp"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/businessRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/businessRateS"
-                android:textColor="@color/black2"
-                android:textSize="@dimen/_8ssp" />
+                <TextView
+                    android:id="@+id/businessEyeNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_8sdp"
+                    android:text="@string/businessEyeNumS"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_11ssp" />
 
-            <ImageView
-                android:id="@+id/businessStar"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                app:srcCompat="@drawable/baseline_star_24" />
+                <ImageView
+                    android:id="@+id/businessEye"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_12sdp"
+                    app:srcCompat="@drawable/ic_password_open_eye" />
 
+                <TextView
+                    android:id="@+id/businessHurtNum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="@dimen/_8sdp"
+                    android:text="@string/businessHurtNumS"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_11ssp" />
+
+                <ImageView
+                    android:id="@+id/businessHurt"
+                    android:layout_width="@dimen/_14sdp"
+                    android:layout_height="@dimen/_12sdp"
+                    app:srcCompat="@drawable/hurt" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/_20sdp"
-            android:gravity="center"
-            android:layout_gravity="end"
-            android:layout_marginTop="@dimen/_45sdp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/businessEyeNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/businessEyeNumS"
-                android:textSize="@dimen/_11ssp"
-                android:textColor="@color/blue"
-                android:layout_marginRight="@dimen/_8sdp"/>
-
-            <ImageView
-                android:id="@+id/businessEye"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_12sdp"
-                app:srcCompat="@drawable/ic_password_open_eye"/>
-
-            <TextView
-                android:id="@+id/businessHurtNum"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/businessHurtNumS"
-                android:textSize="@dimen/_11ssp"
-                android:textColor="@color/blue"
-                android:layout_marginRight="@dimen/_8sdp"/>
-
-            <ImageView
-                android:id="@+id/businessHurt"
-                android:layout_width="@dimen/_14sdp"
-                android:layout_height="@dimen/_12sdp"
-                app:srcCompat="@drawable/hurt" />
-
-        </LinearLayout>
-
-    </LinearLayout>
 
     </ScrollView>
 

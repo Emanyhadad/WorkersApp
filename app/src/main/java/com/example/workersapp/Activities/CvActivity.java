@@ -39,9 +39,7 @@ public class CvActivity extends AppCompatActivity {
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-    ArrayAdapter<String> adapter;
     ArrayList<String> list;
-    String workerId;
     List<String> categoriesListF = new ArrayList<>();
 
 
@@ -56,10 +54,6 @@ public class CvActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
 
         list = new ArrayList<>();
-        workerId = getIntent().getStringExtra("workerId");
-//        Toast.makeText(this, workerId, Toast.LENGTH_SHORT).show();
-        Toast.makeText(CvActivity.this, "worker: "+workerId, Toast.LENGTH_SHORT).show();
-
 
         insertData();
         binding.CvNext.setOnClickListener(new View.OnClickListener() {
@@ -79,10 +73,10 @@ public class CvActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void unused) {
                                     Toast.makeText(CvActivity.this, "success cv and work", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(getBaseContext(),BusinessModelsActivity.class);
-                                    startActivity(intent);
                                 }
                             });
+                    Intent intent = new Intent(getBaseContext(),WorkerProfileActivity.class);
+                    startActivity(intent);
                 } else {
                     binding.CvWork.setError("يرجى تعبئة هذا الحقل");
                 }
@@ -92,7 +86,7 @@ public class CvActivity extends AppCompatActivity {
     }
 
     public void insertData() {
-        db.collection("category").document("dipdTXxKmbylQIJJhC0v")
+        db.collection("category").document("category")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
                     @Override

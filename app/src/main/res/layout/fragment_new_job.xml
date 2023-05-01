@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/back_activity"
     android:fitsSystemWindows="true"
+    android:layoutDirection="rtl"
     tools:context=".Fragments.NewJobFragment">
 
     <ScrollView
@@ -78,6 +79,7 @@
                 app:counterEnabled="true"
                 app:counterMaxLength="20"
                 app:counterTextColor="@color/blue_dark">
+
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etWorkTitle"
                     android:layout_width="match_parent"
@@ -257,14 +259,13 @@
                     android:fontFamily="@font/cairo_semi_bold"
                     android:textSize="@dimen/sdp_textSize_12"
                     android:paddingStart="@dimen/sdp_10"
-                    android:textColor="@color/blue_dark"/>
+                    android:textColor="@color/blue_dark" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager"
-                    />
+                    app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager" />
 
             </com.google.android.flexbox.FlexboxLayout>
 
