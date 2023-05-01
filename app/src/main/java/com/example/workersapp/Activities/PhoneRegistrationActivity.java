@@ -27,6 +27,7 @@ import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityPhoneRegistrationBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseException;
+import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -48,10 +49,6 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         auth = FirebaseAuth.getInstance();
-        Intent intent = getIntent();
-        if (intent.getStringExtra("phoneNum") != null) {
-            binding.etPhoneReg.setText("0" + intent.getStringExtra("phoneNum"));
-        }
         binding.btnSendVerificationCode.setOnClickListener(view -> sendCodeVerification());
 
         binding.imgBack.setOnClickListener(view -> onBackPressed());
@@ -209,7 +206,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
     // إعادة إرسال رمز التحقق
     private void resendVerificationCode(String phone, PhoneAuthProvider.ForceResendingToken token) {
         PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+970" + phone, // رقم الهاتف المسجل
+                phone, // رقم الهاتف المسجل
                 60, // فترة صلاحية الرمز بالثواني
                 TimeUnit.SECONDS, // وحدة فترة صلاحية الرمز
                 this, // النشاط الحالي

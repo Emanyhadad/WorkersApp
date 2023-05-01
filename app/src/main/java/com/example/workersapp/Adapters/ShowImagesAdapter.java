@@ -3,7 +3,6 @@ package com.example.workersapp.Adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -11,30 +10,28 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.workersapp.Listeneres.DeleteListener;
-import com.example.workersapp.databinding.ItemImegBinding;
+import com.example.workersapp.databinding.ItemShowimageBinding;
 
 import java.util.List;
 
-public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder> {
+public class ShowImagesAdapter extends RecyclerView.Adapter<ShowImagesAdapter.ImageHolder> {
 
-    List<Uri> uriList;
+    List < String > uriList;
     Context context;
 
-    DeleteListener listener;
 
-    public ImageAdapter(List<Uri> uriList, Context context, DeleteListener listener) {
+    public ShowImagesAdapter( List < String > uriList, Context context) {
         this.uriList = uriList;
         this.context = context;
-        this.listener = listener;
+
     }
 
     @NonNull
     @Override
     public ImageHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemImegBinding binding = ItemImegBinding.inflate(LayoutInflater.from(parent.getContext()),
+        ItemShowimageBinding binding = ItemShowimageBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
-        return new ImageHolder(binding);
+        return new ImageHolder( binding );
     }
 
     @Override
@@ -43,7 +40,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         if (!(uriList.size() == 0)) {
             Glide.with(context).load(uriList.get(pos))
                     .into(holder.img);
-        holder.imgDelete.setOnClickListener( view -> listener.onDelete(pos) );
         }
 
     }
@@ -53,13 +49,13 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         return uriList.size();
     }
 
-    class ImageHolder extends RecyclerView.ViewHolder {
-        ImageView img, imgDelete;
+    static class ImageHolder extends RecyclerView.ViewHolder {
+        ImageView img;
 
-        public ImageHolder(@NonNull ItemImegBinding binding) {
+        public ImageHolder( @NonNull ItemShowimageBinding binding) {
             super(binding.getRoot());
-            img = binding.img;
-            imgDelete = binding.imgDelete;
+            img = binding.imageView;
+
         }
     }
 }

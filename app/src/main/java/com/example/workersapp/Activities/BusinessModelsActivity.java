@@ -9,10 +9,9 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
+import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.SliderImgAdapter;
-import com.example.workersapp.Adapters.categoryAdapter;
 import com.example.workersapp.Listeneres.clickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityBusinessModelsBinding;
@@ -24,7 +23,7 @@ public class BusinessModelsActivity extends AppCompatActivity implements clickLi
 
     ArrayList<String> categoryArrayList;
 
-    categoryAdapter categoryAdapter;
+    ShowCategoryAdapter showCategoryAdapter;
 
     ArrayList<String> imageArrayList;
     SliderImgAdapter sliderImgAdapter;
@@ -56,8 +55,8 @@ public class BusinessModelsActivity extends AppCompatActivity implements clickLi
         categoryArrayList.add("أثاث ");
         categoryArrayList.add("أثاث خشبي");
 
-        categoryAdapter = new categoryAdapter(categoryArrayList);
-        binding.businessRv.setAdapter(categoryAdapter);
+        showCategoryAdapter = new ShowCategoryAdapter(categoryArrayList);
+        binding.businessRv.setAdapter( showCategoryAdapter );
         binding.businessRv.setLayoutManager(new LinearLayoutManager(getBaseContext(),
                 RecyclerView.HORIZONTAL, false));
 
@@ -106,6 +105,4 @@ public class BusinessModelsActivity extends AppCompatActivity implements clickLi
     public void back(int currentPos) {
         currentPos = ((LinearLayoutManager) binding.businessRvImg.getLayoutManager()).findFirstVisibleItemPosition();
         binding.businessRvImg.smoothScrollToPosition(currentPos - 1);
-    }
-
-}
+    }}

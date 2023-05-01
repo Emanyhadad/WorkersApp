@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="closeProject">إغلاق المشروع</string>
+    <string name="jobTitle">بدي خزانة نوع خشب أند إي أف، ست ضرفات</string>
+    <string name="jobdata">بيانات الوظيفة</string>
+    <string name="close_job">إغلاق المشروع</string>
+    <string name="_32">32</string>
+    <string name="month">شهر</string>
+    <string name="_200">200</string>
+    <string name="city">خانيونس</string>
+    <string name="_2">تم النشر قبل: 2س</string>
+    <string name="offers_37">Offers: 37</string>
+    <string name="tv_offers">عدد العروض</string>
+    <string name="tv_projectstate">حالة المشروع</string>
+    <string name="tv_now">الآن</string>
+    <string name="tv_duration">مايو/2023 -</string>
+    <string name="_4_5i">4.5i</string>
+    <string name="tv_workerName">عبدالله يوسف</string>
+    <string name="_37i">37i</string>
+    <string name="tv_finishproject">إنهاء المشروع</string>
+    <string name="_2023_2023">مايو/2023 - أغسطس/2023</string>
+    <string name="vv">عبدالله نجار رائع وملتزم بالوقت</string>
+    <string name="putoffer">قدم عرضك</string>
+    <string name="write_offer">اكتب عرضك</string>
+    <string name="worke_raiting">تقيم العامل</string>
+</resources>

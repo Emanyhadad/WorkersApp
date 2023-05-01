@@ -61,7 +61,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     private static final int REQUEST_CODE = 1;
     String fullName, nickName, birth, gender, accountType;
     int genderId;
-    
+
     public static String profileImageUrl;
 
 
@@ -179,12 +179,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             }
         });
     }
-
-//    private void openGallery() {
-//        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-//    }
-
 
     private void showDatePickerDialog() {
         Calendar calendar = null;

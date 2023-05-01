@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_280sdp"
+    android:padding="@dimen/_15sdp"
+    android:gravity="center_vertical|center_horizontal"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:background="@drawable/et_bg"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:id="@+id/deleteIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/delete_image" />
+    <TextView
+        android:id="@+id/deleteMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:textSize="@dimen/_14ssp"
+        android:textColor="@color/black"
+        android:fontFamily="@font/cairo_semi_bold"
+        android:textAlignment="center"
+        android:layout_toRightOf="@id/deleteIcon"
+        android:text="هل أنت متأكد من أنك تريد
+ إغلاق المشروع؟"/>
+
+    <LinearLayout
+        android:layout_marginTop="@dimen/_31sdp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/deleteButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/deleteMessage"
+        android:background="@drawable/btn_delete"
+        android:layout_gravity="center"
+        android:textColor="@color/red"
+        android:textSize="@dimen/_15ssp"
+        android:fontFamily="@font/cairo_semi_bold"
+        android:text="حذف"/>
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/deleteMessage"
+            android:background="@drawable/btn_cancel"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/_79sdp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15ssp"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="الغاء"/>
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

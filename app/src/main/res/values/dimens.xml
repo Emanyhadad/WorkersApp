@@ -11,6 +11,7 @@
     <dimen name="sdp_textSize_22">@dimen/_17ssp</dimen>
     <dimen name="sdp_textSize_30">@dimen/_22ssp</dimen>
 
+
     <dimen name="sdp_5">@dimen/_4sdp</dimen>
     <dimen name="sdp_8">@dimen/_5sdp</dimen>
     <dimen name="sdp_10">@dimen/_8sdp</dimen>
@@ -30,5 +31,5 @@
     <dimen name="sdp_height_40">@dimen/_31sdp</dimen>
     <dimen name="sdp_45">@dimen/_35sdp</dimen>
     <dimen name="sdp_80">@dimen/_70sdp</dimen>
-
+    <dimen name="sdp_90">@dimen/_85sdp</dimen>
 </resources>
