@@ -1,8 +1,19 @@
 package com.example.workersapp.Fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -11,35 +22,24 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.text.TextUtils;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
-
+import com.example.workersapp.Activities.MapsActivity;
 import com.example.workersapp.Adapters.ImageAdapter;
 import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentNewJobBinding;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +55,8 @@ public class NewJobFragment extends Fragment {
     List<Uri> uriList;
     String budget;
     String duration;
+
+    String jobLocation;
     ImageAdapter imageAdapter;
     JobCategoryAdapter jobCategoryAdapter;
     List<String> jobCategory;
@@ -99,6 +101,8 @@ public class NewJobFragment extends Fragment {
         uriList = new ArrayList<>();
         jobCategory = new ArrayList<>();
         categoriesListF = new ArrayList<>();
+//        Toast.makeText(getContext(),  "clas: "+NewJobFragment.class, Toast.LENGTH_SHORT).show();
+
 
         String[] durationList = {"يوم", "يومين", "3 ايام", "4 ايام", "5 ايام", "اسبوع", "اسبوعين", "3 اسابيع", "شهر", "شهرين"};
         ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(requireContext(), R.layout.list_item, durationList);
@@ -189,12 +193,11 @@ public class NewJobFragment extends Fragment {
                     }
                 });
 
-
         binding.etoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                jobCategory.add(categoriesListF.get(i));
+                String selectedCategory = ((TextView) view).getText().toString();
+                jobCategory.add(selectedCategory);
                 binding.etoJobType.setText("");
 
                 if (jobCategory.size() != 0) {
@@ -214,6 +217,26 @@ public class NewJobFragment extends Fragment {
             }
         });
 
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result != null) {
+                    jobLocation = result.getData().getStringExtra("city");
+                    binding.tvJobLocation.setText(jobLocation);
+                }
+
+            }
+        });
+        binding.locationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                intent.putExtra("source", NewJobFragment.class.getSimpleName());
+//                startActivity(intent);
+                arl.launch(intent);
+
+            }
+        });
         //التحقق و التخزين
         binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -230,15 +253,19 @@ public class NewJobFragment extends Fragment {
                     Toast.makeText(getContext(), "قم بتحديد الميزانية المتوقعة", Toast.LENGTH_SHORT).show();
                 } else if (jobCategory.size() == 0) {
                     Toast.makeText(getContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
+                } else if (jobLocation == null) {
+                    Toast.makeText(getContext(), "قم بحديد موقع العمل", Toast.LENGTH_SHORT).show();
                 } else {
                     String uid = firebaseUser.getUid();
                     long time = System.currentTimeMillis();
                     String userPhoneNumber = firebaseUser.getPhoneNumber();
                     if (uriList.size() != 0) {
                         //نرفع الصور ونخزنهم
+                        uriFromStorage = new ArrayList<>();
                         for (int i = 0; i < uriList.size(); i++) {
                             StorageReference reference = firebaseStorage.getReference("posts/" + userPhoneNumber + "/" + uid + time + "/" + "/" + uriList.get(i).getLastPathSegment());
                             UploadTask uploadTask = reference.putFile(uriList.get(i));
+                            int finalI = i;
                             Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
                                 public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
@@ -253,12 +280,10 @@ public class NewJobFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         String uriString = task.getResult().toString();
                                         if (!uriString.isEmpty()) {
-                                            uriFromStorage = new ArrayList<>();
                                             Toast.makeText(getContext(), "im not null", Toast.LENGTH_SHORT).show();
                                             uriFromStorage.add(uriString);
-                                            for (int i = 0; i < uriFromStorage.size(); i++) {
-                                                Toast.makeText(getContext(), "im here" + i, Toast.LENGTH_SHORT).show();
-                                                Log.d("uriFromStorage", uriFromStorage.get(i));
+                                            if (finalI == uriList.size() - 1) {
+                                                createPost(workTitle, description, uid, time, jobLocation);
                                             }
                                         }
                                     } else {
@@ -267,11 +292,11 @@ public class NewJobFragment extends Fragment {
                                 }
                             });
                         }
+                    } else {
+                        createPost(workTitle, description, uid, time, jobLocation);
                     }
                     //تخزين الكل
-                    Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
-                            budget, "", "مفتوح");
-                    addPost(post, uid + time);
+
                 }
             }
         });
@@ -279,7 +304,13 @@ public class NewJobFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void addPost(Post post, String documentName) {
+    private void createPost(String workTitle, String description, String uid, long time, String jobLocation) {
+        Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
+                budget, jobLocation, "مفتوح");
+        uploadPost(post, uid + time);
+    }
+
+    private void uploadPost(Post post, String documentName) {
         firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
                 .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

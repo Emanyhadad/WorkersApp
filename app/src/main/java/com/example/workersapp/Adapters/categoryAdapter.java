@@ -7,7 +7,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.workersapp.databinding.ItemRvBinding;
+import com.example.workersapp.databinding.ItemCategoryModelBinding;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,7 @@ public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.Catego
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemRvBinding binding = ItemRvBinding.inflate(LayoutInflater.from(parent.getContext()),
+        ItemCategoryModelBinding binding = ItemCategoryModelBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
         return new CategoryViewHolder(binding);
     }
@@ -38,8 +38,8 @@ public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.Catego
     class CategoryViewHolder extends RecyclerView.ViewHolder{
         TextView nameCat;
 
+        public CategoryViewHolder(ItemCategoryModelBinding binding) {
 
-        public CategoryViewHolder(ItemRvBinding binding) {
             super(binding.getRoot());
             nameCat = binding.itemRvTv;
 

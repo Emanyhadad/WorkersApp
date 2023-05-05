@@ -7,7 +7,7 @@
     android:background="@color/back_activity"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.NewFormActivity">
+    tools:context=".Activities.NewModelActivity">
 
 
     <ScrollView

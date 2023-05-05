@@ -1,24 +1,37 @@
 package com.example.workersapp.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
+import com.example.workersapp.Adapters.ImageModelFragAdapter;
+import com.example.workersapp.Fragments.BlankFragment;
+import com.example.workersapp.Fragments.BusinessModelsFragment;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityWorkerProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class WorkerProfileActivity extends AppCompatActivity {
@@ -28,6 +41,12 @@ public class WorkerProfileActivity extends AppCompatActivity {
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
+    
+    List<String> imagesList;
+
+    ImageModelFragAdapter adapter;
+    ActivityResultLauncher<Intent> arl;
+    String documentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +58,17 @@ public class WorkerProfileActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+
+
+        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                assert result.getData() != null;
+                documentId = result.getData().getStringExtra("documentId");
+//                Toast.makeText(WorkerProfileActivity.this, "documentIdProfile: "+documentId, Toast.LENGTH_SHORT).show();
+            }
+        });
 
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .get()
@@ -65,7 +95,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
                                     .circleCrop()
                                     .error(R.drawable.worker)
                                     .into(binding.pWorkerImg);
-
                         }
                     }
                 })
@@ -75,11 +104,31 @@ public class WorkerProfileActivity extends AppCompatActivity {
                         Toast.makeText(WorkerProfileActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
                     }
                 });
+        imagesList = new ArrayList<>();
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        ArrayList<String> tabs = new ArrayList<>();
+        tabs.add("آراء العملاء");
+        tabs.add("نماذج الأعمال");
 
+        fragments.add(BlankFragment.newInstance("Audi"));
+        fragments.add(BusinessModelsFragment.newInstance(documentId));
+
+        adapter = new ImageModelFragAdapter(this, fragments);
+        binding.FragPager.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                if (position < tabs.size()) {
+                    tab.setText(tabs.get(position));
+                }
+            }
+        }).attach();
         binding.fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(),NewFormActivity.class));
+                Intent intent = new Intent(getBaseContext(), NewModelActivity.class);
+                arl.launch(intent);
             }
         });
     }

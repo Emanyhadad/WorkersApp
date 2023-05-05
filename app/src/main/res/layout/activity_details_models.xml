@@ -7,7 +7,7 @@
     android:background="@color/back_activity"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.BusinessModelsActivity">
+    tools:context=".Activities.DetailsModelsActivity">
 
     <ScrollView
         android:layout_width="match_parent"

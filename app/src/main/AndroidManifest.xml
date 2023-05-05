@@ -19,7 +19,10 @@
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
         <activity
-            android:name="com.example.workersapp.Activities.NewFormActivity"
+            android:name="com.example.workersapp.Activities.EmptyActivity"
+            android:exported="false" />
+        <activity
+            android:name="com.example.workersapp.Activities.NewModelActivity"
             android:exported="false" />
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
@@ -35,8 +38,6 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
-
-
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -54,14 +55,14 @@
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
 
         <activity
-            android:name="com.example.workersapp.Activities.BusinessModelsActivity"
-            android:exported="false"/>
+            android:name="com.example.workersapp.Activities.DetailsModelsActivity"
+            android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.MapsActivity"
             android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.PhoneRegistrationActivity"
-            android:exported="false"/>
+            android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.CvActivity"
             android:exported="false" />
@@ -70,13 +71,16 @@
             android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.WorkerProfileActivity"
-            android:exported="false" />
+            android:exported="true">
+<!--            <intent-filter>-->
+<!--                <action android:name="android.intent.action.MAIN" />-->
+
+<!--                <category android:name="android.intent.category.LAUNCHER" />-->
+<!--            </intent-filter>-->
+        </activity>
         <activity
             android:name="com.example.workersapp.Activities.WorkOwnerProfileActivity"
-            android:exported="true">
-
-        </activity>
-
+            android:exported="false" />
         <activity
             android:name="com.example.workersapp.Activities.LoginActivity"
             android:exported="true">
@@ -86,9 +90,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.example.workersapp.Activities.RegisterActivity"
-            android:exported="false"/>
+            android:exported="false" />
 
         <meta-data
             android:name="android.app.lib_name"

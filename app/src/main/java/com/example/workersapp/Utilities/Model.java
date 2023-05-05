@@ -2,24 +2,20 @@ package com.example.workersapp.Utilities;
 
 import java.util.List;
 
-public class Form {
+public class Model {
 
     List<String> images;
     String description;
     List<String> categoriesList;
     String date;
 
-    public Form() {
+    String documentId;
+
+    public Model() {
     }
 
-    public Form(List<String> images, String description, List<String> categoriesList, String date) {
+    public Model(List<String> images, String description, List<String> categoriesList, String date) {
         this.images = images;
-        this.description = description;
-        this.categoriesList = categoriesList;
-        this.date = date;
-    }
-
-    public Form(String description, List<String> categoriesList, String date) {
         this.description = description;
         this.categoriesList = categoriesList;
         this.date = date;
@@ -55,5 +51,13 @@ public class Form {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public String getDocumentId() {
+        return documentId;
+    }
+
+    public void setDocumentId(String documentId) {
+        this.documentId = documentId;
     }
 }
