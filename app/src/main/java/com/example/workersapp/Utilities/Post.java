@@ -11,6 +11,7 @@ public class Post {
     String projectedBudget;
     String jobLocation;
     String jobState;
+    String workerId;
 
     public Post(String title, String description, List<String> images, List<String> categoriesList,
                 String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState) {
@@ -86,5 +87,13 @@ public class Post {
 
     public void setJobState(String jobState) {
         this.jobState = jobState;
+    }
+
+    public String getWorkerId( ) {
+        return workerId;
+    }
+
+    public void setWorkerId( String workerId ) {
+        this.workerId = workerId;
     }
 }

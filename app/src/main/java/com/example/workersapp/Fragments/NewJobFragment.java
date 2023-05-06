@@ -270,7 +270,7 @@ public class NewJobFragment extends Fragment {
                     }
                     //تخزين الكل
                     Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
-                            budget, "", "مفتوح");
+                            budget, "", "open");
                     addPost(post, uid + time);
                 }
             }
