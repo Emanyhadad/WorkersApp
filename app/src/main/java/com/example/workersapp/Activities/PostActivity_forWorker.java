@@ -76,9 +76,14 @@ ActivityPostForWorkerBinding binding;
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
+
         //GetPost
         clintID = "+970595964511";
         postId = "b2nYHmf9PCV4NhRWd0la2Wf9lqk11683192375017"; //TODO GET FROM INTENT
+        firestore.collection( "forms" ).document( clintID).collection( "userForm" ).get().addOnSuccessListener( runnable -> {
+            formsCount = runnable.size();
+            Log.e( "sizesizesize",runnable.size()+"" );
+        } );
 
         path = "posts/" + clintID + "/userPost/" + postId ;
         documentReference = firestore.collection("posts").document( clintID ).
@@ -191,7 +196,8 @@ ActivityPostForWorkerBinding binding;
                             firestore.document(path).collection("Offers").document(String.valueOf(clintID)).set(offer);
 
                             // Set the offer in the "JobApplied" collection
-                            firestore.collection("users").document(clintID).collection("JobApplied").document(postId).set(offer);
+                            firestore.collection("users").document(clintID).collection("JobApplied")
+                                    .document(postId).set(offer);
 
                             binding.LLWriteOffer.setVisibility(View.GONE);
                             binding.tvWriteOffer.setText("العرض الخاص بك");
