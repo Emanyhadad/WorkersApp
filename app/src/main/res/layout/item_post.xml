@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_16sdp"
+    android:layout_marginRight="@dimen/_16sdp"
+    android:layout_marginLeft="@dimen/_16sdp"
+    android:layoutDirection="rtl">
+
+    <LinearLayout
+        android:id="@+id/LL_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border_postitem"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_closedJob"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="تم إغلاق هذه الوظيفة"
+            android:textColor="@color/white"
+            android:paddingEnd="@dimen/_8sdp"
+            android:visibility="gone"
+            android:textSize="@dimen/_10ssp"
+            android:background="@drawable/border_colseitem"
+            />
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:id="@+id/linearLayoutCompat"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_et"
+            android:orientation="vertical"
+            android:padding="@dimen/_8sdp"
+            >
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_postTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_6sdp"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:text="@string/jobTitle"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_11ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_postDec"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:lines="2"
+                android:text="@string/post_paragraph"
+                android:textAlignment="textStart"
+                android:textColor="@color/black"
+                android:textSize="@dimen/_9ssp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_postTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/_2"
+                android:textAlignment="textStart"
+                android:textColor="@color/black0"
+                android:textSize="@dimen/_8ssp" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="start">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:drawablePadding="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_regular"
+                        android:gravity="start"
+                        android:text="@string/ile"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/_10ssp"
+                        />
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/tv_postBudget"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="@dimen/_5sdp"
+                        android:drawablePadding="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_regular"
+                        android:gravity="start"
+                        android:text="@string/_200"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_10ssp" />
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:id="@+id/tv_postLoc"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/_5sdp"
+                    android:drawableStart="@drawable/pin"
+                    android:drawablePadding="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/city"
+                    android:layout_gravity="end"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_10ssp" />
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/tv_jobTime"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/_5sdp"
+                android:drawableStart="@drawable/clender"
+                android:drawablePadding="@dimen/_4sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/month"
+                android:textAlignment="textStart"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_10ssp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/CategoryRecycle"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_19sdp"
+                android:layout_marginTop="@dimen/_5sdp"
+                />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginBottom="@dimen/_8sdp"
+                android:gravity="right|center_horizontal|center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.imageview.ShapeableImageView
+                    android:id="@+id/item_img_clint"
+                    android:layout_width="@dimen/_15sdp"
+                    android:layout_height="@dimen/_15sdp"
+                    android:src="@drawable/worker"
+                     />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_clintName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:text="@string/tv_workerName"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_9ssp" />
+
+                <TextView
+                    android:id="@+id/item_tv_clintRating"
+                    android:layout_width="@dimen/_30sdp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_4sdp"
+                    android:layout_marginRight="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:gravity="center_vertical"
+                    android:text="@string/_4_5i"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_9ssp"
+                    app:drawableEndCompat="@drawable/baseline_star_24" />
+
+
+            </LinearLayout>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvCountOffers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawableEnd="@drawable/ic_comments"
+                    android:fontFamily="@font/cairo_semi_bold"
+                    android:gravity="center_vertical|center_horizontal"
+                    android:padding="@dimen/_3sdp"
+                    android:text="@string/_32"
+                    android:textSize="@dimen/_11ssp"
+                    />
+    </LinearLayout>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -18,21 +18,24 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
+
+
+        <activity
+            android:name=".Activities.PostActivity2"
+            android:exported="false" />
+
         <activity
             android:name=".Activities.PostActivity_forWorker"
             android:exported="false" />
+
         <activity
             android:name=".Activities.OffersActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activities.PostActivity"
-            android:exported="true" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -70,23 +73,10 @@
 
         <activity
             android:name=".Activities.BusinessModelsActivity"
-            android:exported="false" /> <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-        <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-        <!-- </intent-filter> -->
-        <!-- </activity> -->
-
+            android:exported="false" />
         <activity
             android:name=".Activities.PhoneRegistrationActivity"
-            android:exported="false">
-
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
+            android:exported="false"/>
         <activity
             android:name=".Activities.CvActivity"
             android:exported="false" />
@@ -100,19 +90,14 @@
             android:name=".Activities.WorkOwnerProfileActivity"
             android:exported="true">
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
+             <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true">
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.MAIN" />-->
-
-<!--                <category android:name="android.intent.category.LAUNCHER" />-->
-<!--            </intent-filter>-->
         </activity>
         <activity
             android:name=".Activities.RegisterActivity"

@@ -122,5 +122,7 @@
     <string name="putoffer">قدم عرضك</string>
     <string name="write_offer">اكتب عرضك</string>
     <string name="worke_raiting">تقيم العامل</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

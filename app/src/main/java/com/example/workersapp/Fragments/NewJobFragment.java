@@ -237,7 +237,8 @@ public class NewJobFragment extends Fragment {
                     if (uriList.size() != 0) {
                         //نرفع الصور ونخزنهم
                         for (int i = 0; i < uriList.size(); i++) {
-                            StorageReference reference = firebaseStorage.getReference("posts/" + userPhoneNumber + "/" + uid + time + "/" + "/" + uriList.get(i).getLastPathSegment());
+                            StorageReference reference = firebaseStorage.getReference("posts/" + userPhoneNumber + "/" + uid + time + "/" + "/" +
+                                    uriList.get(i).getLastPathSegment());
                             UploadTask uploadTask = reference.putFile(uriList.get(i));
                             Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
@@ -270,7 +271,7 @@ public class NewJobFragment extends Fragment {
                     }
                     //تخزين الكل
                     Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
-                            budget, "", "مفتوح");
+                            budget, "", "open");
                     addPost(post, uid + time);
                 }
             }
@@ -280,6 +281,8 @@ public class NewJobFragment extends Fragment {
     }
 
     private void addPost(Post post, String documentName) {
+        post.setPostId(documentName  );
+
         firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
                 .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
