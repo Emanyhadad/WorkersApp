@@ -11,14 +11,21 @@ public class Model {
 
     String documentId;
 
+
     public Model() {
     }
 
-    public Model(List<String> images, String description, List<String> categoriesList, String date) {
+    public Model(List<String> images, String documentId) {
+        this.images = images;
+        this.documentId = documentId;
+    }
+
+    public Model(List<String> images, String description, List<String> categoriesList, String date,String documentId) {
         this.images = images;
         this.description = description;
         this.categoriesList = categoriesList;
         this.date = date;
+        this.documentId = documentId;
     }
 
     public List<String> getImages() {

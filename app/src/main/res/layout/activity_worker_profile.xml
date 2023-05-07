@@ -31,13 +31,6 @@
             android:layout_marginBottom="@dimen/_8sdp"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/imgBack"
-                android:layout_width="@dimen/_17sdp"
-                android:layout_height="@dimen/_17sdp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/back_icon" />
-
             <TextView
                 android:id="@+id/tvBasicInformation"
                 android:layout_width="wrap_content"
@@ -49,6 +42,14 @@
                 android:text="@string/ProfileToolBar"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_14ssp" />
+
+            <ImageView
+                android:id="@+id/imgBack"
+                android:layout_width="@dimen/_17sdp"
+                android:layout_height="@dimen/_17sdp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/back_icon" />
+
         </LinearLayout>
 
         <androidx.cardview.widget.CardView
@@ -379,8 +380,9 @@
                     android:id="@+id/FragTab"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:tabMode="scrollable"
-                    android:background="@color/back_activity"/>
+                    android:background="@color/back_activity"
+                    android:layoutDirection="rtl"
+                    app:tabTextColor="@color/blue" />
 
                 <androidx.viewpager2.widget.ViewPager2
                     android:id="@+id/FragPager"

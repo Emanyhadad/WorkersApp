@@ -101,7 +101,6 @@ public class NewJobFragment extends Fragment {
         uriList = new ArrayList<>();
         jobCategory = new ArrayList<>();
         categoriesListF = new ArrayList<>();
-//        Toast.makeText(getContext(),  "clas: "+NewJobFragment.class, Toast.LENGTH_SHORT).show();
 
 
         String[] durationList = {"يوم", "يومين", "3 ايام", "4 ايام", "5 ايام", "اسبوع", "اسبوعين", "3 اسابيع", "شهر", "شهرين"};

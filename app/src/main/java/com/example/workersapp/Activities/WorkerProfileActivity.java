@@ -1,15 +1,10 @@
 package com.example.workersapp.Activities;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -45,7 +40,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
     List<String> imagesList;
 
     ImageModelFragAdapter adapter;
-    ActivityResultLauncher<Intent> arl;
     String documentId;
 
     @Override
@@ -58,17 +52,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-
-
-        arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @SuppressLint("NotifyDataSetChanged")
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                assert result.getData() != null;
-                documentId = result.getData().getStringExtra("documentId");
-//                Toast.makeText(WorkerProfileActivity.this, "documentIdProfile: "+documentId, Toast.LENGTH_SHORT).show();
-            }
-        });
 
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .get()
@@ -88,8 +71,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
                             binding.pWorkerCv.setText(cv);
                             binding.pWorkerLocation.setText(city);
                             binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-                            Toast.makeText(WorkerProfileActivity.this, "phone: " + firebaseUser.getPhoneNumber(), Toast.LENGTH_SHORT).show();
-                            Toast.makeText(WorkerProfileActivity.this, "image: " + image, Toast.LENGTH_SHORT).show();
                             Glide.with(getBaseContext())
                                     .load(image)
                                     .circleCrop()
@@ -111,7 +92,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
         tabs.add("نماذج الأعمال");
 
         fragments.add(BlankFragment.newInstance("Audi"));
-        fragments.add(BusinessModelsFragment.newInstance(documentId));
+        fragments.add(new BusinessModelsFragment());
 
         adapter = new ImageModelFragAdapter(this, fragments);
         binding.FragPager.setAdapter(adapter);
@@ -128,7 +109,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(getBaseContext(), NewModelActivity.class);
-                arl.launch(intent);
+                startActivity(intent);
             }
         });
     }

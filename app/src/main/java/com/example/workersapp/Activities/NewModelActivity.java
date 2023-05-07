@@ -1,8 +1,6 @@
 package com.example.workersapp.Activities;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
@@ -56,17 +54,12 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
 
     List<String> uriFromStorage;
 
-    public static SharedPreferences sp;
-    public static SharedPreferences.Editor editor;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityNewModelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        sp = getSharedPreferences("details", MODE_PRIVATE);
-        editor = sp.edit();
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -237,7 +230,12 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void createModel(String description, String uid, long time, String date) {
-        Model model = new Model(uriFromStorage,description, jobCategory,date);
+        Model model = new Model();
+        model.setImages(uriFromStorage);
+        model.setDescription(description);
+        model.setCategoriesList(jobCategory);
+        model.setDate(date);
+        model.setDocumentId(uid+time);
         uploadForm(model, uid + time);
     }
 
@@ -252,15 +250,10 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                         if (!task.isSuccessful()) {
                             Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
-                            Intent intent = new Intent();
-                            intent.putExtra("documentId",documentId);
-                            Toast.makeText(NewModelActivity.this, "model: "+intent.putExtra("documentId",documentId), Toast.LENGTH_SHORT).show();
-                            setResult(RESULT_OK,intent);
                             finish();
                         }
                     }
                 });
-
     }
 
     private void showDatePickerDialog() {

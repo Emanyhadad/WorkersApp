@@ -77,6 +77,7 @@
     <string name="tvWorkTitle">عنوان العمل</string>
     <string name="etWorkTitleHint">أدرج عنوانا موجزا يصف مشروعك بشكل دقيق.</string>
     <string name="tvOptional">اختياري</string>
+    <string name="btnEditModel">تعديل</string>
 
     <string-array name="cities">
         <item>غزة</item>

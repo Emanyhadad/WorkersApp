@@ -75,13 +75,11 @@ public class SliderImgAdapter extends RecyclerView.Adapter<SliderImgAdapter.Slid
     }
 
     class SliderViewHolder extends RecyclerView.ViewHolder {
-        ImageView img, nextImg, backImg;
+        ImageView img;
 
         public SliderViewHolder(ItemSliderImgBinding binding) {
             super(binding.getRoot());
             img = binding.businessShowImg;
-            nextImg = binding.businessNextImg;
-            backImg = binding.businessBackImg;
         }
     }
 }

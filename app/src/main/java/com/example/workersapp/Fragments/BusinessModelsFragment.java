@@ -5,7 +5,6 @@ import static android.content.Context.MODE_PRIVATE;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +18,7 @@ import com.example.workersapp.Activities.DetailsModelsActivity;
 import com.example.workersapp.Adapters.ImageModelAdapter;
 import com.example.workersapp.Listeneres.clickListener;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.Model;
 import com.example.workersapp.databinding.FragmentBusinessModelsBinding;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -47,7 +47,8 @@ public class BusinessModelsFragment extends Fragment {
     String firstImageUrl;
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
-//    String documentId;
+    //    String documentId;
+    List<Model> models;
 
     public BusinessModelsFragment() {
         // Required empty public constructor
@@ -67,7 +68,6 @@ public class BusinessModelsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             documentId = getArguments().getString(ARG_PARAM1_IMAGE);
-            Toast.makeText(getContext(),"frag: "+documentId , Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -83,6 +83,8 @@ public class BusinessModelsFragment extends Fragment {
         firebaseUser = auth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
         imagesList = new ArrayList<>();
+        models = new ArrayList<>();
+
 //        documentId = sp.getString("documentId","null");
 
         // TODO: تاريخ الانضمام
@@ -93,7 +95,7 @@ public class BusinessModelsFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        imagesList.clear();
+        models.clear();
         firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
                 .collection("userForm")
                 .get()
@@ -102,17 +104,17 @@ public class BusinessModelsFragment extends Fragment {
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                             List<String> images = (List<String>) document.get("images");
+                            String doc = (String) document.get("documentId");
                             if (!images.isEmpty()) {
-                                firstImageUrl = images.get(0); // الحصول على الصورة الأولى
-                                Log.d("imageUrlBusniessModels:",firstImageUrl);
-                                imagesList.add(firstImageUrl);
-                                adapter = new ImageModelAdapter(imagesList, getContext(), new clickListener() {
+//                                firstImageUrl = images.get(0);// الحصول على الصورة الأولى
+//                                imagesList.add(firstImageUrl);
+
+                                models.add(new Model(images, doc));
+                                adapter = new ImageModelAdapter(models, getContext(), new clickListener() {
                                     @Override
-                                    public void click(int pos) {
-                                        Toast.makeText(getContext(), "position"+pos, Toast.LENGTH_SHORT).show();
+                                    public void click(String documentId) {
                                         Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
-                                        intent.putExtra("pos",pos);
-                                        intent.putExtra("documentId",document.getId());
+                                        intent.putExtra("documentId", documentId);
                                         startActivity(intent);
                                     }
                                 });
@@ -120,18 +122,12 @@ public class BusinessModelsFragment extends Fragment {
                                 fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
                                 fragRv.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
-                            }
-                            else {
+                            } else {
                                 Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
                             }
-//                            for (String imageUrl : images) {
-////                                Picasso.get().load(imageUrl).into(imageView);
-//                                Toast.makeText(getContext(), "imageUrl: "+imageUrl, Toast.LENGTH_SHORT).show();
-//                                Log.d("imageUrlBusniessModels:",imageUrl);
-////                                Toast.makeText(getContext(), "imageDone", Toast.LENGTH_SHORT).show();
-//                            }
                         }
                     }
                 });
+
     }
 }

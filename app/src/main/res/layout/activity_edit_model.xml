@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_activity"
+    android:fitsSystemWindows="true"
+    android:layoutDirection="rtl"
+    tools:context=".Activities.EditModelActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/sdp_20">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:gravity="center"
+                    android:text="إضافة نموذج جديد"
+                    android:textColor="@color/blue_1"
+                    android:textSize="@dimen/sdp_textSize_16" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/back_icon" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/editImgPicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_picture" />
+
+                <TextView
+                    android:id="@+id/editTvPicture"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sdp_5"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tvPicture"
+                    android:textColor="@color/blue_dark"
+                    android:textSize="@dimen/sdp_textSize_16" />
+
+                <TextView
+                    android:id="@+id/editTvOptional"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:layout_marginStart="@dimen/sdp_5"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tvOptional"
+                    android:textColor="#CFCFCFB3"
+                    android:textSize="@dimen/sdp_textSize_10" />
+
+                <ImageView
+                    android:id="@+id/editImgAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:padding="@dimen/sdp_5"
+                    android:src="@drawable/ic_add_image"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/editImgAddImage"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/sdp_height_100"
+                android:background="@drawable/et_bg"
+                android:padding="@dimen/sdp_30"
+                android:src="@drawable/ic_add_image" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/editRcImg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_bg"
+                android:orientation="horizontal"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sdp_12"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/editImgDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/ic_description" />
+
+                <TextView
+                    android:id="@+id/editTvJobDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sdp_5"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tvJobDescription"
+                    android:textColor="@color/blue_dark"
+                    android:textSize="@dimen/sdp_textSize_16" />
+
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/editEtlDescription"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scrollbars="horizontal"
+                android:textColorHint="#CFCFCF"
+                app:counterEnabled="true"
+                app:counterMaxLength="200"
+                app:counterTextColor="@color/blue_dark">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/editEtDescription"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/sdp_height_100"
+                    android:background="@drawable/et_bg"
+                    android:fontFamily="@font/cairo_regular"
+                    android:gravity="start"
+                    android:maxHeight="@dimen/sdp_height_100"
+                    android:textColor="@color/blue_dark" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/sdp_12"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/editImgJobType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_job_type" />
+
+                <TextView
+                    android:id="@+id/editTvJobType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/sdp_5"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tvJobType"
+                    android:textColor="@color/blue_dark"
+                    android:textSize="@dimen/sdp_textSize_16" />
+            </LinearLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/editFlexboxLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/et_bg"
+                android:padding="@dimen/sdp_10"
+                app:alignItems="stretch"
+                app:flexWrap="wrap"
+                app:justifyContent="flex_start">
+
+                <AutoCompleteTextView
+                    android:id="@+id/editEtoJobType"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/sdp_50"
+                    android:background="@drawable/et_bg"
+                    android:completionThreshold="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:paddingStart="@dimen/sdp_10"
+                    android:textColor="@color/blue_dark" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/editRecyclerView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:layoutManager="com.google.android.flexbox.FlexboxLayoutManager" />
+
+            </com.google.android.flexbox.FlexboxLayout>
+
+            <LinearLayout
+                android:id="@+id/editLinearCalender"
+                android:layout_width="@dimen/_150sdp"
+                android:layout_height="@dimen/_27sdp"
+                android:layout_marginTop="@dimen/_15sdp"
+                android:background="@drawable/back_linear_calender"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/editImgCalendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_9sdp"
+                    android:src="@drawable/ic_calendar2" />
+
+                <TextView
+                    android:id="@+id/editTvCalender"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/_5sdp"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="تاريخ الإنجاز"
+                    android:layout_weight="1"
+                    android:textColor="@color/blue_form_screen"
+                    android:textSize="@dimen/sdp_textSize_16" />
+
+                <ImageView
+                    android:id="@+id/editCalender"
+                    android:layout_width="@dimen/_5sdp"
+                    android:layout_height="@dimen/_8sdp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:src="@drawable/back_icon" />
+
+            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/editBtnEditModel"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_23sdp"
+                android:layout_marginTop="@dimen/_31sdp"
+                android:layout_marginEnd="@dimen/_23sdp"
+                android:layout_marginBottom="@dimen/sdp_40"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/btnEditModel"
+                android:textColor="@color/white"
+                android:background="@drawable/border_button"
+                android:textSize="@dimen/sdp_textSize_16" />
+        </LinearLayout>
+
+    </ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

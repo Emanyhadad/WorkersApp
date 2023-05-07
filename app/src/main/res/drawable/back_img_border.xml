@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <shape android:shape="rectangle" xmlns:android="http://schemas.android.com/apk/res/android">
-    <corners android:radius="@dimen/_4sdp" />
-    <stroke android:color="@color/back_tv" android:width="2dp"/>
-    <size android:width="@dimen/_60sdp" android:height="@dimen/_55sdp"/>
+    <corners android:radius="20dp" />
 </shape>
