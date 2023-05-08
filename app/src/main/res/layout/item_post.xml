@@ -25,9 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="تم إغلاق هذه الوظيفة"
-            android:textColor="@color/white"
-            android:paddingEnd="@dimen/_8sdp"
             android:visibility="gone"
+            android:textColor="@color/white"
+            android:paddingStart="@dimen/_8sdp"
             android:textSize="@dimen/_10ssp"
             android:background="@drawable/border_colseitem"
             />

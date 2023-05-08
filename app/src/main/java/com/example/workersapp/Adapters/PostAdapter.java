@@ -4,7 +4,9 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -12,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemPostBinding;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -30,10 +34,14 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.myViewHolder> 
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     Context context;
+    ItemClickListener listener;
+    DocumentSnapshot documentSnapshot;
+    String path;
 
-    public PostAdapter( List < Post > offerList , Context context ) {
-        this.postList = offerList;
+    public PostAdapter( List < Post > postList , Context context , ItemClickListener listener ) {
+        this.postList = postList;
         this.context = context;
+        this.listener = listener;
     }
 
     @NonNull
@@ -60,24 +68,39 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.myViewHolder> 
         if ( postList.get( pos ).getJobState().equals( "close" ) ){ holder.ClosedJob.setVisibility( View.VISIBLE ); }
         postList.get( pos ).getPostId();
         holder.LL_item.setOnClickListener( view -> {
-
+        listener.OnClick( pos );
         } );
-//        firestore.collection("users").document( Objects.requireNonNull(workerId))
-//                .get()
-//                .addOnSuccessListener(documentSnapshot1 -> {
-//                    if (documentSnapshot1.exists()) {
-//                        String fullName = documentSnapshot1.getString("fullName");
-//                        holder.workerName.setText( fullName );
-//                        String image = documentSnapshot1.getString("image");
-//                        Glide.with(context)
-//                                .load(image)
-//                                .circleCrop()
-//                                .error( R.drawable.worker)
-//                                .into(holder.WorkerImage);
-//                    }
-//                })
-//                .addOnFailureListener(e -> {});
+        firestore.collection("users").document(firebaseUser.getPhoneNumber() )
+                .get()
+                .addOnSuccessListener(documentSnapshot1 -> {
+                    if (documentSnapshot1.exists()) {
+                        String fullName = documentSnapshot1.getString("fullName");
+                        holder.ClintName.setText( fullName );
+                        String image = documentSnapshot1.getString("image");
+                        Glide.with(context)
+                                .load(image)
+                                .circleCrop()
+                                .error( R.drawable.worker)
+                                .into(holder.clintImage);
+                    }
+                })
+                .addOnFailureListener(e -> {});
+                 path="";
 
+//        String count = (firestore.collection("posts")
+//                .document(firebaseUser.getPhoneNumber())
+//                .collection("userPost")
+//                .document(postList.get(pos).getPostId().trim())
+//                .collection("Offers")
+//                .get()
+//                .getResult().isEmpty()? "0" : String.valueOf(firestore.collection("posts")
+//                .document(firebaseUser.getPhoneNumber())
+//                .collection("userPost")
+//                .document(postList.get(pos).getPostId().trim())
+//                .collection("Offers")
+//                .get()
+//                .getResult().size()));
+//        holder.OffersCount.setText(count);
 
 
     }
@@ -96,8 +119,10 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.myViewHolder> 
         AppCompatTextView PostTitle;
         AppCompatTextView PostTime;
         AppCompatTextView PostLoc;
-
+        TextView ClintName;
         RecyclerView CategoryRecycle;
+        ImageView clintImage;
+        MaterialTextView OffersCount;
         public myViewHolder( @NonNull ItemPostBinding binding) {
             super( binding.getRoot() );
             PostTitle = binding.tvPostTitle;
@@ -109,6 +134,9 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.myViewHolder> 
             CategoryRecycle = binding.CategoryRecycle;
             ClosedJob = binding.tvClosedJob;
             LL_item=binding.LLItem;
+            ClintName=binding.tvClintName;
+            clintImage=binding.itemImgClint;
+            OffersCount = binding.tvCountOffers;
         }
     }
 }

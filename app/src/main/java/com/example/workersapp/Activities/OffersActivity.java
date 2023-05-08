@@ -125,9 +125,9 @@ ActivityOffersBinding binding;
                         Hiring(pos);
                     }
                 }, getApplicationContext());
-
                 binding.RV.setAdapter(offersAdapter);
                 binding.RV.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
+
             } else {
                 Log.d("TAG", "Error getting offers: ", task.getException());
             }

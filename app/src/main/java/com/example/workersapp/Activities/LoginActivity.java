@@ -267,8 +267,8 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             binding.progressBarLogin.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
-                                ////////////////////////////////////////////////////////////////////////
-                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+
+                                Intent intent = new Intent(LoginActivity.this, WorkOwnerProfileActivity.class);
                                 startActivity(intent);
                                 finish();
 

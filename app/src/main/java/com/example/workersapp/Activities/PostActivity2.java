@@ -42,7 +42,7 @@ public class PostActivity2 extends AppCompatActivity {
     DocumentReference documentReference;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    String userId,postId,path;
+    String postId,path;
 
 
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation,projectState;
@@ -73,11 +73,11 @@ public class PostActivity2 extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
-        userId = "+970595560706";//TODO GET UserCurrent
-        postId = "y6MM0PPBhyTlzUJ4VaXCjEuII6m11682883708701"; //TODO GET FROM INTENT
+//        userId = "+970594461722";//TODO GET UserCurrent
+        postId = getIntent().getStringExtra( "PostId" ).toString().trim(); //TODO GET FROM INTENT
 
-        path = "posts/" + userId + "/userPost/" + postId ;
-        documentReference = firestore.collection("posts").document( userId ).
+        path = "posts/" + user + "/userPost/" + postId ;
+        documentReference = firestore.collection("posts").document( user.getPhoneNumber() ).
                 collection("userPost").document(postId);
 
 
@@ -93,6 +93,8 @@ public class PostActivity2 extends AppCompatActivity {
                             case "open":
                                 binding.APbtnCloseProject.setVisibility( View.VISIBLE );
                                 binding.APbtnComments.setVisibility( View.VISIBLE );
+                                binding.APTvJobData.setVisibility( View.GONE );
+                                binding.APCLInWork.setVisibility( View.GONE );
                                 DeleteJob( );
                                 binding.APbtnComments.setOnClickListener( view ->
                                         startActivity( new Intent( PostActivity2.this, OffersActivity.class) ) );
@@ -104,6 +106,9 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.PAtvProjectstate.setBackground(getResources().getDrawable( R.drawable.close_bg ));
                                 binding.APbtnCloseProject.setVisibility( View.GONE );
                                 binding.APbtnComments.setVisibility( View.GONE );
+                                binding.APTvJobData.setVisibility( View.GONE );
+                                binding.APCLInWork.setVisibility( View.GONE );
+
                                 Map <String, Object> updates = new HashMap <>();
                                 updates.put("jobState", "close");
                                 documentReference.update(updates).addOnSuccessListener( aVoid -> {
@@ -124,30 +129,37 @@ public class PostActivity2 extends AppCompatActivity {
                         }
 
                         title = documentSnapshot.getString("title");
-                        description= documentSnapshot.getString( "description" );
-                        List<String> images = (List<String>) documentSnapshot.get("images");
-                        List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
-
-                        expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
-                        projectedBudget= documentSnapshot.getString( "projectedBudget" );
-                        jobLocation= documentSnapshot.getString( "jobLocation" );
                         binding.APTvJobTitle.setText( title );
-                        binding.APTvJobDec.setText( description );
-                        //TODO GET Timestamp
-                        binding.APtvJopPrice.setText( projectedBudget );
-                        binding.APTvJobLoc.setText( jobLocation );
-                        binding.APTvJobTime.setText( expectedWorkDuration );
 
+                        description= documentSnapshot.getString( "description" );
+                        binding.APTvJobDec.setText( description );
+
+                        List<String> images = (List<String>) documentSnapshot.get("images");
+                        if (images == null || images.isEmpty()) {
+                            binding.APImageRV.setVisibility(View.GONE);
+                        } else {
+                            showImagesAdapter = new ShowImagesAdapter(images, this);
+                            binding.APImageRV.setAdapter(showImagesAdapter);
+                            binding.APImageRV.setLayoutManager(new LinearLayoutManager(this,
+                                    LinearLayoutManager.HORIZONTAL, false));
+                        }
+
+                        List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
                         showCategoryAdapter = new ShowCategoryAdapter( ( ArrayList < String > ) categoriesList );
                         binding.APCategoryRV.setAdapter( showCategoryAdapter );
                         binding.APCategoryRV.setLayoutManager( new LinearLayoutManager(getBaseContext(),
                                 LinearLayoutManager.HORIZONTAL, false));
 
-                        if ( images.size() == 0 ){binding.APImageRV.setVisibility( View.GONE );}
-                        showImagesAdapter = new ShowImagesAdapter(images, this);
-                        binding.APImageRV.setAdapter(showImagesAdapter);
-                        binding.APImageRV.setLayoutManager(new LinearLayoutManager(this,
-                                LinearLayoutManager.HORIZONTAL, false));
+
+                        expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
+                        binding.APTvJobTime.setText( expectedWorkDuration );
+
+                        projectedBudget= documentSnapshot.getString( "projectedBudget" );
+                        binding.APtvJopPrice.setText( projectedBudget );
+
+                        jobLocation= documentSnapshot.getString( "jobLocation" );
+                        binding.APTvJobLoc.setText( jobLocation );
+//TODO GET Timestamp
 
 
                     } else {

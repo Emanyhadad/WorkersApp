@@ -13,7 +13,7 @@ public class Post {
     String jobState;
     String workerId;
     String postId;
-
+    String OwnerId;
     public Post(String title, String description, List<String> images, List<String> categoriesList,
                 String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState) {
         this.title = title;
@@ -104,5 +104,13 @@ public class Post {
 
     public void setWorkerId( String workerId ) {
         this.workerId = workerId;
+    }
+
+    public String getOwnerId( ) {
+        return OwnerId;
+    }
+
+    public void setOwnerId( String ownerId ) {
+        OwnerId = ownerId;
     }
 }

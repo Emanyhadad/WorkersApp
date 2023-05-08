@@ -11,14 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.workersapp.Activities.OffersActivity;
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
-import com.example.workersapp.Adapters.ShowImagesAdapter;
-import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostsBinding;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -26,9 +24,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -40,12 +36,12 @@ public class PostsFragment extends Fragment {
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
-    String firebaseUser1;
     FirebaseStorage firebaseStorage;
     ShowCategoryAdapter adapter;
     List<String> categoryList;
     List<Post> postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
+    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
 
 
     public PostsFragment( ) {
@@ -71,20 +67,23 @@ public class PostsFragment extends Fragment {
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
         FragmentPostsBinding binding= FragmentPostsBinding.inflate( inflater,container,false );
+        binding.btnFilter.setOnClickListener( view -> {filterButtonSheet.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+        } );
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-        firebaseUser1="+970595964511";
+//        firebaseUser1="+970594461722";
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
-        firebaseFirestore.collection( "posts" ).document( firebaseUser1 ).collection( "userPost" ).get()
+        firebaseFirestore.collection( "posts" ).document( firebaseUser.getPhoneNumber() ).collection( "userPost" ).get()
                 .addOnCompleteListener( task -> {
                     for ( DocumentSnapshot document : task.getResult()) {
-                        firebaseFirestore.document("posts/" + firebaseUser1+ "/userPost/" + document.getId()).get()
+                        Toast.makeText( getContext() , ""+task.getResult().size() , Toast.LENGTH_SHORT ).show( );
+                        firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
                                 .addOnSuccessListener( documentSnapshot -> {
                                     binding.ProgressBar.setVisibility( View.GONE );
-                                    binding.RV.setVisibility( View.VISIBLE );
+                                    binding.RV.setVisibility( View.GONE );
                                     if (documentSnapshot.exists()) {
                                         jobState = documentSnapshot.getString("jobState");
                                         title = documentSnapshot.getString("title");
@@ -98,10 +97,7 @@ public class PostsFragment extends Fragment {
 
                                         Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
                                         postList.add( post );
-                                        Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
-                                        binding.RV.setAdapter( new PostAdapter( postList,getContext() ) );
-                                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
-                                                LinearLayoutManager.HORIZONTAL, false));
+
 
 
                                     } else {
@@ -111,6 +107,15 @@ public class PostsFragment extends Fragment {
                                 .addOnFailureListener( e -> {
                                     // Handle the error
                                 } );
+                        Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
+                        binding.RV.setAdapter( new PostAdapter( postList , getContext( ) , pos -> {
+                            Intent intent = new Intent(getActivity(), PostActivity2.class);
+                            intent.putExtra("PostId", document.getId()); // pass data to new activity
+                            startActivity(intent);
+                        } ) );
+                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                LinearLayoutManager.VERTICAL, false));
+
 
                     }
                 } ).addOnFailureListener( runnable -> {} );

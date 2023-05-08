@@ -1,0 +1,58 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layoutDirection="rtl"
+    android:padding="@dimen/_12sdp"
+    android:background="@drawable/dialog_bg">
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/filter_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="تصفية الوظائف"
+        android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
+        android:textSize="@dimen/_15ssp"
+        android:fontFamily="@font/cairo_semi_bold"
+        />
+
+    <RadioGroup
+        android:id="@+id/status_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:checkedButton="@+id/open_posts_radio_button">
+
+        <RadioButton
+            android:fontFamily="@font/cairo_semi_bold"
+            android:id="@+id/open_posts_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/_13ssp"
+            android:layout_height="wrap_content"
+            android:text="الوظائف المفتوحة" />
+
+        <RadioButton
+            android:fontFamily="@font/cairo_semi_bold"
+            android:id="@+id/closed_posts_radio_button"
+            android:layout_width="wrap_content"
+            android:layout_weight="1"
+            android:textSize="@dimen/_13ssp"
+            android:layout_height="wrap_content"
+            android:text="الوظائف المغلقة" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btn_apply_filter"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_12sdp"
+        android:fontFamily="@font/cairo_semi_bold"
+        android:textSize="@dimen/_13ssp"
+
+        android:text="تنفيذ" />
+
+</LinearLayout>
