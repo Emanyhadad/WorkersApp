@@ -79,7 +79,7 @@ ActivityPostForWorkerBinding binding;
 
         //GetPost
         clintID = "+970595964511";
-        postId = "b2nYHmf9PCV4NhRWd0la2Wf9lqk11683192375017"; //TODO GET FROM INTENT
+        postId = getIntent().getStringExtra( "PostId" ).trim(); //TODO GET FROM INTENT
         firestore.collection( "forms" ).document( clintID).collection( "userForm" ).get().addOnSuccessListener( runnable -> {
             formsCount = runnable.size();
             Log.e( "sizesizesize",runnable.size()+"" );
@@ -117,7 +117,7 @@ ActivityPostForWorkerBinding binding;
                         binding.CategoryRecycle.setLayoutManager( new LinearLayoutManager(getBaseContext(),
                                 LinearLayoutManager.HORIZONTAL, false));
 
-                        if ( images.size() == 0 ){binding.ImageRecycle.setVisibility( View.GONE );}
+                        if ( images.isEmpty() ){binding.ImageRecycle.setVisibility( View.GONE );}
                         showImagesAdapter = new ShowImagesAdapter(images, this);
                         binding.ImageRecycle.setAdapter(showImagesAdapter);
                         binding.ImageRecycle.setLayoutManager(new LinearLayoutManager(this,
@@ -183,7 +183,7 @@ ActivityPostForWorkerBinding binding;
                 offerDes=  Objects.requireNonNull( binding.etOfferDes.getText( ) ).toString();
                 offerPrice=binding.PASpOfferPrice.getText().toString();
                 offerDuration=binding.PAspOfferDuration.getText().toString();
-                Offer offer = new Offer( offerPrice,offerDuration,offerDes,String.valueOf( clintID )  );
+                Offer offer = new Offer( offerPrice,offerDuration,offerDes,String.valueOf( user )  );
 
                 new AlertDialog.Builder(PostActivity_forWorker.this)
                         .setMessage("هل أنت متأكد أنك تريد تقديم عرضك؟")

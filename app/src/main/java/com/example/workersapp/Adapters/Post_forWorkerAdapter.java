@@ -27,17 +27,15 @@ import com.google.firebase.firestore.QuerySnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder> {
+public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerAdapter.myViewHolder> {
     List < Post > postList;
     FirebaseFirestore firestore;
-    FirebaseAuth auth;
-    FirebaseUser firebaseUser;
     Context context;
     ItemClickListener listener;
     QuerySnapshot documentSnapshot;
     String path;
 
-    public PostAdapter( List < Post > postList , Context context , ItemClickListener listener ) {
+    public Post_forWorkerAdapter( List < Post > postList , Context context , ItemClickListener listener ) {
         this.postList = postList;
         this.context = context;
         this.listener = listener;
@@ -53,8 +51,7 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
     @Override
     public void onBindViewHolder( @NonNull myViewHolder holder , int position ) {
         firestore = FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
-        firebaseUser = auth.getCurrentUser();
+
 
         int pos = position;
         holder.PostTitle.setText( postList.get( pos ).getTitle() );
@@ -67,9 +64,9 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
         if ( postList.get( pos ).getJobState().equals( "close" ) ){ holder.ClosedJob.setVisibility( View.VISIBLE ); }
         postList.get( pos ).getPostId();
         holder.LL_item.setOnClickListener( view -> {
-        listener.OnClick( pos );
+            listener.OnClick( pos );
         } );
-        firestore.collection("users").document(firebaseUser.getPhoneNumber() )
+        firestore.collection("users").document(postList.get( pos ).getOwnerId() )
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
                     if (documentSnapshot1.exists()) {
@@ -84,11 +81,11 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
                     }
                 })
                 .addOnFailureListener(e -> {});
-                 path="";
+        path="";
 
 
-         firestore.collection("posts")
-                .document(firebaseUser.getPhoneNumber())
+        firestore.collection("posts")
+                .document(postList.get( pos ).getPostId())
                 .collection("userPost")
                 .document(postList.get(pos).getPostId().trim())
                 .collection("Offers")

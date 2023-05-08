@@ -9,10 +9,12 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
+import android.widget.Toast;
 
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
@@ -27,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class PostActivity2 extends AppCompatActivity {
     ShowCategoryAdapter showCategoryAdapter;
@@ -74,18 +77,18 @@ public class PostActivity2 extends AppCompatActivity {
         user = firebaseAuth.getCurrentUser();
 
 //        userId = "+970594461722";//TODO GET UserCurrent
-        postId = getIntent().getStringExtra( "PostId" ).toString().trim(); //TODO GET FROM INTENT
+        postId = getIntent().getStringExtra( "PostId" ).trim(); //TODO GET FROM INTENT
 
-        path = "posts/" + user + "/userPost/" + postId ;
+                path = "posts/" + user + "/userPost/" + Objects.requireNonNull(postId) ;
         documentReference = firestore.collection("posts").document( user.getPhoneNumber() ).
                 collection("userPost").document(postId);
 
+        Toast.makeText( this , Objects.requireNonNull(postId) , Toast.LENGTH_SHORT ).show( );
 
-        firestore.document(path).get()
+        firestore.collection("posts").document( user.getPhoneNumber() ).
+                collection("userPost").document(Objects.requireNonNull(postId)).get()
                 .addOnSuccessListener( documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        binding.progressBar.setVisibility( View.GONE );
-                        binding.SV.setVisibility( View.VISIBLE );
                         jobState = documentSnapshot.getString("jobState");
                         projectState=jobState;
 
@@ -160,14 +163,14 @@ public class PostActivity2 extends AppCompatActivity {
                         jobLocation= documentSnapshot.getString( "jobLocation" );
                         binding.APTvJobLoc.setText( jobLocation );
 //TODO GET Timestamp
-
+                        binding.progressBar.setVisibility( View.GONE );
+                        binding.SV.setVisibility( View.VISIBLE );
 
                     } else {
-                        // Handle the case when the document doesn't exist
-                    }
+                        Toast.makeText( this , "Prop" , Toast.LENGTH_SHORT ).show( );                    }
                 } )
                 .addOnFailureListener( e -> {
-                    // Handle the error
+                    Log.e( "GetingPost",e.getMessage().toString() );
                 } );
 
 

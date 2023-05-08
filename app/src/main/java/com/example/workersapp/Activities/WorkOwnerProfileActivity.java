@@ -1,6 +1,5 @@
 package com.example.workersapp.Activities;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -9,10 +8,9 @@ import android.widget.Toast;
 
 import com.example.workersapp.Adapters.FragmentAdapter;
 import com.example.workersapp.Fragments.NewJobFragment;
+import com.example.workersapp.Fragments.PostFragment_inWorker;
 import com.example.workersapp.Fragments.PostsFragment;
-import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityWorkOwnerProfileBinding;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -43,7 +41,7 @@ public class WorkOwnerProfileActivity extends AppCompatActivity {
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( NewJobFragment.newInstance( "","" ) );
         fragments.add( PostsFragment.newInstance( "","" ) );
-        fragments.add( PostsFragment.newInstance( "","" ) );
+        fragments.add( PostFragment_inWorker.newInstance( "","" ) );
         fragments.add( PostsFragment.newInstance( "","" ) );
 
         FragmentAdapter adapter=new FragmentAdapter(this,fragments );
