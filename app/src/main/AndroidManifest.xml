@@ -21,7 +21,13 @@
 
 
         <activity
-            android:name=".Activities.PostActivity2"
+            android:name=".Activities.EditModelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.EmptyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activities.NewModelActivity"
             android:exported="false" />
 
         <activity
@@ -72,7 +78,7 @@
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
 
         <activity
-            android:name=".Activities.BusinessModelsActivity"
+            android:name=".Activities.DetailsModelsActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.PhoneRegistrationActivity"
@@ -83,25 +89,27 @@
         <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activities.WorkerProfileActivity"
-            android:exported="false" />
+
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
-            android:exported="true">
-
-             <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-             </intent-filter>
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true">
-        </activity>
+            android:exported="false"/>
+
         <activity
             android:name=".Activities.RegisterActivity"
             android:exported="false" />
+
+        <activity android:name=".Activities.WorkerActivities"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+        </activity>
 
         <meta-data
             android:name="android.app.lib_name"
