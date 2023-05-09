@@ -48,7 +48,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     private static final int REQUEST_CODE = 1;
     String fullName, nickName, birth, gender, accountType;
     int genderId;
-    
+
     public static String profileImageUrl;
 
 

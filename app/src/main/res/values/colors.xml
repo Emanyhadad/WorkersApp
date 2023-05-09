@@ -6,14 +6,16 @@
     <color name="teal_200">#FF03DAC5</color>
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
+    <color name="black0">#1E1E1E</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="white2">#FAFAFA</color>
     <color name="green">#64A811</color>
     <color name="blue">#0E2E3B</color>
     <color name="gray">#CFCFCF</color>
     <color name="gray9">#999999</color>
     <color name="gray1">#FAFAFA</color>
     <color name="black2">#000000</color>
-    <color name="gray_border">#707070</color>
+    <color name="gray_border">#F1F1F1</color>
     <color name="gray_hint">#646464</color>
     <color name="blue_dark">#0E2E3B</color>
     <color name="blue_1">#0E4C75</color>
@@ -22,5 +24,6 @@
     <color name="yellow">#FEC136</color>
     <color name="back_activity">#FAFAFA</color>
     <color name="back_tv">#F1F1F1</color>
-
+    <color name="transparent">#00000000</color>
+    <color name="red">#ED1C24</color>
 </resources>

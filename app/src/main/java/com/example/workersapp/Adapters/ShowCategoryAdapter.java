@@ -7,20 +7,22 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.workersapp.databinding.ItemCategoryModelBinding;
+
+import com.example.workersapp.databinding.ItemJobCategoryBinding;
+import com.example.workersapp.databinding.ItemShowjobcategoryBinding;
 
 import java.util.ArrayList;
 
-public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.CategoryViewHolder> {
+public class ShowCategoryAdapter extends RecyclerView.Adapter< ShowCategoryAdapter.CategoryViewHolder> {
 
     ArrayList<String> categoryArrayList = new ArrayList<>();
-    public categoryAdapter(ArrayList<String> categoryArrayList) {
+    public ShowCategoryAdapter( ArrayList<String> categoryArrayList) {
         this.categoryArrayList = categoryArrayList;
     }
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemCategoryModelBinding binding = ItemCategoryModelBinding.inflate(LayoutInflater.from(parent.getContext()),
+        ItemShowjobcategoryBinding binding = ItemShowjobcategoryBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
         return new CategoryViewHolder(binding);
     }
@@ -38,8 +40,9 @@ public class categoryAdapter extends RecyclerView.Adapter<categoryAdapter.Catego
     class CategoryViewHolder extends RecyclerView.ViewHolder{
         TextView nameCat;
 
-        public CategoryViewHolder(ItemCategoryModelBinding binding) {
 
+
+        public CategoryViewHolder( ItemShowjobcategoryBinding binding) {
             super(binding.getRoot());
             nameCat = binding.itemRvTv;
 

@@ -43,12 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         if (!(uriList.size() == 0)) {
             Glide.with(context).load(uriList.get(pos))
                     .into(holder.img);
-        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onDelete(pos);
-            }
-        });
+        holder.imgDelete.setOnClickListener( view -> listener.onDelete(pos) );
         }
 
     }

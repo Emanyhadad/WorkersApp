@@ -16,7 +16,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/btnSendVerificationCode"
         app:layout_constraintVertical_bias="0.0" />
@@ -50,8 +49,6 @@
             android:text="البيانات الاساسية"
             android:textColor="@color/black"
             android:textSize="@dimen/_18ssp" />
-
-
     </LinearLayout>
 
     <TextView
@@ -61,10 +58,9 @@
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_60sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:fontFamily="@font/cairo_regular"
         android:text="@string/tvPhone"
-        android:textColor="@color/black"
-        android:textSize="@dimen/sdp_textSize_16"
+        android:textColor="#0E2E3B"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/linearLayout4" />
@@ -72,18 +68,17 @@
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/etPhoneReg"
         android:layout_width="@dimen/_280sdp"
-        android:layout_height="@dimen/_46sdp"
+        android:layout_height="@dimen/_50sdp"
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_3sdp"
         android:layout_marginEnd="@dimen/_20sdp"
         android:background="@drawable/et_bg"
-        android:fontFamily="@font/cairo_bold"
         android:hint="@string/etPhoneHint"
         android:inputType="number"
-        android:paddingStart="@dimen/sdp_50"
-        android:textColor="@color/blue_dark"
-        android:textColorHint="@color/gray"
-        android:textSize="@dimen/sdp_textSize_16"
+        android:paddingStart="@dimen/_50sdp"
+        android:textColor="@color/black"
+        android:textColorHint="#CFCFCF"
+        android:textSize="@dimen/_16ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tvPhoneReg" />
@@ -93,10 +88,9 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:text="@string/tvPalestinePhone"
-        android:textColor="@color/green"
-        android:textSize="@dimen/sdp_textSize_16"
+        android:textColor="#64A811"
+        android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
-        android:fontFamily="@font/cairo_bold"
         app:layout_constraintBottom_toBottomOf="@+id/etPhoneReg"
         app:layout_constraintStart_toStartOf="@+id/etPhoneReg"
         app:layout_constraintTop_toTopOf="@+id/etPhoneReg" />
@@ -109,12 +103,11 @@
         android:layout_marginStart="@dimen/_20sdp"
         android:layout_marginTop="@dimen/_30sdp"
         android:layout_marginEnd="@dimen/_20sdp"
-        android:backgroundTint="@color/blue"
-        android:fontFamily="@font/cairo_regular"
+        android:backgroundTint="#0E2E3B"
         android:text="@string/btnSendVerificationCode"
         android:textAllCaps="false"
         android:textColor="@color/white"
-        android:textSize="@dimen/sdp_textSize_16"
+        android:textSize="@dimen/_18ssp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/etPhoneReg" />
