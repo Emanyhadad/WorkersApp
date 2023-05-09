@@ -2,14 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/Careers"
-        android:icon="@drawable/baseline_search_24"
-        android:title="@string/CareersNav"/>
+        android:id="@+id/profile"
+        android:icon="@drawable/profile"
+        android:title="@string/ArithmeticNav"/>
 
-    <item
-    android:id="@+id/Presenter"
-    android:icon="@drawable/write"
-    android:title="@string/PresenterNav"/>
 
     <item
         android:id="@+id/myJobs"
@@ -17,7 +13,14 @@
         android:title="@string/myJobsNav"/>
 
     <item
-        android:id="@+id/Arithmetic"
-        android:icon="@drawable/profile"
-        android:title="@string/ArithmeticNav"/>
+        android:id="@+id/Presenter"
+        android:icon="@drawable/write"
+        android:title="@string/PresenterNav"/>
+
+
+    <item
+        android:id="@+id/jobs"
+        android:icon="@drawable/baseline_search_24"
+        android:title="@string/CareersNav"/>
+
 </menu>
