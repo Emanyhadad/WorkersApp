@@ -54,6 +54,7 @@ public class BusinessModelsFragment extends Fragment {
         // Required empty public constructor
     }
 
+
     // TODO: Rename and change types and number of parameters
     public static BusinessModelsFragment newInstance(String documentId) {
         BusinessModelsFragment fragment = new BusinessModelsFragment();

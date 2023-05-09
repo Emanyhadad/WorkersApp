@@ -65,7 +65,7 @@ public class CvActivity extends AppCompatActivity {
                                     Toast.makeText(CvActivity.this, "success cv and work", Toast.LENGTH_SHORT).show();
                                 }
                             });
-                    Intent intent = new Intent(getBaseContext(),WorkerProfileActivity.class);
+                    Intent intent = new Intent(getBaseContext(),WorkerActivities.class);
                     startActivity(intent);
                 } else {
                     binding.CvWork.setError("يرجى تعبئة هذا الحقل");

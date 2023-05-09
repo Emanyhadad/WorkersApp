@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.denzcoskun.imageslider.constants.ScaleTypes;
 import com.denzcoskun.imageslider.interfaces.ItemChangeListener;
 import com.denzcoskun.imageslider.models.SlideModel;
-import com.example.workersapp.Adapters.categoryAdapter;
+import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityDetailsModelsBinding;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -39,7 +39,7 @@ public class DetailsModelsActivity extends AppCompatActivity {
 
     ArrayList<String> categoryArrayList;
 
-    categoryAdapter categoryAdapter;
+    ShowCategoryAdapter categoryAdapter;
 
     List<String> imagesList;
     String doc;
@@ -86,6 +86,8 @@ public class DetailsModelsActivity extends AppCompatActivity {
                     }
                 });
 
+
+
         binding.businessImgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -94,37 +96,6 @@ public class DetailsModelsActivity extends AppCompatActivity {
                 startActivity(intent1);
             }
         });
-
-//
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        ArrayList<SlideModel> slideModels = new ArrayList<>();
-//                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-//                            List<String> images = (List<String>) document.get("images");
-//                            if (!images.isEmpty()) {
-//                                for (String imageUrl : images) {
-//                                    imagesList.add(imageUrl);
-//                                    // imageUrl : بتجيب كل الصور الموجودة في كل الديكيومنت
-//                                    Toast.makeText(DetailsModelsActivity.this, "imageUrl: "+imageUrl, Toast.LENGTH_SHORT).show();
-//                                    slideModels.add(new SlideModel(imageUrl,null));
-////                                    adapter = new SliderImgAdapter(imagesList,getBaseContext());
-////                                    binding.businessRvImg.setAdapter(adapter);
-////                                    binding.businessRvImg.setLayoutManager(new LinearLayoutManager(getBaseContext(),
-////                                            RecyclerView.HORIZONTAL, false));
-////                                    binding.businessRvImg.setAdapter(adapter);
-////                                    adapter.notifyDataSetChanged();
-//                                }
-//                            }
-//                            else {
-//                                Toast.makeText(getBaseContext(), "wait", Toast.LENGTH_SHORT).show();
-//                            }
-//                        }
-//                        binding.imageSlider.setImageList(slideModels);
-//
-//                    }
-//                });
 
     }
 
@@ -163,7 +134,7 @@ public class DetailsModelsActivity extends AppCompatActivity {
 
                         for (String categoryList:categories){
                             categoryArrayList.add(categoryList);
-                            categoryAdapter = new categoryAdapter(categoryArrayList);
+                            categoryAdapter = new ShowCategoryAdapter(categoryArrayList);
                             binding.businessRv.setAdapter(categoryAdapter);
                             binding.businessRv.setLayoutManager(new LinearLayoutManager(getBaseContext(),
                                     RecyclerView.HORIZONTAL, false));

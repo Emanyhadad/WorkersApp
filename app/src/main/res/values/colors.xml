@@ -26,4 +26,5 @@
     <color name="back_tv">#F1F1F1</color>
     <color name="transparent">#00000000</color>
     <color name="red">#ED1C24</color>
+    <color name="gray_tv">#707070</color>
 </resources>

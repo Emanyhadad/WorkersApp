@@ -41,7 +41,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NewModelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+
     ActivityNewModelBinding binding;
+
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -183,6 +185,8 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                 } else if (jobCategory.size() == 0) {
                     Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
                 } else {
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.formBtnAddForm.setVisibility(View.GONE);
                     String uid = firebaseUser.getUid();
                     long time = System.currentTimeMillis();
                     String userPhoneNumber = firebaseUser.getPhoneNumber();
@@ -250,6 +254,8 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                         if (!task.isSuccessful()) {
                             Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
+                            binding.progressBar.setVisibility(View.VISIBLE);
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }

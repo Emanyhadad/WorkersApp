@@ -55,10 +55,12 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
     JobCategoryAdapter jobCategoryAdapter;
     List<String> categoriesListF;
     List<String> jobCategory;
+    ActivityResultLauncher<String> al1;
 
     List<String> uriFromStorage;
 
-    String document;
+    String document, date, description;
+
 
 
     @Override
@@ -74,7 +76,6 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
         categoryArrayList = new ArrayList<>();
         uriList = new ArrayList<>();
         jobCategory = new ArrayList<>();
-
         Intent intent = getIntent();
         document = intent.getStringExtra("document");
 
@@ -85,8 +86,105 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
             }
         });
 
+        choosePicture();
+
+        binding.editImgAddImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                al1.launch("image/*");
+            }
+        });
+        binding.editImgAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                al1.launch("image/*");
+            }
+        });
+
+        firebaseFirestore.collection("workCategoryAuto").document("category").get().
+                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            categoriesListF = (List<String>) task.getResult().get("categories");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+                            binding.editEtoJobType.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+        categoryJobType();
+        getData();
+
+
+        binding.editBtnEditModel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                 description = binding.editEtDescription.getText().toString();
+                 date = binding.editTvCalender.getText().toString();
+                String userPhoneNumber = firebaseUser.getPhoneNumber();
+                if (uriList.size() != 0) {
+                    //نرفع الصور ونخزنهم
+                    uriFromStorage = new ArrayList<>();
+                    binding.editBtnEditModel.setVisibility(View.GONE);
+                    binding.progressBarEdit.setVisibility(View.VISIBLE);
+                    for (int i = 0; i < uriList.size(); i++) {
+                        StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + document + "/" + "/" + uriList.get(i).getLastPathSegment());
+                        UploadTask uploadTask = reference.putFile(uriList.get(i));
+                        int finalI = i;
+                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                    @Override
+                                    public void onSuccess(Uri uri) {
+                                        String uriString = uri.toString();
+                                        uriFromStorage.add(uriString);
+                                        if (finalI == uriList.size() - 1) {
+                                            updateModel();
+                                        }
+                                    }
+                                });
+                            }
+                        });
+                    }
+                } else {
+                }
+
+            }
+        });
+
+    }
+    private void showDatePickerDialog() {
+        Calendar calendar = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+            calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    this,
+                    this,
+                    year,
+                    month,
+                    dayOfMonth
+            );
+            datePickerDialog.show();
+        }
+
+    }
+
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
+        binding.editTvCalender.setText(date);
+    }
+    private void choosePicture(){
         //اختيار صورة
-        ActivityResultLauncher<String> al1 = registerForActivityResult(
+        al1 = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {
                     @Override
@@ -126,33 +224,8 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                         binding.editRcImg.setAdapter(imageAdapter);
                     }
                 });
-        binding.editImgAddImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                al1.launch("image/*");
-            }
-        });
-        binding.editImgAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                al1.launch("image/*");
-            }
-        });
-
-        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
-                            binding.editEtoJobType.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-
+    }
+    private void categoryJobType(){
         binding.editEtoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -176,7 +249,8 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                 binding.editRecyclerView.setAdapter(jobCategoryAdapter);
             }
         });
-
+    }
+    private void getData(){
         firebaseFirestore.collection("forms")
                 .document(firebaseUser.getPhoneNumber())
                 .collection("userForm")
@@ -246,107 +320,52 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                     }
                 });
 
-        binding.editBtnEditModel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String description = binding.editEtDescription.getText().toString();
-                String date = binding.editTvCalender.getText().toString();
-                String userPhoneNumber = firebaseUser.getPhoneNumber();
-                if (uriList.size() != 0) {
-                    //نرفع الصور ونخزنهم
-                    uriFromStorage = new ArrayList<>();
-                    for (int i = 0; i < uriList.size(); i++) {
-                        StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + document + "/" + "/" + uriList.get(i).getLastPathSegment());
-                        UploadTask uploadTask = reference.putFile(uriList.get(i));
-                        int finalI = i;
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+    }
+
+    private void updateModel(){
+        firebaseFirestore.collection("forms")
+                .document(firebaseUser.getPhoneNumber())
+                .collection("userForm")
+                .document(document)
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("description", description);
+                        map.put("date", date);
+                        List<String> images = (List<String>) documentSnapshot.get("images");
+                        if (images != null) {
+                            uriFromStorage.addAll(images);
+                        }
+                        if (!uriFromStorage.isEmpty()) {
+                            map.put("images", uriFromStorage);
+                        }
+                        if (!jobCategory.isEmpty()) {
+                            map.put("categoriesList", jobCategory);
+                        }
+                        firebaseFirestore.collection("forms")
+                                .document(firebaseUser.getPhoneNumber())
+                                .collection("userForm")
+                                .document(document)
+                                .update(map)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
-                                    public void onSuccess(Uri uri) {
-                                        String uriString = uri.toString();
-                                        uriFromStorage.add(uriString);
-                                        if (finalI == uriList.size() - 1) {
-                                            // استخدام uriFromStorage لتحديث الوثيقة
-                                            firebaseFirestore.collection("forms")
-                                                    .document(firebaseUser.getPhoneNumber())
-                                                    .collection("userForm")
-                                                    .document(document)
-                                                    .get()
-                                                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                                        @Override
-                                                        public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                                            Map<String, Object> map = new HashMap<>();
-                                                            map.put("description", description);
-                                                            map.put("date", date);
-                                                            List<String> images = (List<String>) documentSnapshot.get("images");
-                                                            if (images != null) {
-                                                                uriFromStorage.addAll(images);
-                                                            }
-                                                            if (!uriFromStorage.isEmpty()) {
-                                                                map.put("images", uriFromStorage);
-                                                            }
-                                                            if (!jobCategory.isEmpty()) {
-                                                                map.put("categoriesList", jobCategory);
-                                                            }
-                                                            firebaseFirestore.collection("forms")
-                                                                    .document(firebaseUser.getPhoneNumber())
-                                                                    .collection("userForm")
-                                                                    .document(document)
-                                                                    .update(map)
-                                                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                                        @Override
-                                                                        public void onSuccess(Void unused) {
-                                                                            Toast.makeText(EditModelActivity.this, "successfully", Toast.LENGTH_SHORT).show();
-                                                                            finish();
-                                                                        }
-                                                                    })
-                                                                    .addOnFailureListener(new OnFailureListener() {
-                                                                        @Override
-                                                                        public void onFailure(@NonNull Exception e) {
-                                                                            Toast.makeText(EditModelActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                                                                        }
-                                                                    });
-                                                        }
-                                                    });
-                                        }
+                                    public void onSuccess(Void unused) {
+                                        binding.progressBarEdit.setVisibility(View.GONE);
+                                        binding.editBtnEditModel.setVisibility(View.VISIBLE);
+                                        setResult(RESULT_OK);
+                                        finish();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toast.makeText(EditModelActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                                     }
                                 });
-                            }
-                        });
                     }
-                } else {
-                }
-
-            }
-        });
+                });
 
     }
-    private void showDatePickerDialog() {
-        Calendar calendar = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    this,
-                    this,
-                    year,
-                    month,
-                    dayOfMonth
-            );
-            datePickerDialog.show();
-        }
-
-    }
-
-    @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-        binding.editTvCalender.setText(date);
-    }
-
 }
