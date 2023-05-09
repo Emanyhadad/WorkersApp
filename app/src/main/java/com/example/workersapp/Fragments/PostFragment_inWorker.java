@@ -42,17 +42,13 @@ public class PostFragment_inWorker extends Fragment {
     List<String> categoryList;
     List<Post> postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
-//    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
 
     public PostFragment_inWorker( ) {
-        // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
-    public static PostFragment_inWorker newInstance( String param1 , String param2 ) {
+    public static PostFragment_inWorker newInstance( ) {
         PostFragment_inWorker fragment = new PostFragment_inWorker( );
         Bundle args = new Bundle( );
-
         fragment.setArguments( args );
         return fragment;
     }
@@ -69,11 +65,9 @@ public class PostFragment_inWorker extends Fragment {
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
 
-        FragmentPostsBinding binding= FragmentPostsBinding.inflate( inflater,container,false );
-//        binding.btnFilter.setOnClickListener( view -> {filterButtonSheet.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
-//        } );
+        FragmentPostInWorkerBinding binding= FragmentPostInWorkerBinding.inflate( inflater,container,false );
+
         firebaseFirestore=FirebaseFirestore.getInstance();
-//        firebaseUser1="+970594461722";
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
         List decoumtId = new ArrayList(  );

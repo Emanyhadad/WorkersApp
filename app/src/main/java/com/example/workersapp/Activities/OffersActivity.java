@@ -56,7 +56,7 @@ ActivityOffersBinding binding;
          firestore = FirebaseFirestore.getInstance();
          //TODO INTENT
         String clientId = "+970595964511";
-        String postId = "b2nYHmf9PCV4NhRWd0la2Wf9lqk11683192375017";
+        String postId = "b2nYHmf9PCV4NhRWd0la2Wf9lqk11683485597267";
 
         CollectionReference offersRef = firestore.collection("posts").document(clientId)
                 .collection("userPost").document(postId)
@@ -100,7 +100,7 @@ ActivityOffersBinding binding;
                                 .setPositiveButton("نعم ، حذف", (dialogInterface, i) -> {
                                     Map<String, Object> updates = new HashMap<>();
                                     updates.put("OfferState", "hide");
-                                    offersRef.document(String.valueOf(offerList.get(pos).getWorkerID()))
+                                    offersRef.document(offerList.get( pos ).workerID)
                                             .update(updates)
                                             .addOnSuccessListener(aVoid -> {
                                                 // Handle the case when the update is successful

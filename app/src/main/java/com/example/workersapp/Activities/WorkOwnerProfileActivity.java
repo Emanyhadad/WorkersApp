@@ -41,7 +41,7 @@ public class WorkOwnerProfileActivity extends AppCompatActivity {
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( NewJobFragment.newInstance( "","" ) );
         fragments.add( PostsFragment.newInstance( "","" ) );
-        fragments.add( PostFragment_inWorker.newInstance( "","" ) );
+        fragments.add( PostFragment_inWorker.newInstance( ) );
         fragments.add( PostsFragment.newInstance( "","" ) );
 
         FragmentAdapter adapter=new FragmentAdapter(this,fragments );
