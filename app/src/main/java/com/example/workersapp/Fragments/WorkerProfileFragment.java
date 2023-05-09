@@ -144,7 +144,7 @@ public class WorkerProfileFragment extends Fragment {
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
 
-        fragments.add(BlankFragment.newInstance("Audi"));
+        fragments.add(BlankFragment.newInstance());
         fragments.add(new BusinessModelsFragment());
 
         adapter = new ImageModelFragAdapter(getActivity(), fragments);

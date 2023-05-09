@@ -16,6 +16,8 @@ import com.example.workersapp.Listeneres.OfferListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
 import com.example.workersapp.databinding.ActivityOffersBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -35,7 +37,8 @@ ActivityOffersBinding binding;
     View hireDialogView;
 
     OffersAdapter offersAdapter;
-
+    FirebaseAuth firebaseAuth;
+    FirebaseUser user;
 
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
@@ -54,11 +57,36 @@ ActivityOffersBinding binding;
 
 
          firestore = FirebaseFirestore.getInstance();
-         //TODO INTENT
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
+        //TODO INTENT
         String clientId = "+970595964511";
         String postId = "b2nYHmf9PCV4NhRWd0la2Wf9lqk11683485597267";
 
-        CollectionReference offersRef = firestore.collection("posts").document(clientId)
+
+        firestore.collection( "offers" ).get().addOnSuccessListener( queryDocumentSnapshots -> {
+            for ( DocumentSnapshot documentSnapshot: queryDocumentSnapshots ){
+                Log.e( "DecoumentId",documentSnapshot.getId() );
+                Log.e( "PostId",documentSnapshot.get( "postID" ).toString() );
+
+                if (  documentSnapshot.get( "clintID" ).equals( user.getPhoneNumber() ) ){
+                    Log.e( "MyOffers",documentSnapshot.get( "offerDuration" ).toString() );
+
+                }
+
+                firestore.collection( "users" ).document( documentSnapshot.get( "workerID" ).toString() )
+                        .get().addOnSuccessListener( runnable -> Log.e( "workerId",  runnable.get( "accountType" ).toString()) );
+
+
+
+
+
+            }
+        } ).addOnFailureListener( runnable -> {} );
+
+
+        CollectionReference offersRef = firestore.collection("offers").document(clientId)
                 .collection("userPost").document(postId)
                 .collection("Offers");
 
@@ -73,7 +101,7 @@ ActivityOffersBinding binding;
                     String offerDuration = String.valueOf(document.get("offerDuration"));
                     String offerDescription = String.valueOf(document.get("offerDescription"));
                     String offerState = String.valueOf(document.get("OfferState"));
-                    offer = new Offer(offerBudget, offerDuration, offerDescription, workerID);
+                    offer = new Offer(offerBudget, offerDuration, offerDescription, workerID,clientId,postId);
                     if (!offerState.equals("hide") || offerState.equals(null)) {
                         offerList.add(offer);
                     }

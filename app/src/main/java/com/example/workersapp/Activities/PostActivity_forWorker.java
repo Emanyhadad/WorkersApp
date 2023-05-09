@@ -24,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -87,39 +88,33 @@ ActivityPostForWorkerBinding binding;
                 .addOnSuccessListener(runnable -> formsCount = runnable.size());
 
         path = "posts/" + clintID + "/userPost/" + postId;
-
+        String offerId = user.getPhoneNumber()+">"+postId;
 
         //Get Post
         getPostData();
 
         //store Offer in Worker
-        firestore.collection("users")
-                .document(user.getPhoneNumber()).collection("JobApplied").
-                document(postId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
+        firestore.collection( "offers" ).document( offerId ).get().addOnSuccessListener(
+                documentSnapshot -> {
+                    if ( documentSnapshot.exists() ){
                         binding.PB2.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "You have already applied for a job", Toast.LENGTH_SHORT).show();
                         binding.tvWriteOffer.setText("العرض الخاص بك");
 
                         //Get Worker Data
                         GetUserData();
+                        binding.tvSendOfferDuration.setText( documentSnapshot.getString( "offerDuration" ) );
+                        binding.tvSendOfferDec.setText( documentSnapshot.getString( "offerDescription" ) );
+                        binding.tvSendOfferPrice.setText( documentSnapshot.getString( "offerBudget" ) );
 
-                        //Get Offer Data
-                        firestore.collection("users").document(user.getPhoneNumber()).collection("JobApplied")
-                                .document(postId).get().addOnSuccessListener(runnable -> {
-                                    binding.tvSendOfferDuration.setText(runnable.getString("offerDuration"));
-                                    binding.tvSendOfferDec.setText(runnable.getString("offerDescription"));
-                                    binding.tvSendOfferPrice.setText(runnable.getString("offerBudget"));
-                                });
-                    } else {
+                    }                    else {
                         binding.LLWriteOffer.setVisibility(View.VISIBLE);
 
                         binding.btnSendOffer.setOnClickListener(view -> {
                             offerDes = binding.etOfferDes.getText().toString().trim();
                             offerPrice = binding.PASpOfferPrice.getText().toString().trim();
                             offerDuration = binding.PAspOfferDuration.getText().toString().trim();
-                            Offer offer = new Offer(offerPrice, offerDuration, offerDes, user.getPhoneNumber());
+                            Offer offer = new Offer(offerPrice, offerDuration, offerDes, user.getPhoneNumber(),clintID,postId);
 
                             new AlertDialog.Builder(PostActivity_forWorker.this)
                                     .setMessage("هل أنت متأكد أنك تريد تقديم عرضك؟")
@@ -128,15 +123,7 @@ ActivityPostForWorkerBinding binding;
                                         binding.PB2.setVisibility(View.VISIBLE);
 
 
-                                        // Create a new offer object and set it in the "Offers" collection
-                                        firestore.collection( "posts" ).document( clintID )
-                                                .collection( "userPost" )
-                                                .document( postId )
-                                                .collection("Offers").document(user.getPhoneNumber()).set(offer);
-
-                                        // Set the offer in the "JobApplied" collection
-                                        firestore.collection("users").document(user.getPhoneNumber())
-                                                .collection("JobApplied").document(postId).set(offer);
+                                        firestore.collection( "offers" ).document( user+">"+postId ).set( offer );
 
                                         binding.LLWriteOffer.setVisibility(View.GONE);
                                         binding.tvWriteOffer.setText("العرض الخاص بك");
@@ -151,12 +138,12 @@ ActivityPostForWorkerBinding binding;
                                     .create()
                                     .show();
                         } );
-            }
-        }).addOnFailureListener(e -> {});
+                    }
 
+                }
+        ).addOnFailureListener( e -> {} );}
 
-    }
-    void GetUserData(){
+        void GetUserData(){
         // Get user details and set them in the view
         firestore.collection("users").document(Objects.requireNonNull(user.getPhoneNumber()))
                 .get()

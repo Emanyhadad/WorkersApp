@@ -7,22 +7,16 @@ public class Offer {
     public String offerDuration;
     public String offerDescription;
     public String workerID;
+    public String clintID;
+    public String postID;
 
-    public String countForm;
-
-    public Offer(String offerBudget, String offerDuration, String offerDescription, String workerID) {
+    public Offer( String offerBudget , String offerDuration , String offerDescription , String workerID , String clintID , String postID ) {
         this.offerBudget = offerBudget;
         this.offerDuration = offerDuration;
         this.offerDescription = offerDescription;
         this.workerID = workerID;
-    }
-
-    public String getCountForm( ) {
-        return countForm;
-    }
-
-    public void setCountForm( String countForm ) {
-        this.countForm = countForm;
+        this.clintID = clintID;
+        this.postID = postID;
     }
 
     public String getOfferBudget( ) {
@@ -55,5 +49,21 @@ public class Offer {
 
     public void setWorkerID( String workerID ) {
         this.workerID = workerID;
+    }
+
+    public String getClintID( ) {
+        return clintID;
+    }
+
+    public void setClintID( String clintID ) {
+        this.clintID = clintID;
+    }
+
+    public String getPostID( ) {
+        return postID;
+    }
+
+    public void setPostID( String postID ) {
+        this.postID = postID;
     }
 }
