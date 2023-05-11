@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/sdp_20"
+    android:background="#FFFFFF"
+    android:layoutDirection="rtl"
+    app:cardCornerRadius="@dimen/sdp_10"
+    app:cardElevation="@dimen/_2sdp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="@dimen/sdp_10">
+
+        <TextView
+            android:id="@+id/tvWorkTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/sdp_5"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="بدي خزانة نوع خشب أند إي أف، ست ضرفات"
+            android:textColor="@color/black"
+            android:textSize="@dimen/sdp_textSize_14" />
+
+        <TextView
+            android:id="@+id/tvWorkDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sdp_8"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="بدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينعرضها أقل حاجة 60سممع أدراج وعلاقة، دهان نوع كذا، مع مفاتيح للأبواب،"
+            android:textColor="@color/gray9A"
+            android:textSize="@dimen/sdp_textSize_12" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tvILE"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_regular"
+                android:text="ILE"
+                android:textColor="@color/green"
+                android:textSize="@dimen/sdp_textSize_14" />
+
+            <TextView
+                android:id="@+id/tvBudget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/_3sdp"
+                android:layout_weight="1"
+                android:fontFamily="@font/cairo_regular"
+                android:text="150 "
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/sdp_textSize_14" />
+
+            <TextView
+                android:id="@+id/tvLocation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:drawableRight="@drawable/ic_pin"
+                android:drawablePadding="@dimen/sdp_5"
+                android:fontFamily="@font/cairo_regular"
+                android:text="خانيونس"
+                android:textColor="@color/blue_dark"
+                android:textSize="@dimen/sdp_textSize_14" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvDuration"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sdp_8"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/clender"
+            android:drawablePadding="@dimen/sdp_5"
+            android:fontFamily="@font/cairo_regular"
+            android:text="ا1/مايو/2023 - الآن"
+            android:textColor="@color/blue_dark"
+            android:textSize="@dimen/sdp_textSize_12" />
+
+        <TextView
+            android:id="@+id/tvWorkerName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/sdp_5"
+            android:layout_weight="1"
+            android:drawableRight="@drawable/profile"
+            android:drawablePadding="@dimen/sdp_5"
+            android:fontFamily="@font/cairo_regular"
+            android:text="عبدالله يوسف"
+            android:textColor="@color/blue_dark"
+            android:textSize="@dimen/sdp_textSize_12" />
+
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

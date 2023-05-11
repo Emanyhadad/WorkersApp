@@ -30,18 +30,22 @@
             android:name=".Activities.NewModelActivity"
             android:exported="false" />
 
+
         <activity
             android:name=".Activities.PostActivity_forWorker"
             android:exported="false" />
-
         <activity
             android:name=".Activities.OffersActivity"
             android:exported="false" />
-
         <activity
             android:name=".Activities.PostActivity"
-            android:exported="false"/>
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
 
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -92,7 +96,12 @@
 
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="false"/>
