@@ -30,5 +30,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/work_owner_nav" />
 
-
 </androidx.constraintlayout.widget.ConstraintLayout>

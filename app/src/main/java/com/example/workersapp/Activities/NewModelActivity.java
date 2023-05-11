@@ -1,57 +1,49 @@
 package com.example.workersapp.Activities;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.DatePickerDialog;
 import android.icu.util.Calendar;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Adapters.ImageAdapter;
 import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
-import com.example.workersapp.R;
-import com.example.workersapp.Utilities.Form;
-import com.example.workersapp.Utilities.Post;
-import com.example.workersapp.databinding.ActivityNewFormBinding;
+import com.example.workersapp.Utilities.Model;
+import com.example.workersapp.databinding.ActivityNewModelBinding;
 import com.google.android.flexbox.FlexboxLayoutManager;
 import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-public class NewFormActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
-    ActivityNewFormBinding binding;
+public class NewModelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+
+    ActivityNewModelBinding binding;
+
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -64,13 +56,11 @@ public class NewFormActivity extends AppCompatActivity implements DatePickerDial
 
     List<String> uriFromStorage;
 
-    String documentName;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityNewFormBinding.inflate(getLayoutInflater());
+        binding = ActivityNewModelBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -81,6 +71,7 @@ public class NewFormActivity extends AppCompatActivity implements DatePickerDial
         jobCategory = new ArrayList<>();
         categoriesListF = new ArrayList<>();
         uriFromStorage = new ArrayList<>();
+
 
         binding.formLinearCalender.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,8 +151,8 @@ public class NewFormActivity extends AppCompatActivity implements DatePickerDial
         binding.formEtoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
-                jobCategory.add(categoriesListF.get(i));
+                String selectedCategory = ((TextView) view).getText().toString();
+                jobCategory.add(selectedCategory);
                 binding.formEtoJobType.setText("");
 
                 if (jobCategory.size() != 0) {
@@ -186,71 +177,85 @@ public class NewFormActivity extends AppCompatActivity implements DatePickerDial
             @Override
             public void onClick(View view) {
                 String description = binding.formEtDescription.getText().toString();
-                String birth = binding.formTvCalender.getText().toString();
+                String date = binding.formTvCalender.getText().toString();
                 if (TextUtils.isEmpty(description)) {
                     binding.formEtDescription.setError("يجب ملء هذا الحقل");
-                } else if (TextUtils.isEmpty(birth) || birth.equals("تاريخ الإنجاز")) {
+                } else if (TextUtils.isEmpty(date) || date.equals("تاريخ الإنجاز")) {
                     binding.formTvCalender.setError("يجب ملء هذا الحقل");
                 } else if (jobCategory.size() == 0) {
                     Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
                 } else {
+                    binding.progressBar.setVisibility(View.VISIBLE);
+                    binding.formBtnAddForm.setVisibility(View.GONE);
                     String uid = firebaseUser.getUid();
                     long time = System.currentTimeMillis();
                     String userPhoneNumber = firebaseUser.getPhoneNumber();
                     if (uriList.size() != 0) {
                         //نرفع الصور ونخزنهم
+                        uriFromStorage = new ArrayList<>();
                         for (int i = 0; i < uriList.size(); i++) {
-                            StorageReference reference = firebaseStorage.getReference("form/" + userPhoneNumber + "/" + uid + time + "/" + "/" + uriList.get(i).getLastPathSegment());
-
-                            StorageTask<UploadTask.TaskSnapshot> uploadTask = reference.putFile(uriList.get(i));
-
-                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + uid + time + "/" + "/" + uriList.get(i).getLastPathSegment());
+                            UploadTask uploadTask = reference.putFile(uriList.get(i));
+                            int finalI = i;
+                            Task<Uri> uriTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot, Task<Uri>>() {
                                 @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                        @Override
-                                        public void onSuccess(Uri uri) {
-                                            String imageUrl = uri.toString();
-                                            documentName = uid + time;
-                                            if (!imageUrl.isEmpty()) {
-                                                // إنشاء Map لحفظ رابط الصورة في Firestore
-                                                uriFromStorage.add(imageUrl);
-                                                Map<String, Object> data = new HashMap<>();
-                                                data.put("images", uriFromStorage);
-                                                // إضافة Map إلى Firestore مع جميع الحقول الإضافية اللازمة
-                                                Toast.makeText(NewFormActivity.this, "imageUrl: " + imageUrl, Toast.LENGTH_SHORT).show();
-                                                firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
-                                                        .collection("userForm").document(documentName).update(data)
-                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                                            @Override
-                                                            public void onSuccess(Void unused) {
-                                                                Toast.makeText(NewFormActivity.this, "Done", Toast.LENGTH_SHORT).show();
-                                                            }
-                                                        });
+                                public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                                    if (!task.isSuccessful()) {
+                                        throw task.getException();
+                                    }
+                                    return reference.getDownloadUrl();
+                                }
+                            }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Uri> task) {
+                                    if (task.isSuccessful()) {
+                                        String uriString = task.getResult().toString();
+                                        if (!uriString.isEmpty()) {
+                                            Toast.makeText(getBaseContext(), "im not null", Toast.LENGTH_SHORT).show();
+                                            uriFromStorage.add(uriString);
+                                            if (finalI == uriList.size() - 1) {
+                                                createModel(description, uid, time, date);
                                             }
                                         }
-                                    });
+                                    } else {
+                                        Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                    }
                                 }
                             });
                         }
+                    } else {
+                        createModel(description, uid, time, date);
                     }
                     //تخزين الكل
-                    Form form = new Form(description, jobCategory, birth);
-                    addForm(form, uid + time);
                 }
             }
         });
 
     }
 
-    private void addForm(Form form, String documentName) {
+    private void createModel(String description, String uid, long time, String date) {
+        Model model = new Model();
+        model.setImages(uriFromStorage);
+        model.setDescription(description);
+        model.setCategoriesList(jobCategory);
+        model.setDate(date);
+        model.setDocumentId(uid+time);
+        uploadForm(model, uid + time);
+    }
+
+    private void uploadForm(Model model, String documentName) {
         firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
-                .collection("userForm").document(documentName).set(form).addOnCompleteListener(new OnCompleteListener<Void>() {
+                .collection("userForm").document(documentName)
+                .set(model)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
+                        String documentId = documentName;
                         if (!task.isSuccessful()) {
                             Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         } else {
+                            binding.progressBar.setVisibility(View.VISIBLE);
+                            setResult(RESULT_OK);
                             finish();
                         }
                     }
