@@ -106,34 +106,33 @@ public class PostActivity extends AppCompatActivity {
 
 
 
-        binding.tvPostTitle.setText( title );
-        binding.tvPostDec.setText( description );
+        binding.PAtvPostTitle.setText( title );
+        binding.PAtvPostDec.setText( description );
         //TODO GET Timestamp
-        binding.tvPostPrice.setText( projectedBudget );
-        binding.tvPostLoc.setText( jobLocation );
-        binding.tvJobTime.setText( expectedWorkDuration );
+        binding.PAtvPostPrice.setText( projectedBudget );
+        binding.PAtvPostLoc.setText( jobLocation );
+        binding.PAtvJobTime.setText( expectedWorkDuration );
 
+        categoriesList=new ArrayList <>(  );
         showCategoryAdapter = new ShowCategoryAdapter( ( ArrayList < String > ) categoriesList );
-        binding.CategoryRecycle.setAdapter( showCategoryAdapter );
-        binding.CategoryRecycle.setLayoutManager( new LinearLayoutManager(getBaseContext(),
+        binding.PACategoryRecycle.setAdapter( showCategoryAdapter );
+        binding.PACategoryRecycle.setLayoutManager( new LinearLayoutManager(getBaseContext(),
                 LinearLayoutManager.HORIZONTAL, false));
 
         imageList=new ArrayList<>();
         //TODO: GET IMAGE LIST FROM FIREBASE
-        if ( imageList.size() == 0 ){binding.ImageRecycle.setVisibility( View.GONE );}
+        if ( imageList.size() == 0 ){binding.PAImageRecycle.setVisibility( View.GONE );}
         showImagesAdapter = new ShowImagesAdapter(images, this);
-        binding.ImageRecycle.setAdapter(showImagesAdapter);
-        binding.ImageRecycle.setLayoutManager(new LinearLayoutManager(this,
+        binding.PAImageRecycle.setAdapter(showImagesAdapter);
+        binding.PAImageRecycle.setLayoutManager(new LinearLayoutManager(this,
                 LinearLayoutManager.HORIZONTAL, false));
 
 
 
-        String projectState = jobState;
+        String projectState = "open";
 
         switch ( projectState ){
-            case "open":
-                openProject();
-                break;
+
             case "inWork":
                 inWorkProject();
                 break;
@@ -162,44 +161,11 @@ public class PostActivity extends AppCompatActivity {
         } );
     }
 
-    void DeleteJob( ){
-
-        // Set the click listeners for the delete and cancel buttons
-        Button deleteButton = deleteDialogView.findViewById(R.id.deleteButton);
-
-        deleteButton.setOnClickListener( v -> {
-            // TODO: delete the work and change its state to closed & delete job
-            binding.btnCloseProject.setVisibility( View.GONE );
-            binding.btnComment.setVisibility( View.GONE );
-            closeProject();
-
-            deleteDialog.dismiss();
-        } );
-
-        Button cancelButton = deleteDialogView.findViewById(R.id.cancelButton);
-        cancelButton.setOnClickListener( v -> deleteDialog.dismiss() );
-    }
-    void openProject(){
-        binding.btnCloseProject.setVisibility( View.VISIBLE );
-        binding.btnComment.setVisibility( View.VISIBLE );
-
-        DeleteJob( );
-
-        binding.btnComment.setOnClickListener( view ->
-                startActivity( new Intent( PostActivity.this, OffersActivity.class) ) );
-
-        binding.btnCloseProject.setOnClickListener( view -> {
-            // Show the delete deluge
-            deleteDialog.show();
-        } );
-
-
-        }
 
     void inWorkProject(){
-        binding.tvProjectstate.setText( "قيد العمل" );
-        binding.tvProjectstate.setBackgroundResource(R.color.yellow);
-        binding.LLInWork.setVisibility( View.VISIBLE );
+        binding.PAtvProjectstate.setText( "قيد العمل" );
+        binding.PAtvProjectstate.setBackgroundResource(R.color.yellow);
+//        binding.LLInWork.setVisibility( View.VISIBLE );
 
         Map <String, Object> updates = new HashMap <>();
         updates.put("title", "inWork");
@@ -211,19 +177,19 @@ public class PostActivity extends AppCompatActivity {
 
         Rating();
 
-        binding.btnFinishProject.setOnClickListener( view -> {
-            // Show the evaluation dialog
-            evaluationDialog.show();
-            doneProject();
-        } );
+//        binding.btnFinishProject.setOnClickListener( view -> {
+//            // Show the evaluation dialog
+//            evaluationDialog.show();
+//            doneProject();
+//        } );
 
     }
     void doneProject(){
-        binding.tvProjectstate.setText( "منتهي" );
-        binding.tvProjectstate.setBackgroundResource(R.color.blue);
-        binding.tvDjData.setVisibility( View.VISIBLE );
-        binding.CLDoneWork.setVisibility( View.VISIBLE );
-        binding.LLInWork.setVisibility( View.GONE );
+        binding.PAtvProjectstate.setText( "منتهي" );
+        binding.PAtvProjectstate.setBackgroundResource(R.color.blue);
+//        binding.PAtvDjData.setVisibility( View.VISIBLE );
+//        binding.PACLDoneWork.setVisibility( View.VISIBLE );
+//        binding.LLInWork.setVisibility( View.GONE );
 
         Map <String, Object> updates = new HashMap <>();
         updates.put("title", "done");
@@ -235,8 +201,8 @@ public class PostActivity extends AppCompatActivity {
 
     }
     void closeProject(){
-        binding.tvProjectstate.setText( "مغلق" );
-        binding.tvProjectstate.setBackgroundResource(R.color.red);
+        binding.PAtvProjectstate.setText( "مغلق" );
+        binding.PAtvProjectstate.setBackgroundResource(R.color.red);
 
         Map <String, Object> updates = new HashMap <>();
         updates.put("title", "close");

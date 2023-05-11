@@ -7,7 +7,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.workersapp.databinding.ItemRvBinding;
+
+import com.example.workersapp.databinding.ItemJobCategoryBinding;
+import com.example.workersapp.databinding.ItemShowjobcategoryBinding;
 
 import java.util.ArrayList;
 
@@ -20,7 +22,7 @@ public class ShowCategoryAdapter extends RecyclerView.Adapter< ShowCategoryAdapt
     @NonNull
     @Override
     public CategoryViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemRvBinding binding = ItemRvBinding.inflate(LayoutInflater.from(parent.getContext()),
+        ItemShowjobcategoryBinding binding = ItemShowjobcategoryBinding.inflate(LayoutInflater.from(parent.getContext()),
                 parent, false);
         return new CategoryViewHolder(binding);
     }
@@ -39,7 +41,8 @@ public class ShowCategoryAdapter extends RecyclerView.Adapter< ShowCategoryAdapt
         TextView nameCat;
 
 
-        public CategoryViewHolder(ItemRvBinding binding) {
+
+        public CategoryViewHolder( ItemShowjobcategoryBinding binding) {
             super(binding.getRoot());
             nameCat = binding.itemRvTv;
 

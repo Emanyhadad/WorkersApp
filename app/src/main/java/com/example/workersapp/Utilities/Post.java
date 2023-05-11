@@ -11,6 +11,8 @@ public class Post {
     String projectedBudget;
     String jobLocation;
     String jobState;
+    String workerId;
+    String postId;
 
     public Post(String title, String description, List<String> images, List<String> categoriesList,
                 String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState) {
@@ -28,7 +30,15 @@ public class Post {
         return title;
     }
 
-    public void setTitle(String title) {
+    public String getPostId( ) {
+        return postId;
+    }
+
+    public void setPostId( String postId ) {
+        this.postId = postId;
+    }
+
+    public void setTitle( String title) {
         this.title = title;
     }
 
@@ -86,5 +96,13 @@ public class Post {
 
     public void setJobState(String jobState) {
         this.jobState = jobState;
+    }
+
+    public String getWorkerId( ) {
+        return workerId;
+    }
+
+    public void setWorkerId( String workerId ) {
+        this.workerId = workerId;
     }
 }

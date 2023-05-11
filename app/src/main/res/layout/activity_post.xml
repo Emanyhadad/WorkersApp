@@ -67,7 +67,7 @@
             android:orientation="vertical">
 
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_projectstate"
+                android:id="@+id/PAtv_projectstate"
                 android:layout_width="wrap_content"
                 android:layout_height="@dimen/_19sdp"
                 android:background="@drawable/corner"
@@ -85,7 +85,7 @@
                 tools:ignore="TextSizeCheck,TextContrastCheck" />
 
             <TextView
-                android:id="@+id/tv_offers"
+                android:id="@+id/PAtv_offers"
                 android:layout_width="@dimen/_46sdp"
                 android:layout_height="@dimen/_21sdp"
                 android:layout_marginTop="@dimen/_4sdp"
@@ -112,7 +112,7 @@
         app:layout_constraintTop_toBottomOf="@+id/projectstateLayout">
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_postTitle"
+            android:id="@+id/PAtv_postTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -123,7 +123,7 @@
             android:textSize="@dimen/_13ssp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_postDec"
+            android:id="@+id/PAtv_postDec"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -134,7 +134,7 @@
             android:textSize="@dimen/_11ssp" />
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_postTime"
+            android:id="@+id/PAtv_postTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -167,7 +167,7 @@
                     android:textSize="@dimen/_10ssp"
                     tools:ignore="TextContrastCheck" />
                 <androidx.appcompat.widget.AppCompatTextView
-                    android:id="@+id/tv_postPrice"
+                    android:id="@+id/PAtv_postPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="start"
@@ -181,7 +181,7 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_postLoc"
+                android:id="@+id/PAtv_postLoc"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_5sdp"
@@ -197,7 +197,7 @@
         </androidx.appcompat.widget.LinearLayoutCompat>
 
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/tv_jobTime"
+            android:id="@+id/PAtv_jobTime"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/_5sdp"
@@ -210,7 +210,7 @@
             android:textSize="@dimen/_10ssp" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/CategoryRecycle"
+            android:id="@+id/PACategoryRecycle"
             android:layout_width="match_parent"
             android:layout_height="@dimen/_39sdp"
             android:layout_marginTop="@dimen/_5sdp"
@@ -218,7 +218,7 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ImageRecycle"
+        android:id="@+id/PAImageRecycle"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_45sdp"
         android:layout_marginTop="@dimen/_6sdp"
@@ -228,432 +228,7 @@
 
 
 
-    <!--   OpenProject-->
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_comment"
-                android:layout_width="@dimen/_39sdp"
-                android:layout_height="@dimen/_27sdp"
-                android:layout_marginTop="@dimen/_45sdp"
-                android:layout_marginBottom="@dimen/_45sdp"
-                android:background="@drawable/corner"
-                android:backgroundTint="@color/white"
-                android:drawableEnd="@drawable/ic_comments"
-                android:fontFamily="@font/cairo_semi_bold"
-                android:gravity="center_vertical|start"
-                android:padding="@dimen/_3sdp"
-                android:text="@string/_32"
-                android:visibility="gone"
 
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ImageRecycle"
-                app:layout_constraintVertical_bias="0.2" />
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_closeProject"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/transparent"
-                android:fontFamily="@font/cairo_semi_bold"
-                android:text="@string/close_job"
-                android:textColor="@color/red"
-                android:textColorLink="@color/red"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="@+id/btn_comment"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/btn_comment"
-                app:layout_constraintVertical_bias="1.0" />
-
-
-    <!--   inWorkProject-->
-            <LinearLayout
-                android:id="@+id/LL_inWork"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ImageRecycle"
-                >
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_IWJData"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_12sdp"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/jobdata"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_11ssp"
-                    android:textStyle="bold"
-                    android:visibility="visible"
-                    app:layout_constraintEnd_toEndOf="@+id/ImageRecycle"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/ImageRecycle" />
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/CL_inWork"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:background="@drawable/border_et"
-                    android:padding="@dimen/_8sdp"
-                    android:visibility="visible"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@+id/tv_IWJData"
-                    app:layout_constraintHorizontal_bias="0.888"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_IWJData"
-                    app:layout_constraintVertical_bias="0.044">
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_IWJNow"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="@dimen/_4sdp"
-                        android:fontFamily="@font/cairo_regular"
-                        android:text="@string/tv_now"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/green"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0"
-                        tools:ignore="TextContrastCheck" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_IWJDuration"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:drawablePadding="@dimen/_4sdp"
-                        android:fontFamily="@font/cairo_regular"
-                        android:text="@string/tv_duration"
-                        android:textAlignment="textEnd"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/tv_IWJNow"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_IWJ_Price"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:fontFamily="@font/cairo_regular"
-                        android:gravity="start"
-                        android:text="@string/_200"
-                        android:textColor="@color/blue"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintBottom_toBottomOf="@+id/tv_IWJ"
-                        app:layout_constraintStart_toEndOf="@+id/tv_IWJ"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_IWJ"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="start"
-                        android:drawablePadding="@dimen/_4sdp"
-                        android:fontFamily="@font/cairo_regular"
-                        android:gravity="start"
-                        android:text="@string/ile"
-                        android:textColor="#2E7D32"
-                        android:textSize="@dimen/_12ssp"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.0" />
-
-                    <LinearLayout
-                        android:id="@+id/LL_InWorkJob"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="right|center_horizontal|center_vertical"
-                        android:orientation="horizontal"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_IWJ_Price"
-                        tools:ignore="RtlHardcoded">
-
-                        <com.google.android.material.imageview.ShapeableImageView
-                            android:id="@+id/imgIWJ_worker"
-                            android:layout_width="@dimen/_15sdp"
-                            android:layout_height="@dimen/_15sdp"
-                            android:src="@drawable/worker"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="@+id/tv_IWJ"
-                            app:layout_constraintTop_toBottomOf="@+id/tv_IWJ"
-                            tools:ignore="ImageContrastCheck" />
-
-                        <com.google.android.material.textview.MaterialTextView
-                            android:id="@+id/tvIWJ_workerName"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_4sdp"
-                            android:layout_marginRight="@dimen/_4sdp"
-                            android:fontFamily="@font/cairo_semi_bold"
-                            android:text="@string/tv_workerName"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12ssp" />
-
-                        <TextView
-                            android:id="@+id/tvIWJ_workerRating"
-                            android:layout_width="@dimen/_40sdp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="@dimen/_4sdp"
-                            android:layout_marginRight="@dimen/_4sdp"
-                            android:fontFamily="@font/cairo_semi_bold"
-                            android:gravity="center_vertical"
-                            android:text="@string/_4_5i"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/_12ssp"
-                            app:drawableEndCompat="@drawable/baseline_star_24" />
-
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-                <com.google.android.material.button.MaterialButton
-                    android:id="@+id/btn_FinishProject"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_48sdp"
-                    android:layout_marginBottom="@dimen/_48sdp"
-
-                    android:background="@drawable/finishbtn_bg"
-                    android:fontFamily="@font/cairo_semi_bold"
-                    android:gravity="center_vertical|center_horizontal|"
-                    android:text="@string/tv_finishproject"
-                    android:visibility="visible"
-                    android:layout_gravity="end"
-                    />
-            </LinearLayout>
-
-    <!--   DoneProject-->
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_djData"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_12sdp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/jobdata"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_11ssp"
-                android:textStyle="bold"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="@+id/ImageRecycle"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/ImageRecycle" />
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/CL_doneWork"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_48sdp"
-                android:background="@drawable/border_et"
-                android:padding="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_6ssp"
-                android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_djData"
-                app:layout_constraintVertical_bias="0.044"
-                tools:ignore="DuplicateIds">
-
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_IWJDuration"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:drawablePadding="@dimen/_4sdp"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/_2023_2023"
-                    android:textAlignment="textEnd"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0"
-                    tools:ignore="HardcodedText,NotSibling" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_IWJ_Price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:fontFamily="@font/cairo_regular"
-                    android:gravity="start"
-                    android:text="@string/_200"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintBottom_toBottomOf="@+id/tv_IWJ"
-                    app:layout_constraintStart_toEndOf="@+id/tv_IWJ"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_IWJ"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="start"
-                    android:drawablePadding="@dimen/_4sdp"
-                    android:fontFamily="@font/cairo_regular"
-                    android:gravity="start"
-                    android:text="@string/ile"
-                    android:textColor="#2E7D32"
-                    android:textSize="@dimen/_12ssp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="0.0" />
-
-                <LinearLayout
-                    android:id="@+id/LL_workerRiting"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/tv_IWJDuration">
-
-                    <TextView
-                        android:id="@+id/tv_worker"
-                        android:layout_width="@dimen/_217sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:fontFamily="@font/cairo_semi_bold"
-                        android:gravity="end"
-                        android:text="@string/vv"
-                        android:textColor="@color/gray_hint"
-                        android:textDirection="ltr"
-                        android:textSize="@dimen/_12ssp"
-                        app:drawableStartCompat="@drawable/star_rating_bar"
-                        tools:ignore="HardcodedText" />
-
-                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                        android:id="@+id/rb_worker"
-                        android:layout_width="@dimen/_58sdp"
-                        android:layout_height="@dimen/_12sdp"
-                        android:layout_gravity="end|center_vertical"
-                        android:elevation="@dimen/_8sdp"
-                        android:isIndicator="true"
-                        android:maxWidth="@dimen/_54sdp"
-                        android:maxHeight="@dimen/_12sdp"
-                        android:progressBackgroundTint="#A8A8A8"
-                        app:mrb_fillBackgroundStars="true"
-                        app:mrb_progressTint="@color/yellow" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LL_InWorkJob"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:gravity="right|center_horizontal|center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/LL_workerRiting"
-                    tools:ignore="RtlHardcoded">
-
-                    <com.google.android.material.imageview.ShapeableImageView
-                        android:id="@+id/imgIWJ_worker"
-                        android:layout_width="@dimen/_15sdp"
-                        android:layout_height="@dimen/_15sdp"
-                        android:src="@drawable/worker"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="@+id/tv_IWJ"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_IWJ"
-                        tools:ignore="ImageContrastCheck" />
-
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tvIWJ_workerName"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4sdp"
-                        android:layout_marginRight="@dimen/_4sdp"
-                        android:fontFamily="@font/cairo_semi_bold"
-                        android:text="@string/tv_workerName"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_12ssp" />
-
-                    <TextView
-                        android:id="@+id/tvIWJ_workerRating"
-                        android:layout_width="@dimen/_40sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="@dimen/_4sdp"
-                        android:layout_marginRight="@dimen/_4sdp"
-                        android:fontFamily="@font/cairo_semi_bold"
-                        android:gravity="center_vertical"
-                        android:text="@string/_4_5i"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/_10ssp"
-                        app:drawableEndCompat="@drawable/baseline_star_24" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/LL_cliantRiting"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob">
-
-                    <TextView
-                        android:id="@+id/tv_worker"
-                        android:layout_width="@dimen/_217sdp"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical|start"
-                        android:fontFamily="@font/cairo_semi_bold"
-                        android:gravity="end"
-                        android:text="أبو محمد كله ذوق"
-                        android:textColor="@color/gray_hint"
-                        android:textDirection="ltr"
-                        android:textSize="@dimen/_12ssp"
-                        app:drawableStartCompat="@drawable/star_rating_bar"
-                        tools:ignore="HardcodedText" />
-
-                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                        android:id="@+id/rb_cliant"
-                        android:layout_width="@dimen/_58sdp"
-                        android:layout_height="@dimen/_12sdp"
-                        android:elevation="@dimen/_8sdp"
-                        android:isIndicator="true"
-                        android:maxWidth="@dimen/_54sdp"
-                        android:maxHeight="@dimen/_12sdp"
-                        android:progressBackgroundTint="#A8A8A8"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHorizontal_bias="0.498"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/user_name"
-                        app:mrb_fillBackgroundStars="true"
-                        app:mrb_progressTint="@color/yellow" />
-
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
