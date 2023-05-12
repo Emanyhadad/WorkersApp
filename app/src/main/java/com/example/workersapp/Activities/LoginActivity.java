@@ -268,7 +268,7 @@ public class LoginActivity extends AppCompatActivity {
                             binding.progressBarLogin.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
                                 ////////////////////////////////////////////////////////////////////////
-                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+                                Intent intent = new Intent(LoginActivity.this, HomeActivity_forWorker.class);
                                 startActivity(intent);
                                 finish();
 
@@ -363,7 +363,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
+            startActivity(new Intent(getBaseContext(), HomeActivity_forWorker.class));
             finish();
         }
 

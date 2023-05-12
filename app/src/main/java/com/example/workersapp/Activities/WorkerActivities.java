@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.workersapp.Fragments.BlankFragment2;
 import com.example.workersapp.Fragments.BlankFragment3;
 import com.example.workersapp.Fragments.BlankFragment4;
+import com.example.workersapp.Fragments.PostFragment_inWorker;
 import com.example.workersapp.Fragments.WorkerProfileFragment;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityWorkerActivitiesBinding;
@@ -41,7 +42,7 @@ public class WorkerActivities extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.frame , new BlankFragment3()).commit();
                         break;
                     case R.id.jobs:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.frame , new BlankFragment4()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.frame , PostFragment_inWorker.newInstance( ) ).commit();
                         break;
                 }
                 return true;

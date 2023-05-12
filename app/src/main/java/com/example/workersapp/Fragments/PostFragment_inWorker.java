@@ -78,7 +78,8 @@ public class PostFragment_inWorker extends Fragment {
                 firebaseFirestore.collection( "posts" ).document( documentSnapshot1.getId() ).
                         collection( "userPost" ).get()
                         .addOnCompleteListener( task -> {
-                            for ( DocumentSnapshot document : task.getResult()) {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                if (document.getString("jobState").equals("open")) {
                                 Log.e( "DecumentsCount", String.valueOf( task.getResult().size() ) );
                                 firebaseFirestore.document("posts/" + documentSnapshot1.getId()+ "/userPost/" + document.getId()).get()
                                         .addOnSuccessListener( documentSnapshot -> {
@@ -122,7 +123,7 @@ public class PostFragment_inWorker extends Fragment {
                                 Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
 
 
-                            }
+                            }}
                         } ).addOnFailureListener( runnable -> {} );
 
 

@@ -94,7 +94,7 @@ ActivityPostForWorkerBinding binding;
         getPostData();
 
         //store Offer in Worker
-        firestore.collection( "offers" ).document( offerId ).get().addOnSuccessListener(
+        firestore.collection( "offers" ).document( postId ).collection( "workerOffers" ).document(user.getPhoneNumber()  ).get().addOnSuccessListener(
                 documentSnapshot -> {
                     if ( documentSnapshot.exists() ){
                         binding.PB2.setVisibility(View.GONE);
@@ -123,7 +123,7 @@ ActivityPostForWorkerBinding binding;
                                         binding.PB2.setVisibility(View.VISIBLE);
 
 
-                                        firestore.collection( "offers" ).document( user+">"+postId ).set( offer );
+                                        firestore.collection( "offers" ).document( postId ).collection( "workerOffers" ).document(user.getPhoneNumber()  ).set( offer );
 
                                         binding.LLWriteOffer.setVisibility(View.GONE);
                                         binding.tvWriteOffer.setText("العرض الخاص بك");

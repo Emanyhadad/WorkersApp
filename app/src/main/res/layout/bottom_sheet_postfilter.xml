@@ -6,7 +6,6 @@
     android:padding="@dimen/_12sdp"
     android:background="@drawable/dialog_bg">
 
-
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/filter_title"
         android:layout_width="match_parent"
@@ -15,44 +14,47 @@
         android:textColor="@android:color/black"
         android:gravity="center_horizontal"
         android:textSize="@dimen/_15ssp"
-        android:fontFamily="@font/cairo_semi_bold"
-        />
+        android:fontFamily="@font/cairo_semi_bold"/>
 
-    <RadioGroup
-        android:id="@+id/status_radio_group"
+    <LinearLayout
+        android:id="@+id/status_checkboxes_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="@dimen/_12sdp"
-        android:checkedButton="@+id/open_posts_radio_button">
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/_12sdp">
 
-        <RadioButton
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:fontFamily="@font/cairo_semi_bold"
-            android:id="@+id/open_posts_radio_button"
-            android:layout_width="wrap_content"
+            android:id="@+id/open_posts_checkbox"
+            android:layout_width="match_parent"
             android:layout_weight="1"
+            android:layout_marginBottom="@dimen/_6sdp"
             android:textSize="@dimen/_13ssp"
+            android:checked="true"
+            android:background="@drawable/et_bg"
+            android:backgroundTint="@color/gray1"
             android:layout_height="wrap_content"
             android:text="الوظائف المفتوحة" />
 
-        <RadioButton
+        <com.google.android.material.checkbox.MaterialCheckBox
             android:fontFamily="@font/cairo_semi_bold"
-            android:id="@+id/closed_posts_radio_button"
+            android:id="@+id/closed_posts_checkbox"
             android:layout_width="wrap_content"
             android:layout_weight="1"
             android:textSize="@dimen/_13ssp"
             android:layout_height="wrap_content"
             android:text="الوظائف المغلقة" />
-    </RadioGroup>
 
-    <Button
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btn_apply_filter"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_12sdp"
         android:fontFamily="@font/cairo_semi_bold"
+        android:layout_marginBottom="@dimen/_12sdp"
         android:textSize="@dimen/_13ssp"
-
         android:text="تنفيذ" />
 
 </LinearLayout>

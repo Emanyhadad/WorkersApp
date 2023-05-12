@@ -51,7 +51,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
         holder.offerBudget.setText(offerList.get( pos ).offerBudget);
         holder.offerDuration.setText(offerList.get( pos ).offerDuration);
         String workerId =offerList.get( pos ).workerID;
-        firestore.collection("users").document( Objects.requireNonNull(workerId))
+        firestore.collection("users").document( workerId)
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
                     if (documentSnapshot1.exists()) {
@@ -66,9 +66,15 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
                     }
                 })
                 .addOnFailureListener(e -> {});
-        firestore.collection( "forms" ).document( offerList.get( pos ).workerID).collection( "userForm" ).get().addOnSuccessListener( runnable -> {
-            runnable.size();
-        } );
+        firestore.collection( "forms" ).document( offerList.get( pos ).workerID).collection( "userForm" ).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int numDocs = queryDocumentSnapshots.size();
+                    holder.formsCount.setText( numDocs+"" );
+                })
+                .addOnFailureListener(e -> {
+                    // handle the case when the query fails
+                });
+
         holder.deleteButton.setOnClickListener( view -> {listener.onDelete( pos );} );
         holder.hireButton.setOnClickListener( view -> {listener.onHire( pos );} );
 

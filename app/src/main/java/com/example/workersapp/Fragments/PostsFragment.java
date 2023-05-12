@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.util.Log;
@@ -16,6 +18,7 @@ import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
+import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostsBinding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -25,6 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -69,24 +73,41 @@ public class PostsFragment extends Fragment {
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
         FragmentPostsBinding binding= FragmentPostsBinding.inflate( inflater,container,false );
-//        binding.btnFilter.setOnClickListener( view -> {filterButtonSheet.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
-//        } );
+
+
+
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-//        firebaseUser1="+970594461722";
+
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
-        firebaseFirestore.collection( "posts" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) ).
-                collection( "userPost" ).get()
-                .addOnCompleteListener( task -> {
+        firebaseFirestore.collection("posts")
+                .document(firebaseUser.getPhoneNumber())
+                .collection("userPost")
+                .whereIn("jobState", Arrays.asList("open", "close"))
+                .get()
+                .addOnCompleteListener(task -> {
+                    if ( task.getResult().isEmpty() ){
+                        binding.ProgressBar.setVisibility( View.GONE );
+                        binding.LLEmpty.setVisibility( View.VISIBLE );
+                        binding.btnAddpost.setOnClickListener(v -> {
+                            // Replace the current fragment with the new fragment here
+                            FragmentManager fragmentManager = getParentFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            NewJobFragment jobFragment = new NewJobFragment();
+                            fragmentTransaction.replace( R.id.container, jobFragment);
+                            fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                            fragmentTransaction.commit();
+                        });
+                    }
+                    else {
                     for ( DocumentSnapshot document : task.getResult()) {
-                        Log.e( "DecumentsCount", String.valueOf( task.getResult().size() ) );
-
                         firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
                                 .addOnSuccessListener( documentSnapshot -> {
                                     binding.ProgressBar.setVisibility( View.GONE );
+                                    binding.LLEmpty.setVisibility( View.GONE );
                                     binding.RV.setVisibility( View.VISIBLE );
                                     if (documentSnapshot.exists()) {
                                         jobState = documentSnapshot.getString("jobState");
@@ -111,9 +132,7 @@ public class PostsFragment extends Fragment {
                                             startActivity(intent);
                                         } ));
 
-                                    } else {
-                                    }
-                                } )
+                                    } } )
                                 .addOnFailureListener( e -> {
                                     Log.e( "Field",e.getMessage());
                                 } );
@@ -122,10 +141,15 @@ public class PostsFragment extends Fragment {
                         Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
 
 
-                    }
+                    }}
                 } ).addOnFailureListener( runnable -> {} );
 
 
+
+        binding.button2.setOnClickListener( view -> {
+            FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
+            bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+        } );
 
         return binding.getRoot();
     }

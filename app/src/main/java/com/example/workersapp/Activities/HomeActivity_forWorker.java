@@ -24,14 +24,17 @@ ActivityHomeForWorkerBinding binding;
         setContentView( binding.getRoot() );
 
         ArrayList <String> tab1 = new ArrayList <>(  );
-        tab1.add( "F1" );
-        tab1.add( "F2" );
+        tab1.add( "عمل جديد" );
+        tab1.add( "وظائف" );
+        tab1.add( "قيد العمل" );
+        tab1.add( "حسابي" );
 
 
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( PostFragment_inWorker.newInstance( ) );
         fragments.add( PostsFragment.newInstance( "","" ) );
         fragments.add( BlankFragment.newInstance() );
+
 
         FragmentAdapter adapter=new FragmentAdapter(this,fragments );
         binding.viewPager2.setAdapter( adapter );

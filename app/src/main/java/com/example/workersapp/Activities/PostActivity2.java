@@ -7,6 +7,7 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
@@ -26,8 +28,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
@@ -99,8 +103,10 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.APTvJobData.setVisibility( View.GONE );
                                 binding.APCLInWork.setVisibility( View.GONE );
                                 DeleteJob( );
-                                binding.APbtnComments.setOnClickListener( view ->
-                                        startActivity( new Intent( PostActivity2.this, OffersActivity.class) ) );
+                                binding.APbtnComments.setOnClickListener( view ->{
+                                        Intent intent = new Intent( PostActivity2.this, OffersActivity.class);
+                                        intent.putExtra( "postID",postId );
+                                        startActivity(intent  );});
                                 binding.APbtnCloseProject.setOnClickListener( view -> deleteDialog.show() );
                                 break;
 
@@ -128,6 +134,23 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.APbtnComments.setVisibility( View.GONE );
                                 binding.APTvJobData.setVisibility( View.VISIBLE );
                                 binding.APCLInWork.setVisibility( View.VISIBLE );
+                                firestore.collection("users").document( documentSnapshot.getString( "workerId" ))
+                                        .get()
+                                        .addOnSuccessListener(documentSnapshot1 -> {
+                                            if (documentSnapshot1.exists()) {
+                                                String fullName = documentSnapshot1.getString("fullName");
+                                                binding.tvIWJWorkerName.setText( fullName );
+                                                String image = documentSnapshot1.getString("image");
+                                                Glide.with(PostActivity2.this)
+                                                        .load(image)
+                                                        .circleCrop()
+                                                        .error( R.drawable.worker)
+                                                        .into(binding.imgIWJWorker);
+                                            }
+                                        })
+                                        .addOnFailureListener(e -> {});
+
+                                binding.APTvIWJStartDate.setText( documentSnapshot.getString( "jobStartDate" ) );
                                 break;
                         }
 

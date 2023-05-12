@@ -63,21 +63,18 @@
                 android:layout_marginTop="@dimen/_12sdp"
                 app:srcCompat="@drawable/user" />
 
-            <ImageView
+            <androidx.appcompat.widget.AppCompatImageButton
                 android:id="@+id/personAddImgUser"
                 android:layout_width="@dimen/_23sdp"
                 android:layout_height="@dimen/_23sdp"
                 android:layout_below="@id/personImgUser"
                 android:layout_alignStart="@+id/personImgUser"
                 android:layout_alignEnd="@+id/personImgUser"
-                android:layout_marginEnd="@dimen/_53sdp"
                 android:layout_marginTop="-25dp"
-                android:background="@drawable/circle_add_img"
-                android:paddingBottom="@dimen/_2sdp"
-                android:paddingTop="@dimen/_2sdp"
-                android:paddingRight="@dimen/_7sdp"
-                android:paddingLeft="@dimen/_7sdp"
-                app:srcCompat="@drawable/ic_baseline_add_24" />
+                android:layout_marginEnd="@dimen/_53sdp"
+                android:background="@drawable/green_circle"
+                android:src="@drawable/ic_add"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
         </RelativeLayout>
 
         <com.google.android.material.textfield.TextInputLayout

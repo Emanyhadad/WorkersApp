@@ -61,7 +61,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
         //Todo: Put Post Time her
         holder.CategoryRecycle.setAdapter( new ShowCategoryAdapter( ( ArrayList < String > ) postList.get( pos ).getCategoriesList() ) );
         holder.CategoryRecycle.setLayoutManager( new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-        if ( postList.get( pos ).getJobState().equals( "close" ) ){ holder.ClosedJob.setVisibility( View.VISIBLE ); }
+
         postList.get( pos ).getPostId();
         holder.LL_item.setOnClickListener( view -> {
             listener.OnClick( pos );
@@ -83,17 +83,14 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
                 .addOnFailureListener(e -> {});
         path="";
 
-
-        firestore.collection("posts")
-                .document(postList.get( pos ).getPostId())
-                .collection("userPost")
-                .document(postList.get(pos).getPostId().trim())
-                .collection("Offers")
+        firestore.collection("offers").document(postList.get( pos ).getPostId()).collection("workerOffers")
                 .get()
-                .addOnSuccessListener( runnable -> {
-                    runnable.size();
-                    holder.OffersCount.setText( runnable.isEmpty()?"0": runnable.size()+"" );
-                } );
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int count = task.getResult().size();
+                        holder.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
+                    }
+                });
 
 
     }

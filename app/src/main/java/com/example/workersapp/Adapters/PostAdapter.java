@@ -18,6 +18,7 @@ import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemPostBinding;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -86,17 +87,14 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
                 .addOnFailureListener(e -> {});
                  path="";
 
-
-         firestore.collection("posts")
-                .document(firebaseUser.getPhoneNumber())
-                .collection("userPost")
-                .document(postList.get(pos).getPostId().trim())
-                .collection("Offers")
+        firestore.collection("offers").document(postList.get( pos ).getPostId()).collection("workerOffers")
                 .get()
-                .addOnSuccessListener( runnable -> {
-                    runnable.size();
-                    holder.OffersCount.setText( runnable.isEmpty()?"0": runnable.size()+"" );
-                } );
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int count = task.getResult().size();
+                        holder.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
+                    }
+                });
 
 
     }
