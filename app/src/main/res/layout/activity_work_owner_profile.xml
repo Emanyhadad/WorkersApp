@@ -1,66 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutDirection="rtl"
     tools:context=".Activities.WorkOwnerProfileActivity">
 
     <FrameLayout
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager2"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingTop="@dimen/_16sdp" />
+        app:layout_constraintBottom_toTopOf="@+id/workOwnerNav"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
     </FrameLayout>
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/workOwnerNav"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_40sdp"
-        app:tabIconTint="@color/tab_icon_color"
-        app:tabIndicatorColor="@color/tab_indicator_color"
-        app:tabRippleColor="@color/tab_ripple_color"
-        app:tabSelectedTextColor="@color/blue"
-        app:tabTextColor="@color/tab_text_color"
-        tools:targetApi="28">
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:labelVisibilityMode="labeled"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/work_owner_nav" />
 
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/profile"
-            android:text="Tab 1"
-            app:tabTextColor="@color/tab_text_color" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_hammer2"
-            android:text="Tab 2"
-            app:tabTextColor="@color/tab_text_color" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_posts"
-            android:text="Tab 3"
-            app:tabTextColor="@color/tab_text_color" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_serch"
-            android:text="Tab 4"
-            app:tabTextColor="@color/tab_text_color" />
-
-    </com.google.android.material.tabs.TabLayout>
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

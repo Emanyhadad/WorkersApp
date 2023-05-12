@@ -95,6 +95,7 @@
         <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
             android:exported="false" />
@@ -105,16 +106,12 @@
         </activity>
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:exported="false"/>
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".Activities.RegisterActivity"
             android:exported="false" />
+
 
         <meta-data
             android:name="android.app.lib_name"
