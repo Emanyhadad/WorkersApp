@@ -60,33 +60,6 @@ ActivityOffersBinding binding;
         HireDialog = HireDialog_builder.create();
 
 
-
-
-//        firestore.collection( "offers" ).get().addOnSuccessListener( queryDocumentSnapshots -> {
-//            for ( DocumentSnapshot documentSnapshot: queryDocumentSnapshots ){
-//                Log.e( "DecoumentId",documentSnapshot.getId() );
-//                Log.e( "PostId",documentSnapshot.get( "postID" ).toString() );
-//
-//                if (  documentSnapshot.get( "clintID" ).equals( user.getPhoneNumber() ) ){
-//                    Log.e( "MyOffers",documentSnapshot.get( "offerDuration" ).toString() );
-//
-//                }
-//
-//                firestore.collection( "users" ).document( documentSnapshot.get( "workerID" ).toString() )
-//                        .get().addOnSuccessListener( runnable -> Log.e( "workerId",  runnable.get( "accountType" ).toString()) );
-//
-//
-//
-//
-//
-//            }
-//        } ).addOnFailureListener( runnable -> {} );
-
-
-//        CollectionReference offersRef = firestore.collection("offers").document(postId)
-//                .collection("userPost").document(postId)
-//                .collection("Offers");
-//
          firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
@@ -196,21 +169,23 @@ ActivityOffersBinding binding;
                     updates.put( "jobState","inWork" );
 
 // For devices with Android Nougat (API level 24) or higher
-                    if ( Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yyyy", new Locale("ar"));
-                        String currentMonthAndYear = dateFormat.format(new Date());
-                        updates.put("jobStartDate", currentMonthAndYear);
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
+                        String currentDate = dateFormat.format(new Date());
+                        updates.put("jobStartDate", currentDate);
                     } else {
                         // For older devices
                         Calendar calendar = Calendar.getInstance();
                         int year = calendar.get(Calendar.YEAR);
                         int month = calendar.get(Calendar.MONTH) + 1;
+                        int day = calendar.get(Calendar.DAY_OF_MONTH);
                         DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
                         String[] arabicMonthNames = arabicDFS.getMonths();
                         String monthInArabic = arabicMonthNames[month - 1];
-                        String date = String.format(Locale.getDefault(), "%s %d", monthInArabic, year);
+                        String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
                         updates.put("jobStartDate", date);
                     }
+
 
                     reference.document(offerList.get( pos ).getPostID())
                             .update(updates)

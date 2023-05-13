@@ -6,11 +6,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.RatingBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
@@ -27,8 +32,12 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 @SuppressLint( "Registered" )
@@ -43,7 +52,10 @@ public class PostActivity_forWorker extends AppCompatActivity {
     FirebaseUser user;
     String clintID,postId,path,duration,budget,formPath;
     int formsCount;
-
+    private Dialog evaluationDialog;
+    float rating;
+    String comment;
+    DocumentReference documentReference;
 
 
 ActivityPostForWorkerBinding binding;
@@ -213,5 +225,34 @@ ActivityPostForWorkerBinding binding;
                 });
 
     }
+    void Rating(){
+        documentReference = firestore.collection("posts").document( clintID).
+                collection("userPost").document(postId);
+        RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
+        EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
+        Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
+        TextView title = evaluationDialog.findViewById( R.id.tv_title );
+        title.setText( "تقيم العميل" );
+
+        sendButton.setOnClickListener(v -> {
+            rating = ratingBar.getRating();
+            comment = commentEditText.getText().toString();
+
+            Map <String, Object> updates1 = new HashMap <>();
+            updates1.put("Comment-clint", comment);
+            updates1.put("Rating-clint", (int) rating);
+            updates1.put("jobState", "done");
+
+            documentReference.update(updates1).addOnSuccessListener(aVoid -> {
+                // Handle the case when the update is successful
+            }).addOnFailureListener(e -> {
+                // Handle the case when the update fails
+            });
+
+            evaluationDialog.dismiss();
+        });
+
+    }
+
 }
 

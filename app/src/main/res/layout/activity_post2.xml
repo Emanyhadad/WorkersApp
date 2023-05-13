@@ -305,7 +305,7 @@
                 android:fontFamily="@font/cairo_regular"
                 android:text="@string/jobdata"
                 android:textColor="@color/blue"
-                android:textSize="@dimen/_11ssp"
+                android:textSize="@dimen/_12ssp"
                 android:textStyle="bold"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -349,7 +349,7 @@
                         tools:ignore="TextContrastCheck" />
 
                     <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/APtv_IWJJopPrice"
+                        android:id="@+id/APtv_IWJOfferPrice"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="start"
@@ -395,6 +395,33 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
 
+                <LinearLayout
+                    android:id="@+id/linearLayout_rateWorker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_6sdp"
+
+                    >
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_WorkerComment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="عبدالله نجار رائع وملتزم بالوقت" />
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/ratingBar_Worker"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:numStars="5"
+                        android:clickable="false"
+                        android:isIndicator="true"
+                        />
+
+                </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/LL_InWorkJob"
@@ -403,9 +430,10 @@
                     android:gravity="right|center_horizontal|center_vertical"
                     android:orientation="horizontal"
                     android:visibility="visible"
+                    android:layout_marginTop="@dimen/_6sdp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout_rateWorker"
                     tools:ignore="RtlHardcoded">
 
                     <com.google.android.material.imageview.ShapeableImageView
@@ -427,7 +455,7 @@
                         android:fontFamily="@font/cairo_semi_bold"
                         android:text="@string/tv_workerName"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12ssp" />
+                        android:textSize="@dimen/_11ssp" />
 
                     <TextView
                         android:id="@+id/PAtvIWJ_workerRating"
@@ -439,14 +467,55 @@
                         android:gravity="center_vertical"
                         android:text="@string/_4_5i"
                         android:textColor="@color/black"
-                        android:textSize="@dimen/_12ssp"
+                        android:textSize="@dimen/_11ssp"
                         app:drawableEndCompat="@drawable/baseline_star_24" />
 
 
                 </LinearLayout>
 
+                <LinearLayout
+                    android:id="@+id/linearLayout_rateClint"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob"
+                    android:gravity="center_vertical"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    >
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_ClintComment"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="عبدالله نجار رائع وملتزم بالوقت"
+                        android:layout_weight="1"
+                        />
+
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/ratingBar_Clint"
+
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:numStars="5"
+                        android:clickable="false"
+                        android:isIndicator="true"
+                        />
+                </LinearLayout>
+
+
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/Ap_btnFinishJob"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="انهاء المشروع"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:layout_marginTop="@dimen/_12sdp"
+                android:layout_marginBottom="@dimen/_12sdp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/AP_CL_inWork" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

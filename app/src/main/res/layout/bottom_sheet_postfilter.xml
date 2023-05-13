@@ -30,9 +30,6 @@
             android:layout_weight="1"
             android:layout_marginBottom="@dimen/_6sdp"
             android:textSize="@dimen/_13ssp"
-            android:checked="true"
-            android:background="@drawable/et_bg"
-            android:backgroundTint="@color/gray1"
             android:layout_height="wrap_content"
             android:text="الوظائف المفتوحة" />
 

@@ -2,6 +2,7 @@ package com.example.workersapp.Activities;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -46,6 +47,7 @@ import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
     ActivityLoginBinding binding;
+    public static SharedPreferences sharedPreferences;
     private CountDownTimer timer;
     String phoneNum;
     FirebaseAuth auth;
@@ -361,9 +363,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+         sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), HomeActivity_forWorker.class));
+            startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
             finish();
         }
 

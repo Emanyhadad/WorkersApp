@@ -35,7 +35,6 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
     FirebaseUser firebaseUser;
     Context context;
     ItemClickListener listener;
-    QuerySnapshot documentSnapshot;
     String path;
 
     public PostAdapter( List < Post > postList , Context context , ItemClickListener listener ) {

@@ -9,6 +9,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +28,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -50,7 +53,8 @@ public class PostActivity2 extends AppCompatActivity {
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
     String postId,path;
-
+    float rating;
+    String comment;
 
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation,projectState;
     List<String> images,categoriesList;
@@ -128,30 +132,54 @@ public class PostActivity2 extends AppCompatActivity {
                                 break;
 
                             case "inWork":
-                                binding.PAtvProjectstate.setText( "قيد العمل" );
-                                binding.PAtvProjectstate.setBackground(getResources().getDrawable( R.drawable.inwork_bg ));
-                                binding.APbtnCloseProject.setVisibility( View.GONE );
-                                binding.APbtnComments.setVisibility( View.GONE );
-                                binding.APTvJobData.setVisibility( View.VISIBLE );
-                                binding.APCLInWork.setVisibility( View.VISIBLE );
-                                firestore.collection("users").document( documentSnapshot.getString( "workerId" ))
+                                binding.PAtvProjectstate.setText("قيد العمل");
+                                binding.PAtvProjectstate.setBackground(getResources().getDrawable(R.drawable.inwork_bg));
+                                binding.APbtnCloseProject.setVisibility(View.GONE);
+                                binding.APbtnComments.setVisibility(View.GONE);
+                                binding.APTvJobData.setVisibility(View.VISIBLE);
+                                binding.APCLInWork.setVisibility(View.VISIBLE);
+                                binding.ApBtnFinishJob.setVisibility(View.VISIBLE);
+                                binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
+                                //Todo get data from offer (price)
+                                Rating();
+                                firestore.collection("users")
+                                        .document(documentSnapshot.getString("workerId"))
                                         .get()
                                         .addOnSuccessListener(documentSnapshot1 -> {
                                             if (documentSnapshot1.exists()) {
                                                 String fullName = documentSnapshot1.getString("fullName");
-                                                binding.tvIWJWorkerName.setText( fullName );
+                                                binding.tvIWJWorkerName.setText(fullName);
                                                 String image = documentSnapshot1.getString("image");
                                                 Glide.with(PostActivity2.this)
                                                         .load(image)
                                                         .circleCrop()
-                                                        .error( R.drawable.worker)
+                                                        .error(R.drawable.worker)
                                                         .into(binding.imgIWJWorker);
                                             }
                                         })
                                         .addOnFailureListener(e -> {});
 
-                                binding.APTvIWJStartDate.setText( documentSnapshot.getString( "jobStartDate" ) );
+                                binding.ApBtnFinishJob.setOnClickListener(view -> evaluationDialog.show() );
                                 break;
+
+                            case "done":
+                                binding.PAtvProjectstate.setText( "مكتمل" );
+                                binding.PAtvProjectstate.setBackground(getResources().getDrawable(R.drawable.bg_done));
+                                binding.APbtnCloseProject.setVisibility(View.GONE);
+                                binding.APbtnComments.setVisibility(View.GONE);
+                                binding.APTvJobData.setVisibility(View.VISIBLE);
+                                binding.APCLInWork.setVisibility(View.VISIBLE);
+                                binding.ApBtnFinishJob.setVisibility(View.GONE);
+                                binding.linearLayoutRateClint.setVisibility( View.VISIBLE );
+                                binding.linearLayoutRateWorker.setVisibility( View.VISIBLE );
+                                binding.tvWorkerComment.setText( documentSnapshot.getString( "Comment-worker" ) );
+                                double ratingWorker =  documentSnapshot.getDouble("Rating-worker");
+                                binding.ratingBarWorker.setProgress((int) ratingWorker*2);
+                                binding.tvClintComment.setText( documentSnapshot.getString( "Comment-clint" ) );
+                                double ratingClint =  documentSnapshot.getDouble("Rating-clint");
+                                binding.ratingBarClint.setProgress((int) ratingClint*2);
+                                break;
+
                         }
 
                         title = documentSnapshot.getString("title");
@@ -201,21 +229,46 @@ public class PostActivity2 extends AppCompatActivity {
 
     }
 
-    void Rating(){
-        RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
-        EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
-        Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
+void Rating(){
+    RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
+    EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
+    Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
 
-        sendButton.setOnClickListener( v -> {
-            float rating = ratingBar.getRating();
-            String comment = commentEditText.getText().toString();
+    sendButton.setOnClickListener(v -> {
+        rating = ratingBar.getRating();
+        comment = commentEditText.getText().toString();
 
-            // TODO: store the evaluation data in the job description
+        Map<String, Object> updates1 = new HashMap<>();
+        updates1.put("Comment-worker", comment);
+        updates1.put("Rating-worker", (int) rating);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
+            String currentDate = dateFormat.format(new Date());
+            updates1.put("jobFinishDate", currentDate);
+        } else {
+            // For older devices
+            Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH) + 1;
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+            DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
+            String[] arabicMonthNames = arabicDFS.getMonths();
+            String monthInArabic = arabicMonthNames[month - 1];
+            String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
+            updates1.put("jobFinishDate", date);
+        }
+        updates1.put("jobState", "done");
 
-            evaluationDialog.dismiss();
-        } );
-    }
+        documentReference.update(updates1).addOnSuccessListener(aVoid -> {
+            // Handle the case when the update is successful
+        }).addOnFailureListener(e -> {
+            // Handle the case when the update fails
+        });
 
+        evaluationDialog.dismiss();
+    });
+
+}
     void DeleteJob( ){
 
         // Set the click listeners for the delete and cancel buttons

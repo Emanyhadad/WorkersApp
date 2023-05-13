@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.workersapp.Activities.LoginActivity;
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
@@ -48,12 +49,12 @@ public class PostsFragment extends Fragment {
     List<Post> postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
 //    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
-
+FragmentPostsBinding binding;
 
     public PostsFragment( ) {
     }
 
-    public static PostsFragment newInstance( String param1 , String param2 ) {
+    public static PostsFragment newInstance( ) {
         PostsFragment fragment = new PostsFragment( );
         Bundle args = new Bundle( );
 
@@ -72,9 +73,7 @@ public class PostsFragment extends Fragment {
     @Override
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
-        FragmentPostsBinding binding= FragmentPostsBinding.inflate( inflater,container,false );
-
-
+         binding= FragmentPostsBinding.inflate( inflater,container,false );
 
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
@@ -86,7 +85,6 @@ public class PostsFragment extends Fragment {
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
                 .collection("userPost")
-                .whereIn("jobState", Arrays.asList("open", "close"))
                 .get()
                 .addOnCompleteListener(task -> {
                     if ( task.getResult().isEmpty() ){
@@ -110,6 +108,7 @@ public class PostsFragment extends Fragment {
                                     binding.LLEmpty.setVisibility( View.GONE );
                                     binding.RV.setVisibility( View.VISIBLE );
                                     if (documentSnapshot.exists()) {
+
                                         jobState = documentSnapshot.getString("jobState");
                                         title = documentSnapshot.getString("title");
                                         description= documentSnapshot.getString( "description" );
@@ -123,14 +122,17 @@ public class PostsFragment extends Fragment {
                                         Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
                                         post.setPostId( document.getId() );
                                         post.setOwnerId( firebaseUser.getPhoneNumber() );
+                                        if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
                                         postList.add( post );
+                                            binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
+                                                Log.e( "ItemClik",postList.get( pos ).getPostId());
+                                                Intent intent = new Intent(getActivity(), PostActivity2.class);
+                                                intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
+                                                startActivity(intent);
+                                            } ));
 
-                                        binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
-                                            Log.e( "ItemClik",postList.get( pos ).getPostId());
-                                            Intent intent = new Intent(getActivity(), PostActivity2.class);
-                                            intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
-                                            startActivity(intent);
-                                        } ));
+                                        }
+
 
                                     } } )
                                 .addOnFailureListener( e -> {
@@ -153,4 +155,24 @@ public class PostsFragment extends Fragment {
 
         return binding.getRoot();
     }
+
+    public void applyFilter(List<String> jobStates) {
+        if ( LoginActivity.sharedPreferences.getString( "jobStatesOpen","open" ).equals( "open" )  ){
+            FilterBottomSheetDialog.openPostsChecked=true;
+        }
+        if (LoginActivity.sharedPreferences.getString( "jobStatesClose","close" ).equals( "close" )  ){
+            FilterBottomSheetDialog.closedPostsChecked=true;
+        }
+
+        List<Post> filteredPosts = new ArrayList<>();
+        for (Post post : postList) {
+            if (jobStates.contains(post.getJobState())) {
+                filteredPosts.add(post);
+            }
+        }
+        binding.RV.setAdapter(new PostAdapter(filteredPosts, getContext(), pos -> {
+            // rest of the code
+        }));
+    }
+
 }

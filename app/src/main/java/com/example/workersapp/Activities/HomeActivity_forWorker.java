@@ -32,7 +32,7 @@ ActivityHomeForWorkerBinding binding;
 
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( PostFragment_inWorker.newInstance( ) );
-        fragments.add( PostsFragment.newInstance( "","" ) );
+        fragments.add( PostsFragment.newInstance(  ) );
         fragments.add( BlankFragment.newInstance() );
 
 
