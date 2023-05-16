@@ -118,7 +118,6 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
         categoryJobType();
         getData();
 
-
         binding.editBtnEditModel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

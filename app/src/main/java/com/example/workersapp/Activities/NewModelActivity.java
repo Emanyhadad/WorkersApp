@@ -182,9 +182,11 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                     binding.formEtDescription.setError("يجب ملء هذا الحقل");
                 } else if (TextUtils.isEmpty(date) || date.equals("تاريخ الإنجاز")) {
                     binding.formTvCalender.setError("يجب ملء هذا الحقل");
-                } else if (jobCategory.size() == 0) {
-                    Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
-                } else {
+                }
+//                else if (jobCategory.size() == 0) {
+//                    Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
+//                }
+                else {
                     binding.progressBar.setVisibility(View.VISIBLE);
                     binding.formBtnAddForm.setVisibility(View.GONE);
                     String uid = firebaseUser.getUid();

@@ -4,23 +4,30 @@
     <item
         android:id="@+id/profile"
         android:icon="@drawable/profile"
-        android:title="@string/ArithmeticNav"/>
-
+        android:title="@string/ArithmeticNav"
+        android:textAppearance="@style/CustomMenuItemStyle" />
+    />
 
     <item
         android:id="@+id/myJobs"
         android:icon="@drawable/hammer"
-        android:title="@string/myJobsNav"/>
+        android:title="@string/myJobsNav"
+        android:textAppearance="@style/CustomMenuItemStyle" />
+    />
 
     <item
         android:id="@+id/Presenter"
         android:icon="@drawable/write"
-        android:title="@string/PresenterNav"/>
+        android:title="@string/PresenterNav"
+        android:textAppearance="@style/CustomMenuItemStyle" />
+    />
 
 
     <item
         android:id="@+id/jobs"
         android:icon="@drawable/baseline_search_24"
-        android:title="@string/CareersNav"/>
+        android:title="@string/CareersNav"
+        android:textAppearance="@style/CustomMenuItemStyle" />
+    />
 
 </menu>

@@ -86,10 +86,6 @@ public class BusinessModelsFragment extends Fragment {
         imagesList = new ArrayList<>();
         models = new ArrayList<>();
 
-//        documentId = sp.getString("documentId","null");
-
-        // TODO: تاريخ الانضمام
-//        firebaseUser.getMetadata().getCreationTimestamp();
         return binding.getRoot();
     }
 

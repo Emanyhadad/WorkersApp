@@ -56,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     PhoneAuthProvider.ForceResendingToken forceResendingToken;
 
     String verificationID;
-
     //me
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
@@ -357,13 +356,12 @@ public class LoginActivity extends AppCompatActivity {
         tv.setText(content);
     }
 
-
     @Override
     protected void onStart() {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), RegisterActivity.class));
+            startActivity(new Intent(getBaseContext(), WorkerActivities.class));
             finish();
         }
 

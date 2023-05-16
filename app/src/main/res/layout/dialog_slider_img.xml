@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/_250sdp"
+    android:layout_height="@dimen/_298sdp"
+    android:layout_gravity="center"
+    android:layout_marginStart="@dimen/_23sdp"
+    android:background="@drawable/back_slider_dialog"
+    android:layout_marginEnd="@dimen/_23sdp"
+    tools:context=".Fragments.SliderImgDialog">
+
+
+    <com.denzcoskun.imageslider.ImageSlider
+        android:id="@+id/dialogSliderImg"
+        android:layout_width="@dimen/_216sdp"
+        android:layout_height="@dimen/_250sdp"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:layout_marginTop="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_28sdp"
+        android:backgroundTint="@color/back_tv"
+        android:background="@drawable/back_slider_dialog"
+        android:layoutDirection="ltr"
+        app:iss_auto_cycle="false"
+        app:iss_corner_radius="10"
+        app:iss_period="4000"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+        <TextView
+            android:id="@+id/dialogNumImg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_gravity="end"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/cairo_regular"
+            android:text="@string/businessNumImages"
+            android:textColor="@color/gray9"
+            android:textSize="@dimen/_10ssp" />
+    </com.denzcoskun.imageslider.ImageSlider>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
