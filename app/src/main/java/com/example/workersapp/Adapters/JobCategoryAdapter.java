@@ -35,14 +35,15 @@ public class JobCategoryAdapter extends RecyclerView.Adapter<JobCategoryAdapter.
     @Override
     public void onBindViewHolder(@NonNull JobCategoryHolder holder, int position) {
         int pos = position;
-        if (jobCategoryList.size() != 0 && jobCategoryList != null){
+        if (jobCategoryList.size() != 0 && jobCategoryList != null) {
             holder.tvJobCategory.setText(jobCategoryList.get(pos));
-        holder.imgDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                listener.onDelete(pos);
-            }
-        });}
+            holder.imgDelete.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onDelete(pos);
+                }
+            });
+        }
     }
 
     @Override
