@@ -52,7 +52,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActivityMapsBinding binding;
-
     FirebaseFirestore db;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
@@ -61,7 +60,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     ArrayList<String> list;
 
-    List<String> categoriesListF = new ArrayList<>();
+    List<String> citiesListF = new ArrayList<>();
 
     AutoCompleteTextView mySpinner;
 
@@ -133,6 +132,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 String accountType = getIntent().getStringExtra("accountType");
                 Intent intent = getIntent();
                 String intentSource = intent.getStringExtra("source");
+
                 if (intentSource.equals("RegisterActivity")) {
                     if (!title.isEmpty() && !city.isEmpty()) {
 
@@ -221,8 +221,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     @Override
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("cities");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+                            citiesListF = (List<String>) task.getResult().get("cities");
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, citiesListF);
                             mySpinner.setAdapter(adapter);
                         } else {
                             Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();

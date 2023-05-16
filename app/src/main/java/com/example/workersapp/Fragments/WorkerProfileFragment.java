@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.workersapp.Activities.EditWorkerProfileActivity;
 import com.example.workersapp.Activities.NewModelActivity;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
 import com.example.workersapp.R;
@@ -38,8 +39,7 @@ import java.util.Objects;
 
 public class WorkerProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    FragmentWorkerProfileBinding binding;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -89,13 +89,63 @@ public class WorkerProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        FragmentWorkerProfileBinding binding = FragmentWorkerProfileBinding.inflate(inflater, container, false);
-
+        binding = FragmentWorkerProfileBinding.inflate(inflater, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+        imagesList = new ArrayList<>();
+        ArrayList<Fragment> fragments = new ArrayList<>();
+        ArrayList<String> tabs = new ArrayList<>();
 
+        getData();
+
+        tabs.add("آراء العملاء");
+        tabs.add("نماذج الأعمال");
+
+        fragments.add(BlankFragment.newInstance("Audi"));
+        fragments.add(new BusinessModelsFragment());
+
+        adapter = new ImageModelFragAdapter(getActivity(), fragments);
+        binding.FragPager.setAdapter(adapter);
+
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
+            @Override
+            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                if (position < tabs.size()) {
+                    tab.setText(tabs.get(position));
+                }
+            }
+        }).attach();
+
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
+
+
+        binding.fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), NewModelActivity.class);
+                arl.launch(intent);
+            }
+        });
+
+        binding.pWorkerImgEdit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        return binding.getRoot();
+    }
+
+    private void getData() {
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .get()
                 .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
@@ -138,43 +188,11 @@ public class WorkerProfileFragment extends Fragment {
                         Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
                     }
                 });
-        imagesList = new ArrayList<>();
-        ArrayList<Fragment> fragments = new ArrayList<>();
-        ArrayList<String> tabs = new ArrayList<>();
-        tabs.add("آراء العملاء");
-        tabs.add("نماذج الأعمال");
+    }
 
-        fragments.add(BlankFragment.newInstance("Audi"));
-        fragments.add(new BusinessModelsFragment());
-
-        adapter = new ImageModelFragAdapter(getActivity(), fragments);
-        binding.FragPager.setAdapter(adapter);
-
-        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position < tabs.size()) {
-                    tab.setText(tabs.get(position));
-                }
-            }
-        }).attach();
-
-        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), NewModelActivity.class);
-                arl.launch(intent);
-            }
-        });
-
-        return binding.getRoot();
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
     }
 }

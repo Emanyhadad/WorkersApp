@@ -47,22 +47,6 @@ public class WorkerActivities extends AppCompatActivity {
                 return true;
             }
         });
-//        binding.bottomNav.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-//            @Override
-//            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-//                switch(item.getItemId()){
-//                    case R.id.profile:
-////                        item.setT
-//                        break;
-//                    case R.id.myJobs:
-//                        break;
-//                    case R.id.Presenter:
-//                        break;
-//                    case R.id.jobs:
-//                        break;
-//                }
-//                return false;
-//            }
-//        });
+
     }
 }
