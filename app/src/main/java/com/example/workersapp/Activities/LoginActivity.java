@@ -41,7 +41,6 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
-
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
@@ -56,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
     PhoneAuthProvider.ForceResendingToken forceResendingToken;
 
     String verificationID;
+
     //me
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
@@ -137,14 +137,17 @@ public class LoginActivity extends AppCompatActivity {
                                     .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                            dialogInterface.dismiss();
                                         }
                                     })
                                     .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
-                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
-                                            intent.putExtra("phoneNum", phoneNum);
-                                            startActivity(intent);
+                                            showDialog();
+                                            dialogInterface.dismiss();
+//                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+//                                            intent.putExtra("phoneNum", phoneNum);
+//                                            startActivity(intent);
                                         }
                                     })
                                     .create().show();
@@ -157,16 +160,21 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    private void showPhoneDialog() {
-        Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.bottom_sheet_phone);
-        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+    Dialog dialogPhoneNum = null;
 
-        TextView tvTimer = dialog.findViewById(R.id.tvTimer);
-        ImageView imgTimer = dialog.findViewById(R.id.imgTimer);
-        Button btn = dialog.findViewById(R.id.btnLogin);
-        PinView pinView = dialog.findViewById(R.id.firstPinView);
+    private void showPhoneDialog() {
+        if (dialogPhoneNum == null) {
+            dialogPhoneNum = new Dialog(this);
+            dialogPhoneNum.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogPhoneNum.setContentView(R.layout.bottom_sheet_phone);
+            dialogPhoneNum.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+            dialogPhoneNum.show();
+        }
+
+        TextView tvTimer = dialogPhoneNum.findViewById(R.id.tvTimer);
+        ImageView imgTimer = dialogPhoneNum.findViewById(R.id.imgTimer);
+        Button btn = dialogPhoneNum.findViewById(R.id.btnLogin);
+        PinView pinView = dialogPhoneNum.findViewById(R.id.firstPinView);
         tvTimer.setEnabled(false);
 
         String phone = binding.etPhone.getText().toString().trim();
@@ -245,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        Window window = dialog.getWindow();
+        Window window = dialogPhoneNum.getWindow();
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -282,7 +290,7 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
-        dialog.show();
+        dialogPhoneNum.show();
     }
 
     // إعادة إرسال رمز التحقق
@@ -301,20 +309,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void showDialog() {
 
-        dialogAccountType = new Dialog(this);
-        dialogAccountType.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialogAccountType.setContentView(R.layout.bottom_sheet_account_type);
-        dialogAccountType.setCanceledOnTouchOutside(false);
-
-//        if (dialogAccountType == null) {
-//            dialogAccountType = new Dialog(this);
-//            dialogAccountType.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//            dialogAccountType.setContentView(R.layout.bottom_sheet_account_type);
+        if (dialogAccountType == null) {
+            dialogAccountType = new Dialog(this);
+            dialogAccountType.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogAccountType.setContentView(R.layout.bottom_sheet_account_type);
 //            dialogAccountType.setCanceledOnTouchOutside(false);
-//
-//
-//            dialogAccountType.show();
-//        }
+            dialogAccountType.show();
+        }
 
         View workerLayout = dialogAccountType.findViewById(R.id.workerLayout);
         View workOwnerLayout = dialogAccountType.findViewById(R.id.workOwnerLayout);
@@ -356,12 +357,13 @@ public class LoginActivity extends AppCompatActivity {
         tv.setText(content);
     }
 
+
     @Override
     protected void onStart() {
         super.onStart();
         currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+            startActivity(new Intent(getBaseContext(), MainActivity.class));
             finish();
         }
 

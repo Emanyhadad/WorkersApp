@@ -97,17 +97,22 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         );
     }
 
+    Dialog dialogPhoneNum = null;
+
     private void showPhoneDialog() {
 
-        final Dialog dialog = new Dialog(this);
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setContentView(R.layout.bottom_sheet_phone);
-        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+        if (dialogPhoneNum == null) {
+            dialogPhoneNum = new Dialog(this);
+            dialogPhoneNum.requestWindowFeature(Window.FEATURE_NO_TITLE);
+            dialogPhoneNum.setContentView(R.layout.bottom_sheet_phone);
+            dialogPhoneNum.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+            dialogPhoneNum.show();
+        }
 
-        TextView tvTimer = dialog.findViewById(R.id.tvTimer);
-        ImageView imgTimer = dialog.findViewById(R.id.imgTimer);
-        Button btn = dialog.findViewById(R.id.btnLogin);
-        PinView pinView = dialog.findViewById(R.id.firstPinView);
+        TextView tvTimer = dialogPhoneNum.findViewById(R.id.tvTimer);
+        ImageView imgTimer = dialogPhoneNum.findViewById(R.id.imgTimer);
+        Button btn = dialogPhoneNum.findViewById(R.id.btnLogin);
+        PinView pinView = dialogPhoneNum.findViewById(R.id.firstPinView);
         tvTimer.setEnabled(false);
 
         String phone = binding.etPhoneReg.getText().toString().trim();
@@ -161,7 +166,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
             }
         });
 
-        Window window = dialog.getWindow();
+        Window window = dialogPhoneNum.getWindow();
         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         window.getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -200,7 +205,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
                         });
             }
         });
-        dialog.show();
+        dialogPhoneNum.show();
     }
 
     // إعادة إرسال رمز التحقق

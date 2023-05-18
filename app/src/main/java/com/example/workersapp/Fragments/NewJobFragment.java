@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +44,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NewJobFragment extends Fragment {
 
@@ -178,18 +180,46 @@ public class NewJobFragment extends Fragment {
                 al1.launch("image/*");
             }
         });
-        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
+
+//        firebaseFirestore.collection("workCategoryAuto").document("category").get().
+//                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            categoriesListF = (List<String>) task.getResult().get("categories");
+//                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+//                            binding.etoJobType.setAdapter(adapter);
+//                        } else {
+//                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+
+        firebaseFirestore.collection("workCategoryAuto").document("category")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                        if (categoryMap != null) {
+                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                                String fieldName = entry.getKey();
+                                List<String> fieldData = entry.getValue();
+                                Log.d("Field Name", fieldName);
+                                Log.d("Field Data", fieldData.toString());
+                                for (String cat : fieldData) {
+                                    categoriesListF.add(cat);
+                                }
+                                Log.e("Category", categoriesListF.toString());
+                            }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             binding.etoJobType.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.d("Error", "No such document");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Error", "Error getting document: " + e.getMessage());
                 });
 
         binding.etoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -311,7 +341,7 @@ public class NewJobFragment extends Fragment {
     }
 
     private void uploadPost(Post post, String documentName) {
-        post.setPostId(documentName  );
+        post.setPostId(documentName);
         firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
                 .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
