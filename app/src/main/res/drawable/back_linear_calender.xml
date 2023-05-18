@@ -3,5 +3,4 @@
 <solid android:color="@color/white"/>
     <stroke android:color="@color/back_tv" android:width="0.5dp"/>
     <corners android:radius="@dimen/_4sdp"/>
-
 </shape>

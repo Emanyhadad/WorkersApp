@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -20,6 +22,7 @@ import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityDetailsModelsBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -43,7 +46,6 @@ public class DetailsModelsActivity extends AppCompatActivity {
 
     List<String> imagesList;
     String doc;
-
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -86,17 +88,29 @@ public class DetailsModelsActivity extends AppCompatActivity {
                     }
                 });
 
-
+        ActivityResultLauncher<Intent> arl1 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK) {
+                        Snackbar.make(binding.businessDate, "تم التعديل بنجاح", Snackbar.LENGTH_SHORT).show();
+                    }
+                });
 
         binding.businessImgEdit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent1 = new Intent(getBaseContext(),EditModelActivity.class);
                 intent1.putExtra("document",doc);
-                startActivity(intent1);
+                arl1.launch(intent1);
             }
         });
-
+        
+//        binding.businessDetails.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                SliderImgDialog dialog = new SliderImgDialog();
+//                dialog.show(getSupportFragmentManager(),"Dialog");
+//            }
+//        });
     }
 
     @Override

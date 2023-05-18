@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.WorkerProfileActivity"
+    tools:context=".Fragments.WorkerProfileFragment"
     android:background="@color/back_activity">
 
     <ScrollView
@@ -30,6 +30,13 @@
                 android:layout_marginEnd="@dimen/_20sdp"
                 android:layout_marginBottom="@dimen/_8sdp"
                 android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/pWorkerImgEdit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/write" />
 
                 <TextView
                     android:id="@+id/tvBasicInformation"

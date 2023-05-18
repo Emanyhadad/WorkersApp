@@ -44,12 +44,11 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
 
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
-
     private static final int REQUEST_CODE = 1;
     String fullName, nickName, birth, gender, accountType;
     int genderId;
 
-    public static String profileImageUrl;
+    public static String image;
 
 
     @SuppressLint("MissingPermission")
@@ -85,13 +84,17 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
 
                             StorageTask<UploadTask.TaskSnapshot> uploadTask =
                                     reference.putFile(result);
+
                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                                     reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Uri> task) {
-                                            profileImageUrl = task.getResult().toString();
+                                            if (task.isSuccessful()){
+                                                image = task.getResult().toString();
+//                                                Toast.makeText(RegisterActivity.this, "image yes", Toast.LENGTH_SHORT).show();
+                                            }
                                         }
                                     });
                                 }
@@ -137,8 +140,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                 user.setNickName(nickName);
                 user.setBirth(birth);
                 user.setGender(gender);
-                user.setImage(profileImageUrl);
-
+                user.setImage(image);
 
                 if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
 
@@ -191,6 +193,5 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         String date = dayOfMonth + "/" + (month + 1) + "/" + year;
         binding.personBirth.setText(date);
-//        binding.personBirth.setEnabled(false);
     }
 }
