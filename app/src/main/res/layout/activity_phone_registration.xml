@@ -88,7 +88,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/_8sdp"
         android:text="@string/tvPalestinePhone"
-        android:textColor="#64A811"
+        android:textColor="@color/green"
         android:textSize="@dimen/_16ssp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@+id/etPhoneReg"

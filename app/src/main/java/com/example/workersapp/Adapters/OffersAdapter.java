@@ -2,7 +2,9 @@ package com.example.workersapp.Adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -43,7 +45,8 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
     }
 
     @Override
-    public void onBindViewHolder( @NonNull myHolder holder , int position ) {
+    public void onBindViewHolder( @NonNull myHolder holder , int position )
+    {
         firestore = FirebaseFirestore.getInstance();
 
         int pos = position;
@@ -51,7 +54,8 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
         holder.offerBudget.setText(offerList.get( pos ).offerBudget);
         holder.offerDuration.setText(offerList.get( pos ).offerDuration);
         String workerId =offerList.get( pos ).workerID;
-        firestore.collection("users").document( Objects.requireNonNull(workerId))
+        holder.LL_btn.setVisibility( View.VISIBLE );
+        firestore.collection("users").document( workerId)
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
                     if (documentSnapshot1.exists()) {
@@ -66,9 +70,15 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
                     }
                 })
                 .addOnFailureListener(e -> {});
-        firestore.collection( "forms" ).document( offerList.get( pos ).workerID).collection( "userForm" ).get().addOnSuccessListener( runnable -> {
-            runnable.size();
-        } );
+        firestore.collection( "forms" ).document( offerList.get( pos ).workerID).collection( "userForm" ).get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int numDocs = queryDocumentSnapshots.size();
+                    holder.formsCount.setText( numDocs+"" );
+                })
+                .addOnFailureListener(e -> {
+                    // handle the case when the query fails
+                });
+
         holder.deleteButton.setOnClickListener( view -> {listener.onDelete( pos );} );
         holder.hireButton.setOnClickListener( view -> {listener.onHire( pos );} );
 
@@ -88,7 +98,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
         TextView workerRating;
         ShapeableImageView WorkerImage;
         AppCompatButton hireButton,deleteButton;
-
+        LinearLayout LL_btn;
         public myHolder( @NonNull ItemOfferBinding binding ) {
             super( binding.getRoot() );
             offerDescription=binding.itemTvSendOfferDec;
@@ -100,6 +110,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
             formsCount=binding.itemTvCountWorks;
             deleteButton=binding.itemBtnDelete;
             hireButton=binding.itemBtnHireMe;
+            LL_btn=binding.LLBtn;
 
 
 

@@ -32,13 +32,13 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:layout_width="@dimen/_280sdp"
             android:layout_height="@dimen/_300sdp"
-            android:src="@drawable/empty"/>
+            android:src="@drawable/nodata"/>
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_empty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="لا عروض حتى الآن"
-            android:textSize="@dimen/_18ssp"
+            android:textSize="@dimen/_12ssp"
             android:fontFamily="@font/cairo_semi_bold"
             android:textColor="@color/blue"
             android:gravity="center"

@@ -126,7 +126,7 @@
     <string name="employmentRate">معدل التوظيف</string>
     <string name="numberOfJobs">عدد الوظائف</string>
     <string name="openedJobs">الوظائف المفتوحة</string>
-    <string name="finishedJobs">الأعمال المنتهية</string>
+    <string name="finishedJobs">الأعمال المكتملة</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="itOpenJobs">وظائف مفتوحة</string>

@@ -3,8 +3,9 @@
 
     <item
         android:id="@+id/itNewJob"
-        android:icon="@drawable/baseline_search_24"
-        android:title="@string/itNewJob" />
+        android:icon="@drawable/ic_serch"
+        android:title="@string/itNewJob"
+        />
 
     <item
         android:id="@+id/itOpenJobs"
@@ -13,7 +14,7 @@
 
     <item
         android:id="@+id/itInProgress"
-        android:icon="@drawable/hammer"
+        android:icon="@drawable/hammer__2_"
         android:title="@string/itInProgress" />
 
     <item

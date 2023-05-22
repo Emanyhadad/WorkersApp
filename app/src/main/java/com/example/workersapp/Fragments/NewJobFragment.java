@@ -341,7 +341,9 @@ public class NewJobFragment extends Fragment {
     }
 
     private void uploadPost(Post post, String documentName) {
-        post.setPostId(documentName);
+        post.setPostId( documentName );
+        post.setOwnerId( firebaseUser.getPhoneNumber() );
+
         firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
                 .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override

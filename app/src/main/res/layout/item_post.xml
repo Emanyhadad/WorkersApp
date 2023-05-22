@@ -25,9 +25,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="تم إغلاق هذه الوظيفة"
-            android:textColor="@color/white"
-            android:paddingEnd="@dimen/_8sdp"
             android:visibility="gone"
+            android:textColor="@color/white"
+            android:paddingStart="@dimen/_8sdp"
             android:textSize="@dimen/_10ssp"
             android:background="@drawable/border_colseitem"
             />
@@ -41,17 +41,32 @@
             android:padding="@dimen/_8sdp"
             >
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_postTitle"
+                android:id="@+id/tvPostTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_6sdp"
                 android:fontFamily="@font/cairo_semi_bold"
+                android:layout_weight="1"
                 android:text="@string/jobTitle"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
 
+                <ToggleButton
+                    android:id="@+id/favoriteButton"
+                    android:layout_width="@dimen/_18sdp"
+                    android:layout_height="@dimen/_18sdp"
+                    android:background="@color/transparent"
+                    android:button="@drawable/favorite_selector"
+                    android:textOff=""
+                    android:textOn=""
+                    android:visibility="gone" />
+
+    </LinearLayout>
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_postDec"
                 android:layout_width="match_parent"
@@ -127,18 +142,6 @@
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_jobTime"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/_5sdp"
-                android:drawableStart="@drawable/clender"
-                android:drawablePadding="@dimen/_4sdp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="@string/month"
-                android:textAlignment="textStart"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_10ssp" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/CategoryRecycle"
