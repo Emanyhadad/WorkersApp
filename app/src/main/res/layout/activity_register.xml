@@ -21,34 +21,6 @@
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <LinearLayout
-            android:id="@+id/linearLayout4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/_20sdp"
-            android:layout_marginTop="@dimen/_31sdp"
-            android:layout_marginEnd="@dimen/_20sdp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imgBack"
-                android:layout_width="@dimen/_17sdp"
-                android:layout_height="@dimen/_17sdp"
-                android:layout_gravity="center"
-                app:srcCompat="@drawable/back_icon" />
-
-            <TextView
-                android:id="@+id/tvBasicInformation"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="البيانات الشخصية"
-                android:textColor="@color/black"
-                android:fontFamily="@font/cairo_regular"
-                android:textSize="@dimen/_14ssp" />
-        </LinearLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"

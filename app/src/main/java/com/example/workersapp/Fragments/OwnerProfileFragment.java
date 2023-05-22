@@ -182,7 +182,7 @@ public class OwnerProfileFragment extends Fragment {
 
                     if ( task.getResult().isEmpty() ){
                         binding.PB.setVisibility( View.GONE );
-                        binding.rcFinishedJobs.setVisibility( View.GONE );
+                        binding.SV.setVisibility( View.GONE );
                         binding.LLEmpty.setVisibility( View.VISIBLE );
                     }
                     else {
@@ -191,7 +191,7 @@ public class OwnerProfileFragment extends Fragment {
                                     .addOnSuccessListener( documentSnapshot -> {
                                         binding.PB.setVisibility( View.GONE );
                                         binding.LLEmpty.setVisibility( View.GONE );
-                                        binding.rcFinishedJobs.setVisibility( View.VISIBLE );
+                                        binding.SV.setVisibility( View.VISIBLE );
                                         if (documentSnapshot.exists()) {
 
                                             jobState = documentSnapshot.getString("jobState");
