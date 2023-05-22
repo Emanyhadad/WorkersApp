@@ -33,7 +33,7 @@
                     android:layout_weight="1"
                     android:fontFamily="@font/cairo_regular"
                     android:gravity="center"
-                    android:text="إضافة نموذج جديد"
+                    android:text="تعديل النموذج"
                     android:textColor="@color/blue_1"
                     android:textSize="@dimen/sdp_textSize_16" />
 

@@ -18,14 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
-        <activity
-            android:name=".Activities.MainActivity2"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.HomeActivity_forWorker"
-            android:exported="true">
 
-        </activity>
+
         <activity
             android:name=".Activities.EditModelActivity"
             android:exported="false" />
@@ -35,6 +29,8 @@
         <activity
             android:name=".Activities.NewModelActivity"
             android:exported="false" />
+
+
         <activity
             android:name=".Activities.PostActivity_forWorker"
             android:exported="false" />
@@ -43,10 +39,13 @@
             android:exported="false" />
         <activity
             android:name=".Activities.PostActivity"
-            android:exported="false" />
-        <activity
-            android:name=".Activities.PostActivity2"
-            android:exported="false" />
+            android:exported="true">
+            <!--            <intent-filter>-->
+            <!--                <action android:name="android.intent.action.MAIN" />-->
+
+            <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+            <!--            </intent-filter>-->
+        </activity>
         <!--
              TODO: Before you run your application, you need a Google Maps API key.
 
@@ -87,32 +86,40 @@
             android:exported="false" />
         <activity
             android:name=".Activities.PhoneRegistrationActivity"
-            android:exported="false" />
+            android:exported="false"/>
         <activity
             android:name=".Activities.CvActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.MainActivity"
             android:exported="false" />
+
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".Activities.LoginActivity"
+            android:exported="false"/>
+
+        <activity
+            android:name=".Activities.RegisterActivity"
+            android:exported="false" />
+
+        <activity android:name=".Activities.WorkerActivities"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
         </activity>
-        <activity
-            android:name=".Activities.WorkerActivities"
-            android:exported="true">
-        </activity>
-        <activity
-            android:name=".Activities.LoginActivity"
-            android:exported="true" />
-        <activity
-            android:name=".Activities.RegisterActivity"
-            android:exported="false" />
 
         <meta-data
             android:name="android.app.lib_name"

@@ -1,17 +1,10 @@
 package com.example.workersapp.Fragments;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,14 +14,24 @@ import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.workersapp.Activities.MapsActivity;
 import com.example.workersapp.Adapters.ImageAdapter;
 import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentNewJobBinding;
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.flexbox.FlexboxLayoutManager;
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -39,9 +42,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NewJobFragment extends Fragment {
 
@@ -177,25 +180,52 @@ public class NewJobFragment extends Fragment {
                 al1.launch("image/*");
             }
         });
-        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
+
+//        firebaseFirestore.collection("workCategoryAuto").document("category").get().
+//                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            categoriesListF = (List<String>) task.getResult().get("categories");
+//                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+//                            binding.etoJobType.setAdapter(adapter);
+//                        } else {
+//                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
+
+        firebaseFirestore.collection("workCategoryAuto").document("category")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                        if (categoryMap != null) {
+                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                                String fieldName = entry.getKey();
+                                List<String> fieldData = entry.getValue();
+                                Log.d("Field Name", fieldName);
+                                Log.d("Field Data", fieldData.toString());
+                                for (String cat : fieldData) {
+                                    categoriesListF.add(cat);
+                                }
+                                Log.e("Category", categoriesListF.toString());
+                            }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             binding.etoJobType.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.d("Error", "No such document");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Error", "Error getting document: " + e.getMessage());
                 });
-
 
         binding.etoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String selectedCategory = (( TextView ) view).getText().toString();
+                String selectedCategory = ((TextView) view).getText().toString();
                 jobCategory.add(selectedCategory);
                 binding.etoJobType.setText("");
 
@@ -216,6 +246,26 @@ public class NewJobFragment extends Fragment {
             }
         });
 
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result != null) {
+                    jobLocation = result.getData().getStringExtra("city");
+                    binding.tvJobLocation.setText(jobLocation);
+                }
+
+            }
+        });
+        binding.locationLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(), MapsActivity.class);
+                intent.putExtra("source", NewJobFragment.class.getSimpleName());
+//                startActivity(intent);
+                arl.launch(intent);
+
+            }
+        });
         //التحقق و التخزين
         binding.btnAddPost.setOnClickListener(new View.OnClickListener() {
             @Override

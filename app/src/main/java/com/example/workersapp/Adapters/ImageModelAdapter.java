@@ -20,19 +20,11 @@ import com.example.workersapp.databinding.ItemImgModelBinding;
 import java.util.List;
 
 public class ImageModelAdapter extends RecyclerView.Adapter<ImageModelAdapter.ImageViewHolder> {
-//    List<String> imagesList;
     List<Model> models ;
 
     Context context;
 
     clickListener listener;
-
-//    public ImageModelAdapter(List<String> imagesList, Context context, clickListener listener) {
-//        this.imagesList = imagesList;
-//        this.context = context;
-//        this.listener = listener;
-//    }
-
 
     public ImageModelAdapter(List<Model> models, Context context, clickListener listener) {
         this.models = models;
@@ -55,10 +47,6 @@ public class ImageModelAdapter extends RecyclerView.Adapter<ImageModelAdapter.Im
         if (models != null) {
             Glide.with(context)
                     .load(model.getImages().get(0))
-//                    .centerCrop()
-//                    .centerInside()
-//                    .transform(new RoundedCorners(10))
-//                    .transform(new RoundedCorners(10), new BorderTransformation(2, Color.WHITE))
                     .apply(RequestOptions.bitmapTransform(new RoundedCorners(30)))
                     .into(holder.image);
             holder.itemView.setOnClickListener(new View.OnClickListener() {
