@@ -1,6 +1,8 @@
 package com.example.workersapp.Fragments;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -14,10 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.workersapp.Activities.LoginActivity;
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
-import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
@@ -29,16 +29,14 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link PostsFragment#newInstance} factory method to
+ * Use the {@link OwnerPostsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class PostsFragment extends Fragment {
+public class OwnerPostsFragment extends Fragment {
 
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
@@ -51,11 +49,11 @@ public class PostsFragment extends Fragment {
 //    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
 FragmentPostsBinding binding;
 
-    public PostsFragment( ) {
+    public OwnerPostsFragment( ) {
     }
 
-    public static PostsFragment newInstance( ) {
-        PostsFragment fragment = new PostsFragment( );
+    public static OwnerPostsFragment newInstance( ) {
+        OwnerPostsFragment fragment = new OwnerPostsFragment( );
         Bundle args = new Bundle( );
 
         fragment.setArguments( args );
@@ -69,11 +67,13 @@ FragmentPostsBinding binding;
 
         }
     }
+    public static SharedPreferences sharedPreferences;
 
     @Override
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
          binding= FragmentPostsBinding.inflate( inflater,container,false );
+        sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
 
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
@@ -157,10 +157,10 @@ FragmentPostsBinding binding;
     }
 
     public void applyFilter(List<String> jobStates) {
-        if ( LoginActivity.sharedPreferences.getString( "jobStatesOpen","open" ).equals( "open" )  ){
+        if (sharedPreferences.getString( "jobStatesOpen","open" ).equals( "open" )  ){
             FilterBottomSheetDialog.openPostsChecked=true;
         }
-        if (LoginActivity.sharedPreferences.getString( "jobStatesClose","close" ).equals( "close" )  ){
+        if (sharedPreferences.getString( "jobStatesClose","close" ).equals( "close" )  ){
             FilterBottomSheetDialog.closedPostsChecked=true;
         }
 

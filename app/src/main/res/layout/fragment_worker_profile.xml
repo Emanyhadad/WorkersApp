@@ -7,13 +7,14 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:layoutDirection="rtl"
-    tools:context=".Activities.WorkerProfileActivity"
+    tools:context=".Fragments.WorkerProfileFragment"
     android:background="@color/back_activity">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true">
+        android:fillViewport="true"
+        tools:ignore="ScrollViewCount">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -21,36 +22,6 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-            <LinearLayout
-                android:id="@+id/linearLayout4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/_20sdp"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_20sdp"
-                android:layout_marginBottom="@dimen/_8sdp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/tvBasicInformation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/cairo_regular"
-                    android:gravity="center"
-                    android:text="@string/ProfileToolBar"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/_14ssp" />
-
-                <ImageView
-                    android:id="@+id/imgBack"
-                    android:layout_width="@dimen/_17sdp"
-                    android:layout_height="@dimen/_17sdp"
-                    android:layout_gravity="center"
-                    app:srcCompat="@drawable/back_icon" />
-
-            </LinearLayout>
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -250,10 +221,12 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:orientation="vertical"
                         android:layout_marginStart="@dimen/_12sdp"
+                        android:layout_marginEnd="@dimen/_12sdp"
+
                         app:layout_constraintStart_toStartOf="parent"
                         android:gravity="start"
                         android:layout_marginTop="@dimen/_4sdp"
@@ -270,9 +243,11 @@
 
                         <TextView
                             android:id="@+id/pWorkerCv"
-                            android:layout_width="@dimen/_156sdp"
-                            android:layout_height="@dimen/_39sdp"
-                            android:text="@string/ProfileCv"                        android:textSize="@dimen/_10ssp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/ProfileCv"
+                            android:textSize="@dimen/_10ssp"
+                            android:maxLines="2"
                             android:textColor="@color/blue"
                             android:fontFamily="@font/cairo_regular"/>
 
@@ -409,18 +384,18 @@
 
     </ScrollView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_baseline_add_24"
-        android:tint="@color/white"
-        android:enabled="true"
-        app:borderWidth="0dp"
-        android:layout_marginBottom="@dimen/_9sdp"
-        android:layout_marginLeft="@dimen/_8sdp"
-        android:backgroundTint="@color/green"/>
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--        android:id="@+id/fab"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_gravity="end|bottom"-->
+<!--        android:src="@drawable/ic_baseline_add_24"-->
+<!--        android:tint="@color/white"-->
+<!--        app:borderWidth="0dp"-->
+<!--        android:layout_marginBottom="@dimen/_9sdp"-->
+<!--        android:layout_marginLeft="@dimen/_8sdp"-->
+<!--        android:backgroundTint="@color/green"/>-->
+
 
 
 

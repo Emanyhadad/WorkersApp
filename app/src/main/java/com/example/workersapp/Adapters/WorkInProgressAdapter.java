@@ -3,26 +3,20 @@ package com.example.workersapp.Adapters;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.workersapp.Listeneres.ItemClickListener;
-import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemWorkInProgressBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class WorkInProgressAdapter extends RecyclerView.Adapter<WorkInProgressAdapter.WorkInProgressHolder> {
@@ -44,7 +38,7 @@ public class WorkInProgressAdapter extends RecyclerView.Adapter<WorkInProgressAd
     @Override
     public WorkInProgressHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         ItemWorkInProgressBinding binding = ItemWorkInProgressBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new WorkInProgressHolder(binding);
+        return new WorkInProgressHolder( binding );
     }
 
     public void onBindViewHolder(@NonNull WorkInProgressAdapter.WorkInProgressHolder holder, int position) {
@@ -69,16 +63,12 @@ public class WorkInProgressAdapter extends RecyclerView.Adapter<WorkInProgressAd
                             holder.tvWorkerName.setText(fullName);
                         }
                     })
-                    .addOnFailureListener(e -> {
-                        Log.e("Field", e.getMessage());
-                    });
+                    .addOnFailureListener(e -> Log.e("Field", e.getMessage()) );
         } else {
             holder.tvWorkerName.setText("N/A");
         }
 
-        holder.LL.setOnClickListener(view -> {
-            listener.OnClick(pos);
-        });
+        holder.LL.setOnClickListener(view -> listener.OnClick(pos) );
     }
 
     @Override
@@ -86,7 +76,7 @@ public class WorkInProgressAdapter extends RecyclerView.Adapter<WorkInProgressAd
         return postList.size();
     }
 
-    class WorkInProgressHolder extends RecyclerView.ViewHolder {
+    static class WorkInProgressHolder extends RecyclerView.ViewHolder {
         TextView tvBudget,tvDuration,tvWorkDescription,tvWorkTitle,tvLocation,tvWorkerName;
         LinearLayout LL;
         public WorkInProgressHolder(@NonNull ItemWorkInProgressBinding binding) {

@@ -4,6 +4,7 @@ import static android.app.Activity.RESULT_OK;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
-import com.example.workersapp.Activities.NewModelActivity;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.FragmentWorkerProfileBinding;
@@ -57,16 +57,6 @@ public class WorkerProfileFragment extends Fragment {
     public WorkerProfileFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WorkerProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static WorkerProfileFragment newInstance(String param1, String param2) {
         WorkerProfileFragment fragment = new WorkerProfileFragment();
         Bundle args = new Bundle();
@@ -98,82 +88,60 @@ public class WorkerProfileFragment extends Fragment {
 
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String fullName = documentSnapshot.getString("fullName");
-                            String nickName = documentSnapshot.getString("nickName");
-                            String work = documentSnapshot.getString("work");
-                            String cv = documentSnapshot.getString("cv");
-                            String city = documentSnapshot.getString("city");
-                            String image = documentSnapshot.getString("image");
-                            binding.pWorkerUserName.setText(fullName);
-                            binding.pWorkerNickName.setText("( " + nickName + " )");
-                            binding.pWorkerJobName.setText(work);
-                            binding.pWorkerCv.setText(cv);
-                            binding.pWorkerLocation.setText(city);
-                            binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-                            Glide.with(getContext())
-                                    .load(image)
-                                    .circleCrop()
-                                    .error(R.drawable.worker)
-                                    .into(binding.pWorkerImg);
+                .addOnSuccessListener( documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String fullName = documentSnapshot.getString("fullName");
+                        String nickName = documentSnapshot.getString("nickName");
+                        String work = documentSnapshot.getString("work");
+                        String cv = documentSnapshot.getString("cv");
+                        String city = documentSnapshot.getString("city");
+                        String image = documentSnapshot.getString("image");
+                        binding.pWorkerUserName.setText(fullName);
+                        binding.pWorkerNickName.setText("( " + nickName + " )");
+                        binding.pWorkerJobName.setText(work);
+                        binding.pWorkerCv.setText(cv);
+                        binding.pWorkerLocation.setText(city);
+                        binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+                        Glide.with(getContext())
+                                .load(image)
+                                .circleCrop()
+                                .error(R.drawable.worker)
+                                .into(binding.pWorkerImg);
 
-                            long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
-                            // حولنا long -> date
-                            Date date = new Date(timestamp);
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                            String formattedDate = dateFormat.format(date);
+                        long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
+                        // حولنا long -> date
+                        Date date = new Date(timestamp);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String formattedDate = dateFormat.format(date);
 
-                            binding.pWorkerJoinDate.setText(formattedDate);
+                        binding.pWorkerJoinDate.setText(formattedDate);
 
 
-                        }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
-                    }
-                });
+
+                } )
+                .addOnFailureListener( e -> Log.e( "Error retrieving data",e.getMessage() ) );
         imagesList = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
 
-        fragments.add(BlankFragment.newInstance());
+        fragments.add( WorkerReviewsFragment.newInstance());
         fragments.add(new BusinessModelsFragment());
 
         adapter = new ImageModelFragAdapter(getActivity(), fragments);
         binding.FragPager.setAdapter(adapter);
 
-        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position < tabs.size()) {
-                    tab.setText(tabs.get(position));
-                }
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, ( tab , position ) -> {
+            if (position < tabs.size()) {
+                tab.setText(tabs.get(position));
             }
-        }).attach();
-
-        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+        } ).attach();
 
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), NewModelActivity.class);
-                arl.launch(intent);
-            }
-        });
+
+
 
         return binding.getRoot();
     }

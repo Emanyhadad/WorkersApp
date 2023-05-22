@@ -6,10 +6,9 @@ import androidx.fragment.app.Fragment;
 import android.os.Bundle;
 
 import com.example.workersapp.Adapters.FragmentAdapter;
-import com.example.workersapp.Fragments.BlankFragment;
-import com.example.workersapp.Fragments.NewJobFragment;
+import com.example.workersapp.Fragments.WorkerReviewsFragment;
 import com.example.workersapp.Fragments.PostFragment_inWorker;
-import com.example.workersapp.Fragments.PostsFragment;
+import com.example.workersapp.Fragments.OwnerPostsFragment;
 import com.example.workersapp.databinding.ActivityHomeForWorkerBinding;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -32,8 +31,8 @@ ActivityHomeForWorkerBinding binding;
 
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( PostFragment_inWorker.newInstance( ) );
-        fragments.add( PostsFragment.newInstance(  ) );
-        fragments.add( BlankFragment.newInstance() );
+        fragments.add( OwnerPostsFragment.newInstance(  ) );
+        fragments.add( WorkerReviewsFragment.newInstance() );
 
 
         FragmentAdapter adapter=new FragmentAdapter(this,fragments );

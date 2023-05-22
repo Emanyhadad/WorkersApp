@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -58,14 +59,14 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
         holder.PostDescription.setText( postList.get( pos ).getDescription() );
         holder.PostBudget.setText( postList.get( pos ).getProjectedBudget() );
         holder.PostLoc.setText( postList.get( pos ).getJobLocation() );
+        holder.favoriteButton.setVisibility( View.VISIBLE );
+
         //Todo: Put Post Time her
         holder.CategoryRecycle.setAdapter( new ShowCategoryAdapter( ( ArrayList < String > ) postList.get( pos ).getCategoriesList() ) );
         holder.CategoryRecycle.setLayoutManager( new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
         postList.get( pos ).getPostId();
-        holder.LL_item.setOnClickListener( view -> {
-            listener.OnClick( pos );
-        } );
+        holder.LL_item.setOnClickListener( view -> listener.OnClick( pos ) );
         firestore.collection("users").document(postList.get( pos ).getOwnerId() )
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
@@ -113,6 +114,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
         RecyclerView CategoryRecycle;
         ImageView clintImage;
         MaterialTextView OffersCount;
+        ToggleButton favoriteButton;
         public myViewHolder( @NonNull ItemPostBinding binding) {
             super( binding.getRoot() );
             PostTitle = binding.tvPostTitle;
@@ -126,6 +128,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
             ClintName=binding.tvClintName;
             clintImage=binding.itemImgClint;
             OffersCount = binding.tvCountOffers;
+            favoriteButton=binding.favoriteButton;
         }
     }
 }

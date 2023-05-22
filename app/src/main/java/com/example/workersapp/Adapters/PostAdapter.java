@@ -35,7 +35,6 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
     FirebaseUser firebaseUser;
     Context context;
     ItemClickListener listener;
-    String path;
 
     public PostAdapter( List < Post > postList , Context context , ItemClickListener listener ) {
         this.postList = postList;
@@ -84,7 +83,6 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
                     }
                 })
                 .addOnFailureListener(e -> {});
-                 path="";
 
         firestore.collection("offers").document(postList.get( pos ).getPostId()).collection("workerOffers")
                 .get()

@@ -9,7 +9,7 @@ import android.view.MenuItem;
 import com.example.workersapp.Fragments.OwnerInProgressFragment1;
 import com.example.workersapp.Fragments.NewJobFragment;
 import com.example.workersapp.Fragments.OwnerProfileFragment;
-import com.example.workersapp.Fragments.PostsFragment;
+import com.example.workersapp.Fragments.OwnerPostsFragment;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityWorkOwnerProfileBinding;
 import com.google.android.material.navigation.NavigationBarView;
@@ -35,7 +35,7 @@ public class WorkOwnerProfileActivity extends AppCompatActivity {
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerInProgressFragment1()).commit();
                         return true;
                     case R.id.itOpenJobs:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new PostsFragment()).commit();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerPostsFragment()).commit();
                         return true;
                     case R.id.itNewJob:
                         getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewJobFragment()).commit();

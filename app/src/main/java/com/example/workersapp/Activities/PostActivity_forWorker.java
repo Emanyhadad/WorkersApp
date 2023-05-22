@@ -23,18 +23,13 @@ import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
-import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ActivityPostForWorkerBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.text.DateFormatSymbols;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +45,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    String clintID,postId,path,duration,budget,formPath;
+    String clintID,postId,path,duration,budget;
     int formsCount;
     private Dialog evaluationDialog;
     float rating;
@@ -135,7 +130,8 @@ ActivityPostForWorkerBinding binding;
                                         binding.PB2.setVisibility(View.VISIBLE);
 
 
-                                        firestore.collection( "offers" ).document( postId ).collection( "workerOffers" ).document(user.getPhoneNumber()  ).set( offer );
+                                        firestore.collection( "offers" ).document( postId )
+                                                .collection( "workerOffers" ).document(user.getPhoneNumber()  ).set( offer );
 
                                         binding.LLWriteOffer.setVisibility(View.GONE);
                                         binding.tvWriteOffer.setText("العرض الخاص بك");
@@ -220,9 +216,7 @@ ActivityPostForWorkerBinding binding;
                                     LinearLayoutManager.HORIZONTAL, false));
                         }}
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("getPot", "Error getting documents: ", e);
-                });
+                .addOnFailureListener(e -> Log.e("getPot", "Error getting documents: ", e) );
 
     }
     void Rating(){

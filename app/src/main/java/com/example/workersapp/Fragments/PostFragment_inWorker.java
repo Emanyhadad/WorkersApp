@@ -83,8 +83,6 @@ public class PostFragment_inWorker extends Fragment {
                                 Log.e( "DecumentsCount", String.valueOf( task.getResult().size() ) );
                                 firebaseFirestore.document("posts/" + documentSnapshot1.getId()+ "/userPost/" + document.getId()).get()
                                         .addOnSuccessListener( documentSnapshot -> {
-                                            binding.ProgressBar.setVisibility( View.GONE );
-                                            binding.RV.setVisibility( View.VISIBLE );
                                             if (documentSnapshot.exists()) {
                                                 jobState = documentSnapshot.getString("jobState");
                                                 title = documentSnapshot.getString("title");
@@ -112,15 +110,13 @@ public class PostFragment_inWorker extends Fragment {
                                                     startActivity(intent);
                                                 } ));
 
-                                            } else {
                                             }
+                                            binding.ProgressBar.setVisibility( View.GONE );
+                                            binding.RV.setVisibility( View.VISIBLE );
                                         } )
-                                        .addOnFailureListener( e -> {
-                                            Log.e( "Field",e.getMessage());
-                                        } );
+                                        .addOnFailureListener( e -> Log.e( "Field",e.getMessage()) );
                                 binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
                                         LinearLayoutManager.VERTICAL, false));
-                                Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
 
 
                             }}

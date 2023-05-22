@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/tv_postTitle"
+                android:id="@+id/tvPostTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/_6sdp"
@@ -55,15 +55,16 @@
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
+
                 <ToggleButton
                     android:id="@+id/favoriteButton"
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
-                    android:button="@drawable/favorite_selector"
-                    android:visibility="gone"
                     android:background="@color/transparent"
+                    android:button="@drawable/favorite_selector"
                     android:textOff=""
-                    android:textOn="" />
+                    android:textOn=""
+                    android:visibility="gone" />
 
     </LinearLayout>
             <androidx.appcompat.widget.AppCompatTextView

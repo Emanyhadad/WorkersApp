@@ -148,7 +148,7 @@
                     android:textSize="@dimen/_11ssp" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/AP_tvJobTime"
+                    android:id="@+id/APtv_JobShareTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_6sdp"
@@ -216,7 +216,7 @@
                 </androidx.appcompat.widget.LinearLayoutCompat>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/APtv_JobShareTime"
+                    android:id="@+id/AP_tvJobTime"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/_6sdp"
@@ -365,7 +365,7 @@
                 </LinearLayout>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/AP_tv_IWJNow"
+                    android:id="@+id/AP_tv_IWJFinishedDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:drawablePadding="@dimen/_4sdp"
@@ -391,7 +391,7 @@
                     android:textColor="@color/blue"
                     android:textSize="@dimen/_12ssp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@+id/AP_tv_IWJNow"
+                    app:layout_constraintEnd_toStartOf="@+id/AP_tv_IWJFinishedDate"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.0" />
 

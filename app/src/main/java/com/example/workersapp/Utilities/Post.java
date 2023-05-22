@@ -113,4 +113,21 @@ public class Post {
     public void setOwnerId( String ownerId ) {
         OwnerId = ownerId;
     }
+
+    @Override
+    public String toString( ) {
+        return "Post{" +
+                "title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", images=" + images +
+                ", categoriesList=" + categoriesList +
+                ", expectedWorkDuration='" + expectedWorkDuration + '\'' +
+                ", projectedBudget='" + projectedBudget + '\'' +
+                ", jobLocation='" + jobLocation + '\'' +
+                ", jobState='" + jobState + '\'' +
+                ", workerId='" + workerId + '\'' +
+                ", postId='" + postId + '\'' +
+                ", OwnerId='" + OwnerId + '\'' +
+                '}';
+    }
 }

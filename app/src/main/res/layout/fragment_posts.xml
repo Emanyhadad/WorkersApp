@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layoutDirection="rtl"
-    tools:context=".Fragments.PostsFragment">
+    tools:context=".Fragments.OwnerPostsFragment">
     <ProgressBar
         android:id="@+id/ProgressBar"
         android:visibility="visible"

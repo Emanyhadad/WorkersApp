@@ -10,7 +10,8 @@ public class Offer {
     public String clintID;
     public String postID;
 
-    public Offer( String offerBudget , String offerDuration , String offerDescription , String workerID , String clintID , String postID ) {
+    public Offer( String offerBudget , String offerDuration , String offerDescription
+            , String workerID , String clintID , String postID ) {
         this.offerBudget = offerBudget;
         this.offerDuration = offerDuration;
         this.offerDescription = offerDescription;
@@ -65,5 +66,17 @@ public class Offer {
 
     public void setPostID( String postID ) {
         this.postID = postID;
+    }
+
+    @Override
+    public String toString( ) {
+        return "Offer{" +
+                "offerBudget='" + offerBudget + '\'' +
+                ", offerDuration='" + offerDuration + '\'' +
+                ", offerDescription='" + offerDescription + '\'' +
+                ", workerID='" + workerID + '\'' +
+                ", clintID='" + clintID + '\'' +
+                ", postID='" + postID + '\'' +
+                '}';
     }
 }

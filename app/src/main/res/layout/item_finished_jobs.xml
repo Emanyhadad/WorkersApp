@@ -3,11 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/sdp_20"
+    android:layout_marginBottom="@dimen/_15sdp"
     android:background="#FFFFFF"
     android:layoutDirection="rtl"
     app:cardCornerRadius="@dimen/sdp_10"
-    app:cardElevation="@dimen/_2sdp"
     app:cardUseCompatPadding="true">
 
     <LinearLayout
@@ -27,7 +26,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/sdp_8"
+            android:layout_marginStart="@dimen/_6sdp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -45,7 +44,7 @@
                 android:id="@+id/tvOwnerName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/profile"
+                android:drawableRight="@drawable/ic_profile"
                 android:drawablePadding="@dimen/sdp_5"
                 android:fontFamily="@font/cairo_regular"
                 android:text="عبدالله يوسف"
@@ -56,7 +55,7 @@
                 android:id="@+id/tvDateOfPublication"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:drawableRight="@drawable/ic_calendar"
+                android:drawableRight="@drawable/ic_calendar1"
                 android:drawablePadding="@dimen/sdp_5"
                 android:fontFamily="@font/cairo_regular"
                 android:text="11-مايو -2023"
@@ -93,7 +92,7 @@
                 android:gravity="center"
                 android:text="4.8"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_5ssp" />
+                android:textSize="@dimen/_7ssp" />
         </LinearLayout>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

@@ -2,12 +2,13 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/LL_btns"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layoutDirection="rtl"
-    android:layout_marginTop="@dimen/_16sdp"
     android:layout_marginLeft="@dimen/_16sdp"
-    android:layout_marginRight="@dimen/_16sdp">
+    android:layout_marginTop="@dimen/_16sdp"
+    android:layout_marginRight="@dimen/_16sdp"
+    android:layoutDirection="rtl">
 
     <LinearLayout
         android:id="@+id/item_LLSendedOffer"
@@ -165,34 +166,55 @@
             android:textColor="@color/black0" />
 
         <LinearLayout
+            android:id="@+id/LL_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/_6sdp"
 
-            >
+            android:layout_marginTop="@dimen/_6sdp"
+            android:visibility="gone">
+
             <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/item_btn_delete"
-            android:layout_width="@dimen/_50sdp"
-            android:layout_height="@dimen/_25sdp"
-            android:gravity="start"
-             android:layout_weight="1"
-            android:text="إخفاء"
-            android:fontFamily="@font/cairo_semi_bold"
-            android:textColor="@color/red"
-            android:background="@color/white"
-            />
+                android:id="@+id/item_btn_delete"
+                android:layout_width="@dimen/_50sdp"
+                android:layout_height="@dimen/_25sdp"
+                android:layout_weight="1"
+                android:background="@color/white"
+                android:fontFamily="@font/cairo_semi_bold"
+                android:gravity="start"
+                android:text="إخفاء"
+                android:textColor="@color/red" />
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/item_btnHireMe"
                 android:layout_width="@dimen/_50sdp"
                 android:layout_height="@dimen/_25sdp"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:text="وظفني"
-                android:fontFamily="@font/cairo_semi_bold"
-                android:textColor="@color/green"
                 android:background="@drawable/btn_hireme"
-                />
+                android:fontFamily="@font/cairo_semi_bold"
+                android:text="وظفني"
+                android:textColor="@color/green" />
         </LinearLayout>
+
+<LinearLayout
+    android:id="@+id/Line"
+    android:layout_width="match_parent"
+    android:layout_height="1dp"
+    android:layout_marginTop="@dimen/_6sdp"
+    android:layout_marginBottom="@dimen/_6sdp"
+    android:background="@color/back_tv"
+    android:orientation="vertical"
+    android:visibility="gone"/>
+        <TextView
+            android:id="@+id/tvTitleJob"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:lines="1"
+            android:text="TextView"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_11ssp"
+            android:visibility="gone"/>
+
 
 
     </LinearLayout>

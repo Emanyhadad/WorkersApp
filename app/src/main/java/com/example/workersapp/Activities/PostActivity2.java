@@ -1,5 +1,7 @@
 package com.example.workersapp.Activities;
 
+import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -8,7 +10,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
-import android.net.Uri;
+
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,11 +24,16 @@ import com.bumptech.glide.Glide;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
+
 import com.example.workersapp.databinding.ActivityPost2Binding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
@@ -42,7 +49,6 @@ public class PostActivity2 extends AppCompatActivity {
     ShowCategoryAdapter showCategoryAdapter;
 
     ShowImagesAdapter showImagesAdapter;
-    List < Uri > imageList;
 
     private Dialog evaluationDialog;
     private AlertDialog deleteDialog;
@@ -57,9 +63,8 @@ public class PostActivity2 extends AppCompatActivity {
     String comment;
 
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation,projectState;
-    List<String> images,categoriesList;
     ActivityPost2Binding binding;
-    @SuppressLint( "UseCompatLoadingForDrawables" )
+    @SuppressLint( { "UseCompatLoadingForDrawables" , "InflateParams" } )
     @Override
     protected void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
@@ -88,7 +93,7 @@ public class PostActivity2 extends AppCompatActivity {
         postId = getIntent().getStringExtra( "PostId" ).trim(); //TODO GET FROM INTENT
 
                 path = "posts/" + user + "/userPost/" + Objects.requireNonNull(postId) ;
-        documentReference = firestore.collection("posts").document( user.getPhoneNumber() ).
+        documentReference = firestore.collection("posts").document( Objects.requireNonNull( user.getPhoneNumber( ) ) ).
                 collection("userPost").document(postId);
 
         Toast.makeText( this , Objects.requireNonNull(postId) , Toast.LENGTH_SHORT ).show( );
@@ -100,12 +105,13 @@ public class PostActivity2 extends AppCompatActivity {
                         jobState = documentSnapshot.getString("jobState");
                         projectState=jobState;
 
-                        switch ( projectState ){
+                        switch ( Objects.requireNonNull( projectState ) ){
                             case "open":
                                 binding.APbtnCloseProject.setVisibility( View.VISIBLE );
                                 binding.APbtnComments.setVisibility( View.VISIBLE );
                                 binding.APTvJobData.setVisibility( View.GONE );
                                 binding.APCLInWork.setVisibility( View.GONE );
+                                binding.ApBtnFinishJob.setVisibility( View.GONE );
                                 DeleteJob( );
                                 binding.APbtnComments.setOnClickListener( view ->{
                                         Intent intent = new Intent( PostActivity2.this, OffersActivity.class);
@@ -140,11 +146,30 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.APCLInWork.setVisibility(View.VISIBLE);
                                 binding.ApBtnFinishJob.setVisibility(View.VISIBLE);
                                 binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
-                                //Todo get data from offer (price)
+                                binding.linearLayoutRateWorker.setVisibility( View.GONE );
+                                binding.linearLayoutRateClint.setVisibility( View.GONE );
+
+                                CollectionReference workerOffersRef = firestore.collection("offers").document(postId).collection("workerOffers");
+                                workerOffersRef.document( Objects.requireNonNull( documentSnapshot.getString( "workerId" ) ) ).get().addOnCompleteListener( task -> {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            //Todo get data from offer (price)
+                                            String workerId = document.getString("workerID");
+                                            String postId = document.getString("postID");
+                                            String offerDuration = document.getString("offerDuration");
+                                            String offerDescription = document.getString("offerDescription");
+                                            String offerBudget = document.getString("offerBudget");
+                                            binding.APtvIWJOfferPrice.setText( offerBudget+"" );
+                                            String clientId = document.getString("clintID");
+                                        } else Log.d(TAG, "No such document");
+                                    } else  Log.d(TAG, "Error getting document: ", task.getException()); });
+
+
                                 Rating();
+
                                 firestore.collection("users")
-                                        .document(documentSnapshot.getString("workerId"))
-                                        .get()
+                                        .document( Objects.requireNonNull( documentSnapshot.getString( "workerId" ) ) ).get()
                                         .addOnSuccessListener(documentSnapshot1 -> {
                                             if (documentSnapshot1.exists()) {
                                                 String fullName = documentSnapshot1.getString("fullName");
@@ -156,10 +181,36 @@ public class PostActivity2 extends AppCompatActivity {
                                                         .error(R.drawable.worker)
                                                         .into(binding.imgIWJWorker);
                                             }
-                                        })
-                                        .addOnFailureListener(e -> {});
+                                        }).addOnFailureListener(e -> {});
 
-                                binding.ApBtnFinishJob.setOnClickListener(view -> evaluationDialog.show() );
+                                binding.ApBtnFinishJob.setOnClickListener(view -> {new AlertDialog.Builder(PostActivity2.this)
+                                        .setMessage("هل أنت متأكد أنك تريد اكمال الوظيفة؟")
+                                        .setNegativeButton("لا, الغاء", (dialogInterface, i) -> { })
+                                        .setPositiveButton("نعم ، اكمال", (dialogInterface, i) -> {
+                                                    evaluationDialog.show( );
+                                                    //Todo: After Note
+//                                binding.tvClintComment.setText( documentSnapshot.getString( "Comment-clint" ) );
+//                                double ratingClint =  documentSnapshot.getDouble("Rating-clint");
+//                                binding.ratingBarClint.setProgress((int) ratingClint*2);
+                                                }
+                                        ).create().show();
+                                            binding.PAtvProjectstate.setText( "مكتمل" );
+                                            binding.PAtvProjectstate.setBackground(getResources().getDrawable(R.drawable.bg_done));
+                                            binding.APbtnCloseProject.setVisibility(View.GONE);
+                                            binding.APbtnComments.setVisibility(View.GONE);
+                                            binding.APTvJobData.setVisibility(View.VISIBLE);
+                                            binding.APCLInWork.setVisibility(View.VISIBLE);
+                                            binding.ApBtnFinishJob.setVisibility(View.GONE);
+                                            binding.linearLayoutRateClint.setVisibility( View.VISIBLE );
+                                            binding.linearLayoutRateWorker.setVisibility( View.VISIBLE );
+                                            //Todo: How get in same time
+//                                                    binding.tvWorkerComment.setText( documentSnapshot.getString( "Comment-worker" ) );
+//                                                    double ratingWorker =  documentSnapshot.getDouble("Rating-worker");
+//                                                    binding.ratingBarWorker.setProgress((int) ratingWorker*2);
+                                }
+
+
+                                );
                                 break;
 
                             case "done":
@@ -175,9 +226,42 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.tvWorkerComment.setText( documentSnapshot.getString( "Comment-worker" ) );
                                 double ratingWorker =  documentSnapshot.getDouble("Rating-worker");
                                 binding.ratingBarWorker.setProgress((int) ratingWorker*2);
-                                binding.tvClintComment.setText( documentSnapshot.getString( "Comment-clint" ) );
-                                double ratingClint =  documentSnapshot.getDouble("Rating-clint");
-                                binding.ratingBarClint.setProgress((int) ratingClint*2);
+                                binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
+                                binding.APTvIWJFinishedDate.setText("-"+ documentSnapshot.getString( "jobFinishDate" ) );
+                                //Todo: After Note
+//                                binding.tvClintComment.setText( documentSnapshot.getString( "Comment-clint" ) );
+//                                double ratingClint =  documentSnapshot.getDouble("Rating-clint");
+//                                binding.ratingBarClint.setProgress((int) ratingClint*2);
+                                firestore.collection("users")
+                                        .document( Objects.requireNonNull( documentSnapshot.getString( "workerId" ) ) ).get()
+                                        .addOnSuccessListener(documentSnapshot1 -> {
+                                            if (documentSnapshot1.exists()) {
+                                                String fullName = documentSnapshot1.getString("fullName");
+                                                binding.tvIWJWorkerName.setText(fullName);
+                                                String image = documentSnapshot1.getString("image");
+                                                Glide.with(PostActivity2.this)
+                                                        .load(image)
+                                                        .circleCrop()
+                                                        .error(R.drawable.worker)
+                                                        .into(binding.imgIWJWorker);
+                                            }
+                                        }).addOnFailureListener(e -> {});
+                                CollectionReference workerOffersRef1 = firestore.collection("offers").document(postId).collection("workerOffers");
+                                workerOffersRef1.document( Objects.requireNonNull( documentSnapshot.getString( "workerId" ) ) ).get().addOnCompleteListener( task -> {
+                                    if (task.isSuccessful()) {
+                                        DocumentSnapshot document = task.getResult();
+                                        if (document.exists()) {
+                                            //Todo get data from offer (price)
+                                            String workerId = document.getString("workerID");
+                                            String postId = document.getString("postID");
+                                            String offerDuration = document.getString("offerDuration");
+                                            String offerDescription = document.getString("offerDescription");
+                                            String offerBudget = document.getString("offerBudget");
+                                            binding.APtvIWJOfferPrice.setText( offerBudget+"" );
+                                            String clientId = document.getString("clintID");
+                                        } else Log.d(TAG, "No such document");
+                                    } else  Log.d(TAG, "Error getting document: ", task.getException()); });
+                                //Todo: get Rating
                                 break;
 
                         }
@@ -220,16 +304,14 @@ public class PostActivity2 extends AppCompatActivity {
                     } else {
                         Toast.makeText( this , "Prop" , Toast.LENGTH_SHORT ).show( );                    }
                 } )
-                .addOnFailureListener( e -> {
-                    Log.e( "GetingPost",e.getMessage().toString() );
-                } );
+                .addOnFailureListener( e -> Log.e( "GettingPost", e.getMessage() ) );
 
 
 
 
     }
 
-void Rating(){
+    void Rating(){
     RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
     EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
     Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
@@ -314,5 +396,6 @@ void Rating(){
             // Handle the case when the update fails
         } );
     }
+
 
 }

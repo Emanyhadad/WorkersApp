@@ -7,16 +7,13 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import com.example.workersapp.Activities.PostActivity2;
-import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.WorkInProgressAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
@@ -25,7 +22,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,7 +105,7 @@ public class OwnerInProgressFragment extends Fragment {
                                             binding.btnAddpost.setOnClickListener(v -> {
                                                 FragmentManager fragmentManager = getParentFragmentManager();
                                                 FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                                PostsFragment postsFragment = new PostsFragment();
+                                                OwnerPostsFragment postsFragment = new OwnerPostsFragment();
                                                 fragmentTransaction.replace(R.id.container, postsFragment);
                                                 fragmentTransaction.addToBackStack(null);
                                                 fragmentTransaction.commit();
