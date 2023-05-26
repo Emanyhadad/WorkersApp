@@ -62,7 +62,6 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
     String document, date, description;
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

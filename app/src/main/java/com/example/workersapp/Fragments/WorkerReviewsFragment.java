@@ -111,7 +111,6 @@ public class WorkerReviewsFragment extends Fragment {
 
         binding.RV.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
 
-
         return binding.getRoot();
     }
 }
