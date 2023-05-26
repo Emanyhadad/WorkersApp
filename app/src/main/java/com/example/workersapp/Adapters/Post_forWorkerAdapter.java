@@ -20,10 +20,7 @@ import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemPostBinding;
 import com.google.android.material.textview.MaterialTextView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +30,6 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
     FirebaseFirestore firestore;
     Context context;
     ItemClickListener listener;
-    QuerySnapshot documentSnapshot;
-    String path;
 
     public Post_forWorkerAdapter( List < Post > postList , Context context , ItemClickListener listener ) {
         this.postList = postList;
@@ -61,6 +56,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
         holder.PostLoc.setText( postList.get( pos ).getJobLocation() );
         holder.favoriteButton.setVisibility( View.VISIBLE );
 
+
         //Todo: Put Post Time her
         holder.CategoryRecycle.setAdapter( new ShowCategoryAdapter( ( ArrayList < String > ) postList.get( pos ).getCategoriesList() ) );
         holder.CategoryRecycle.setLayoutManager( new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
@@ -82,9 +78,9 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
                     }
                 })
                 .addOnFailureListener(e -> {});
-        path="";
 
-        firestore.collection("offers").document(postList.get( pos ).getPostId()).collection("workerOffers")
+        firestore.collection("offers").document(postList.get( pos ).getPostId()).
+                collection("workerOffers")
                 .get()
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -101,19 +97,13 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter< Post_forWorkerA
         return postList.size();
     }
 
-    class myViewHolder extends RecyclerView.ViewHolder{
-        AppCompatTextView PostDuration;
+    static class myViewHolder extends RecyclerView.ViewHolder{
         LinearLayout LL_item;
-        AppCompatTextView PostDescription;
-        AppCompatTextView PostBudget;
-        MaterialTextView ClosedJob;
-        AppCompatTextView PostTitle;
-        AppCompatTextView PostTime;
-        AppCompatTextView PostLoc;
+        AppCompatTextView PostDescription,PostBudget,PostTitle,PostTime,PostLoc;
+        MaterialTextView ClosedJob,OffersCount;
         TextView ClintName;
         RecyclerView CategoryRecycle;
         ImageView clintImage;
-        MaterialTextView OffersCount;
         ToggleButton favoriteButton;
         public myViewHolder( @NonNull ItemPostBinding binding) {
             super( binding.getRoot() );

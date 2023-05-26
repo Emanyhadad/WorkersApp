@@ -102,33 +102,7 @@ public class WorkerReviewsFragment extends Fragment {
             }
         });
 
-        List<String>Category = new ArrayList <>(  );
-        firebaseFirestore.collection("workCategoryAuto").document("category")
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                            Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
-                            if (categoryMap != null) {
-                                for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
-                                    String fieldName = entry.getKey();
-                                    List<String> fieldData = entry.getValue();
-                                    Log.d("Field Name", fieldName);
-                                    Log.d("Field Data", fieldData.toString());
-                                    for ( String s : fieldData ){
-                                        Category.add( s );
-                                    }
-                                    Log.e( "Category",Category.toString() );
 
-                                }
-                            }
-
-                    } else {
-                        Log.d("Error", "No such document");
-                    }
-                })
-                .addOnFailureListener(e -> {
-                    Log.d("Error", "Error getting document: " + e.getMessage());
-                });
 
 
 
