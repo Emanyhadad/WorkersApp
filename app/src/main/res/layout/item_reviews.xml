@@ -1,111 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:id="@+id/Item"
-xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/Item"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layoutDirection="rtl"
-        android:layout_marginLeft="@dimen/_15sdp"
-        android:layout_marginRight="@dimen/_15sdp"
-        android:layout_marginBottom="@dimen/_8sdp"
-        app:cardCornerRadius="@dimen/_14sdp">
+    android:layout_marginLeft="@dimen/_15sdp"
+    android:layout_marginTop="@dimen/_10sdp"
+    android:layout_marginRight="@dimen/_15sdp"
+    android:layout_marginBottom="@dimen/_8sdp"
+    android:layoutDirection="rtl"
+    app:cardCornerRadius="@dimen/_14sdp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/_8sdp">
+
+        <ImageView
+            android:id="@+id/ItemImgClint"
+            android:layout_width="@dimen/_31sdp"
+            android:layout_height="@dimen/_31sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/work_owner" />
+
+        <TextView
+            android:id="@+id/ItemClintName"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/_8sdp">
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="محمد سعد"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toEndOf="@+id/ItemImgClint"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/ItemImgClint"
-                android:layout_width="@dimen/_31sdp"
-                android:layout_height="@dimen/_31sdp"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/work_owner" />
+        <TextView
+            android:id="@+id/ItemComment_worker"
+            android:layout_width="@dimen/_140sdp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:fontFamily="@font/cairo_regular"
+            android:text="عبدالله نجار رائع أنصح بالتعامل معه"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toEndOf="@+id/ItemImgClint"
+            app:layout_constraintTop_toBottomOf="@+id/ItemClintName" />
 
-            <TextView
-                android:id="@+id/ItemClintName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/cairo_semi_bold"
-                android:text="محمد سعد"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toEndOf="@+id/ItemImgClint"
-                app:layout_constraintTop_toTopOf="parent" />
+        <ImageView
+            android:id="@+id/ItemImgStar"
+            android:layout_width="@dimen/_15sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:layout_marginEnd="@dimen/_8sdp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/baseline_star_24" />
 
-            <TextView
-                android:id="@+id/ItemComment_worker"
-                android:layout_width="@dimen/_140sdp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="عبدالله نجار رائع أنصح بالتعامل معه"
-                android:textColor="@color/blue"
-                android:textSize="@dimen/_10ssp"
-                app:layout_constraintStart_toEndOf="@+id/ItemImgClint"
-                app:layout_constraintTop_toBottomOf="@+id/ItemClintName" />
+        <TextView
+            android:id="@+id/ItemRate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/_1sdp"
+            android:layout_marginTop="@dimen/_9sdp"
+            android:fontFamily="@font/cairo_regular"
+            android:text="4.8"
+            android:textColor="@color/black2"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintEnd_toStartOf="@+id/ItemImgStar"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/ItemImgStar"
-                android:layout_width="@dimen/_15sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginEnd="@dimen/_8sdp"
-                android:layout_marginTop="@dimen/_9sdp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/baseline_star_24" />
-
-            <TextView
-                android:id="@+id/ItemRate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/_1sdp"
-                android:layout_marginTop="@dimen/_9sdp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="4.8"
-                android:textColor="@color/black2"
-                android:textSize="@dimen/_9ssp"
-                app:layout_constraintEnd_toStartOf="@+id/ItemImgStar"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/ItemJobTitle"
-                android:layout_width="@dimen/_170sdp"
-                android:layout_height="@dimen/_15sdp"
-                android:layout_marginTop="@dimen/_4sdp"
-                android:layout_marginStart="@dimen/_8sdp"
-                android:fontFamily="@font/cairo_regular"
-                android:text="أريد باب خشب طوله متربين وعرض ثلاث أمتار ...."
-                android:textColor="@color/gray_hint"
-                android:textSize="@dimen/_9sdp"
-                android:lines="1"
-                app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginBottom="@dimen/_8sdp"
-                app:layout_constraintTop_toBottomOf="@+id/ItemComment_worker" />
+        <TextView
+            android:id="@+id/ItemJobTitle"
+            android:layout_width="@dimen/_170sdp"
+            android:layout_height="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_4sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:fontFamily="@font/cairo_regular"
+            android:lines="1"
+            android:text="أريد باب خشب طوله متربين وعرض ثلاث أمتار ...."
+            android:textColor="@color/gray_hint"
+            android:textSize="@dimen/_9sdp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ItemComment_worker" />
 
 
+        <TextView
+            android:id="@+id/ItemjobFinishDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_8sdp"
+            android:alpha="0.48"
+            android:fontFamily="@font/cairo_regular"
+            android:text="12/2/2000"
+            android:textColor="@color/gray9A"
+            android:textSize="@dimen/_9ssp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/ItemjobFinishDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="12/2/2000"
-                android:textColor="@color/gray9A"
-                android:layout_marginEnd="@dimen/_8sdp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:fontFamily="@font/cairo_regular"
-                android:textSize="@dimen/_9ssp"
-                android:alpha="0.48"
-                app:layout_constraintEnd_toEndOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </androidx.cardview.widget.CardView>
+</androidx.cardview.widget.CardView>
 

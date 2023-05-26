@@ -6,19 +6,31 @@
     android:layoutDirection="rtl"
     tools:context=".Fragments.PostFragment_inWorker">
 
+    <ImageButton
+        android:id="@+id/favoriteBtn"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:background="@color/transparent"
+        android:src="@drawable/ic_favorite"
+        android:layout_gravity="center|top"
+        android:layout_marginTop="20dp"
+        />
+
     <ProgressBar
         android:id="@+id/ProgressBar"
         android:visibility="visible"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/RV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
+        android:layout_marginTop="40dp"
         tools:listitem="@layout/item_post"
-/>
+        />
 
 
 </FrameLayout>

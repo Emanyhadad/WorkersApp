@@ -2,46 +2,43 @@ package com.example.workersapp.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.workersapp.Activities.PostActivity2;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.workersapp.Activities.FavouriteActivity;
 import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
-import com.example.workersapp.R;
+import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
-import com.example.workersapp.databinding.FragmentPostsBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-public class PostFragment_inWorker extends Fragment {
+public class PostFragment_inWorker extends Fragment{
+    FragmentPostInWorkerBinding binding;
     FirebaseFirestore firebaseFirestore;
     FirebaseStorage firebaseStorage;
     ShowCategoryAdapter adapter;
     List<String> categoryList;
     List<Post> postList;
+    Post_forWorkerAdapter post_forWorkerAdapter;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
+
 
     public PostFragment_inWorker( ) {
     }
@@ -65,7 +62,7 @@ public class PostFragment_inWorker extends Fragment {
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
 
-        FragmentPostInWorkerBinding binding= FragmentPostInWorkerBinding.inflate( inflater,container,false );
+        binding= FragmentPostInWorkerBinding.inflate( inflater,container,false );
 
         firebaseFirestore=FirebaseFirestore.getInstance();
         categoryList=new ArrayList <>(  );
@@ -115,20 +112,55 @@ public class PostFragment_inWorker extends Fragment {
                                             binding.RV.setVisibility( View.VISIBLE );
                                         } )
                                         .addOnFailureListener( e -> Log.e( "Field",e.getMessage()) );
-                                binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
                                         LinearLayoutManager.VERTICAL, false));
 
 
                             }}
                         } ).addOnFailureListener( runnable -> {} );
-
-
-
             }
         });
 
-
+        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), FavouriteActivity.class));
+            }
+        });
 
         return binding.getRoot();
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        firebaseFirestore.collection("offers")
+                .document("favorites")
+                .collection("favorites")
+                .get()
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
+                        binding.RV.setAdapter( new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
+                            @Override
+                            public void OnClick(int pos) {
+
+                            }
+                        }));
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // معالجة فشل جلب العناصر المفضلة من Firebase Firestore
+                        Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
+                    }
+                });
+        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                LinearLayoutManager.VERTICAL, false));
+    }
+
+
 }
