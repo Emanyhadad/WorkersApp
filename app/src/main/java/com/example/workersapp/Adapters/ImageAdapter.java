@@ -3,7 +3,6 @@ package com.example.workersapp.Adapters;
 import android.content.Context;
 import android.net.Uri;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
@@ -11,6 +10,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.databinding.ItemImegBinding;
 
@@ -42,6 +43,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageHolder>
         int pos = position;
         if (!(uriList.size() == 0)) {
             Glide.with(context).load(uriList.get(pos))
+                    .apply(RequestOptions.bitmapTransform(new RoundedCorners(50)))
                     .into(holder.img);
         holder.imgDelete.setOnClickListener( view -> listener.onDelete(pos) );
         }

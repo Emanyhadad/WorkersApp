@@ -14,6 +14,8 @@ public class Post {
     String workerId;
     String postId;
     String OwnerId;
+    private boolean isFavorite;
+
     public Post(String title, String description, List<String> images, List<String> categoriesList,
                 String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState) {
         this.title = title;
@@ -24,6 +26,9 @@ public class Post {
         this.projectedBudget = projectedBudget;
         this.jobLocation = jobLocation;
         this.jobState = jobState;
+    }
+
+    public Post() {
     }
 
     public String getTitle() {
@@ -129,5 +134,13 @@ public class Post {
                 ", postId='" + postId + '\'' +
                 ", OwnerId='" + OwnerId + '\'' +
                 '}';
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

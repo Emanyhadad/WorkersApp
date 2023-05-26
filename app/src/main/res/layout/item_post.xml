@@ -56,15 +56,24 @@
                 android:textColor="@color/black"
                 android:textSize="@dimen/_11ssp" />
 
-                <ToggleButton
+<!--                <ToggleButton-->
+<!--                    android:id="@+id/favoriteButton"-->
+<!--                    android:layout_width="@dimen/_18sdp"-->
+<!--                    android:layout_height="@dimen/_18sdp"-->
+<!--                    android:background="@color/transparent"-->
+<!--                    android:button="@drawable/favorite_selector"-->
+<!--                    android:textOff=""-->
+<!--                    android:textOn=""-->
+<!--                    android:visibility="gone" />-->
+
+                <ImageButton
                     android:id="@+id/favoriteButton"
                     android:layout_width="@dimen/_18sdp"
                     android:layout_height="@dimen/_18sdp"
                     android:background="@color/transparent"
-                    android:button="@drawable/favorite_selector"
-                    android:textOff=""
-                    android:textOn=""
-                    android:visibility="gone" />
+                    android:src="@drawable/ic_favorite_border"
+                    android:visibility="gone"
+                    />
 
     </LinearLayout>
             <androidx.appcompat.widget.AppCompatTextView

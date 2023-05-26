@@ -10,16 +10,17 @@
         android:layout_height="@dimen/_110sdp"
         android:layout_margin="@dimen/sdp_20"
         android:src="@drawable/user"
+        android:scaleType="fitCenter"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <ImageView
         android:id="@+id/imgDelete"
         android:layout_width="@dimen/sdp_15"
         android:layout_height="@dimen/sdp_10"
-        android:layout_marginStart="-6dp"
+        android:layout_marginStart="-20dp"
         android:layout_marginTop="@dimen/_10sdp"
         app:layout_constraintStart_toEndOf="@+id/img"
         app:layout_constraintTop_toTopOf="parent"

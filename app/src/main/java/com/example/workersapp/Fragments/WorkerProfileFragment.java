@@ -175,7 +175,6 @@ public class WorkerProfileFragment extends Fragment {
                             Date date = new Date(timestamp);
                             SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                             String formattedDate = dateFormat.format(date);
-
                             binding.pWorkerJoinDate.setText(formattedDate);
 
 
