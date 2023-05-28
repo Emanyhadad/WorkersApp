@@ -41,6 +41,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
@@ -51,6 +52,7 @@ public class LoginActivity extends AppCompatActivity {
     FirebaseUser currentUser;
     FirebaseFirestore firestore;
 
+    AlertDialog.Builder builder;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     PhoneAuthProvider.ForceResendingToken forceResendingToken;
 
@@ -132,25 +134,30 @@ public class LoginActivity extends AppCompatActivity {
                                     });
                         } else {
                             binding.progressBarLogin.setVisibility(View.GONE);
-                            new AlertDialog.Builder(LoginActivity.this)
-                                    .setMessage("انت لست مسجل مسبق, قم بالتجسيل الان!")
-                                    .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                        }
-                                    })
-                                    .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            showDialog();
-                                            dialogInterface.dismiss();
+                            if (builder == null) {
+                                builder = new AlertDialog.Builder(LoginActivity.this);
+                                builder.setMessage("انت لست مسجل مسبق, قم بالتجسيل الان!")
+                                        .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                                builder=null;
+                                            }
+                                        })
+                                        .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                showDialog();
+                                                dialogInterface.dismiss();
+                                                builder=null;
 //                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
 //                                            intent.putExtra("phoneNum", phoneNum);
 //                                            startActivity(intent);
-                                        }
-                                    })
-                                    .create().show();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+                            }
                         }
                     }
                 }
