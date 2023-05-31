@@ -76,6 +76,8 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
         Intent intent = getIntent();
         document = intent.getStringExtra("document");
 
+        binding.inculd.editIcon.setVisibility( View.GONE );
+        binding.inculd.tvPageTitle.setText( "تعديل نموذج العمل" );
         binding.editLinearCalender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

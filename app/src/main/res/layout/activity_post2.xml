@@ -41,14 +41,19 @@
             android:background="@color/back_activity"
             android:padding="@dimen/_15sdp"
             tools:ignore="ScrollViewSize">
+            <include
+                android:id="@+id/inculd"
+                layout="@layout/toolbar_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
             <LinearLayout
                 android:id="@+id/linearLayout5"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintTop_toBottomOf="@+id/inculd"
+                tools:layout_editor_absoluteX="19dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"

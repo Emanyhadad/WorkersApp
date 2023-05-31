@@ -95,22 +95,14 @@ public class DetailsModelsActivity extends AppCompatActivity {
                     }
                 });
 
-        binding.businessImgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent1 = new Intent(getBaseContext(),EditModelActivity.class);
-                intent1.putExtra("document",doc);
-                arl1.launch(intent1);
-            }
-        });
+        binding.inculd.editIcon.setOnClickListener( view -> {
+            Intent intent1 = new Intent(getBaseContext(),EditModelActivity.class);
+            intent1.putExtra("document",doc);
+            arl1.launch(intent1);
+        } );
+       binding.inculd.tvPageTitle.setText( "نماذج الأعمال" );
         
-//        binding.businessDetails.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                SliderImgDialog dialog = new SliderImgDialog();
-//                dialog.show(getSupportFragmentManager(),"Dialog");
-//            }
-//        });
+
     }
 
     @Override

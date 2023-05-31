@@ -83,7 +83,8 @@ public class PostActivity2 extends AppCompatActivity {
         deleteDialog_builder.setView(deleteDialogView);
         deleteDialog = deleteDialog_builder.create();
 
-
+binding.inculd.editIcon.setVisibility( View.GONE );
+binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
 
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();

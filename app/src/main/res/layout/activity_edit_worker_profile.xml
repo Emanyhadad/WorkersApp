@@ -22,11 +22,18 @@
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
+            <include
+                android:id="@+id/inculd"
+                layout="@layout/toolbar_layout"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="16dp">
 
                 <ImageView
                     android:id="@+id/editImgUser"

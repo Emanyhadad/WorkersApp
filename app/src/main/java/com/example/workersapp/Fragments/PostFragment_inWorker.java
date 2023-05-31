@@ -2,36 +2,49 @@ package com.example.workersapp.Fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
-import com.example.workersapp.Activities.FavouriteActivity;
+import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Listeneres.ItemClickListener;
+import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
+import com.example.workersapp.databinding.FragmentPostsBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PostFragment_inWorker extends Fragment{
     FragmentPostInWorkerBinding binding;
     FirebaseFirestore firebaseFirestore;
+    FirebaseAuth firebaseAuth;
+    FirebaseUser user;
     FirebaseStorage firebaseStorage;
     ShowCategoryAdapter adapter;
     List<String> categoryList;
@@ -62,12 +75,38 @@ public class PostFragment_inWorker extends Fragment{
     public View onCreateView( LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
 
-        binding= FragmentPostInWorkerBinding.inflate( inflater,container,false );
+        FragmentPostInWorkerBinding binding= FragmentPostInWorkerBinding.inflate( inflater,container,false );
 
         firebaseFirestore=FirebaseFirestore.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance();
+        user = firebaseAuth.getCurrentUser();
+
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
         List decoumtId = new ArrayList(  );
+        List<String>Category = new ArrayList <>(  );
+        firebaseFirestore.collection("workCategoryAuto").document("category")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Map <String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                        if (categoryMap != null) {
+                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                                String fieldName = entry.getKey();
+                                List<String> fieldData = entry.getValue();
+                                if ( fieldName.equals( GetUserData() ) ){
+                                    Log.d("Field Name", fieldName);
+                                    Log.d("Field Data", fieldData.toString());
+                                    for ( String s : fieldData ){
+                                        Category.add( s );
+                                    }
+                                    Log.e( "Category",Category.toString() );
+                                } } } } else {
+                        Log.d("Error", "No such document");
+                    }
+                })
+                .addOnFailureListener(e -> Log.d("Error", "Error getting document: " + e.getMessage()) );
+
         firebaseFirestore.collection( "users" ).get().addOnSuccessListener( queryDocumentSnapshots ->
         {
             for ( DocumentSnapshot documentSnapshot1: queryDocumentSnapshots ){
@@ -112,21 +151,20 @@ public class PostFragment_inWorker extends Fragment{
                                             binding.RV.setVisibility( View.VISIBLE );
                                         } )
                                         .addOnFailureListener( e -> Log.e( "Field",e.getMessage()) );
-                                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
                                         LinearLayoutManager.VERTICAL, false));
 
 
                             }}
                         } ).addOnFailureListener( runnable -> {} );
+
+
+
             }
         });
 
-        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), FavouriteActivity.class));
-            }
-        });
+
+
 
         return binding.getRoot();
     }
@@ -139,7 +177,7 @@ public class PostFragment_inWorker extends Fragment{
                 .document("favorites")
                 .collection("favorites")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
@@ -154,6 +192,7 @@ public class PostFragment_inWorker extends Fragment{
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
+                        // معالجة فشل جلب العناصر المفضلة من Firebase Firestore
                         Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -161,5 +200,24 @@ public class PostFragment_inWorker extends Fragment{
                 LinearLayoutManager.VERTICAL, false));
     }
 
+
+
+     String GetUserData(){
+        AtomicReference < String > workType = null;
+        // Get user details and set them in the view
+        firebaseFirestore.collection("users")
+                .document(Objects.requireNonNull(user.getPhoneNumber()))
+                .get()
+                .addOnSuccessListener(documentSnapshot1 -> {
+                    if (documentSnapshot1.exists()) {
+                        String w = documentSnapshot1.getString("work");
+                         workType.set( w );
+                    }
+                    else workType.set( "" );
+                })
+                .addOnFailureListener(e -> {});
+        return workType.get( );
+
+    }
 
 }

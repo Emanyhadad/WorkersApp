@@ -24,10 +24,6 @@
         <activity
             android:name=".Activities.EditModelActivity"
             android:exported="false" />
-
-        <activity android:name=".Activities.EditWorkerProfileActivity"
-            android:exported="false"/>
-
         <activity
             android:name=".Activities.EmptyActivity"
             android:exported="false" />
@@ -70,18 +66,7 @@
             android:name=".Activities.MapsActivity"
             android:exported="false"
             android:label="@string/title_activity_maps2" />
-        <!--
-             TODO: Before you run your application, you need a Google Maps API key.
 
-             To get one, follow the directions here:
-
-
-                https://developers.google.com/maps/documentation/android-sdk/get-api-key
-
-             Once you have your API key (it starts with "AIza"), define a new property in your
-             project's local.properties file (e.g. MAPS_API_KEY=Aiza...), and replace the
-             "YOUR_API_KEY" string in this file with "${MAPS_API_KEY}".
-        -->
         <meta-data
             android:name=".API_KEY"
             android:value="AIzaSyBy_fwncUljqQy0b2Ii1sP8w0AiwkWSrNU" />
