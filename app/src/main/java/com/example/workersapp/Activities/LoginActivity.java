@@ -50,6 +50,7 @@ public class LoginActivity extends AppCompatActivity {
     String phoneNum;
     FirebaseAuth auth;
     FirebaseUser currentUser;
+
     FirebaseFirestore firestore;
 
     AlertDialog.Builder builder;
@@ -74,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        currentUser = auth.getCurrentUser();
+
 
         setUnderline(binding.tvRegisterNow);
         binding.tvRegisterNow.setOnClickListener(view -> showDialog());
@@ -365,15 +368,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//
+//    }
     @Override
     protected void onStart() {
         super.onStart();
-        currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), MainActivity.class));
-            finish();
+            String accountType = sp.getString("accountType", "worker");
+            if (accountType.equals("worker")) {
+                startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+            } else if (accountType.equals("work owner")) {
+                startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+            }
         }
-
     }
 
 //    @Override

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,10 +26,8 @@ import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.databinding.ActivityEditModelBinding;
 import com.google.android.flexbox.FlexboxLayoutManager;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -49,7 +48,6 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
     FirebaseUser firebaseUser;
     FirebaseStorage firebaseStorage;
 
-    ArrayList<String> categoryArrayList;
     List<Uri> uriList;
     ImageAdapter imageAdapter;
     JobCategoryAdapter jobCategoryAdapter;
@@ -72,7 +70,7 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
         firebaseStorage = FirebaseStorage.getInstance();
-        categoryArrayList = new ArrayList<>();
+        categoriesListF = new ArrayList<>();
         uriList = new ArrayList<>();
         jobCategory = new ArrayList<>();
         Intent intent = getIntent();
@@ -100,21 +98,58 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
             }
         });
 
-        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
+        firebaseFirestore.collection("workCategoryAuto").document("category")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                        if (categoryMap != null) {
+                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                                String fieldName = entry.getKey();
+                                List<String> fieldData = entry.getValue();
+                                Log.d("Field Name", fieldName);
+                                Log.d("Field Data", fieldData.toString());
+                                for (String cat : fieldData) {
+                                    categoriesListF.add(cat);
+                                }
+                                Log.e("Category", categoriesListF.toString());
+                            }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             binding.editEtoJobType.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.d("Error", "No such document");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Error", "Error getting document: " + e.getMessage());
                 });
 
-        categoryJobType();
+        binding.editEtoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String selectedCategory = ((TextView) view).getText().toString();
+                jobCategory.add(selectedCategory);
+                binding.editEtoJobType.setText("");
+
+                if (jobCategory.size() != 0) {
+                    jobCategoryAdapter = new JobCategoryAdapter(jobCategory, new DeleteListener() {
+                        @Override
+                        public void onDelete(int pos) {
+                            jobCategory.remove(jobCategory.get(pos));
+                            jobCategoryAdapter.notifyItemRemoved(pos);
+                            jobCategoryAdapter.notifyItemRangeChanged(pos, jobCategory.size());
+                        }
+                    });
+                }
+
+                FlexboxLayoutManager layoutManager = new FlexboxLayoutManager(getBaseContext());
+                binding.editRecyclerView.setLayoutManager(layoutManager);
+                binding.editRecyclerView.setAdapter(jobCategoryAdapter);
+            }
+        });
+
+
         getData();
 
         binding.editBtnEditModel.setOnClickListener(new View.OnClickListener() {
@@ -142,12 +177,14 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                                         uriFromStorage.add(uriString);
                                         if (finalI == uriList.size() - 1) {
                                             updateModel();
+
                                         }
                                     }
                                 });
                             }
                         });
                     }
+
                 } else {
                 }
 

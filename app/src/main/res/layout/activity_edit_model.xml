@@ -68,17 +68,6 @@
                     android:textColor="@color/blue_dark"
                     android:textSize="@dimen/sdp_textSize_16" />
 
-                <TextView
-                    android:id="@+id/editTvOptional"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="top"
-                    android:layout_marginStart="@dimen/sdp_5"
-                    android:layout_weight="1"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/tvOptional"
-                    android:textColor="#CFCFCFB3"
-                    android:textSize="@dimen/sdp_textSize_10" />
 
                 <ImageView
                     android:id="@+id/editImgAdd"
