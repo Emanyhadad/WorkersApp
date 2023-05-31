@@ -41,6 +41,7 @@ import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.concurrent.TimeUnit;
 
 public class LoginActivity extends AppCompatActivity {
@@ -49,8 +50,10 @@ public class LoginActivity extends AppCompatActivity {
     String phoneNum;
     FirebaseAuth auth;
     FirebaseUser currentUser;
+
     FirebaseFirestore firestore;
 
+    AlertDialog.Builder builder;
     PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks;
     PhoneAuthProvider.ForceResendingToken forceResendingToken;
 
@@ -72,6 +75,8 @@ public class LoginActivity extends AppCompatActivity {
 
         auth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+        currentUser = auth.getCurrentUser();
+
 
         setUnderline(binding.tvRegisterNow);
         binding.tvRegisterNow.setOnClickListener(view -> showDialog());
@@ -132,25 +137,30 @@ public class LoginActivity extends AppCompatActivity {
                                     });
                         } else {
                             binding.progressBarLogin.setVisibility(View.GONE);
-                            new AlertDialog.Builder(LoginActivity.this)
-                                    .setMessage("انت لست مسجل مسبق, قم بالتجسيل الان!")
-                                    .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            dialogInterface.dismiss();
-                                        }
-                                    })
-                                    .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialogInterface, int i) {
-                                            showDialog();
-                                            dialogInterface.dismiss();
+                            if (builder == null) {
+                                builder = new AlertDialog.Builder(LoginActivity.this);
+                                builder.setMessage("انت لست مسجل مسبق, قم بالتجسيل الان!")
+                                        .setNegativeButton("في وقت لاحق", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                dialogInterface.dismiss();
+                                                builder=null;
+                                            }
+                                        })
+                                        .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialogInterface, int i) {
+                                                showDialog();
+                                                dialogInterface.dismiss();
+                                                builder=null;
 //                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
 //                                            intent.putExtra("phoneNum", phoneNum);
 //                                            startActivity(intent);
-                                        }
-                                    })
-                                    .create().show();
+                                            }
+                                        })
+                                        .setCancelable(false)
+                                        .create().show();
+                            }
                         }
                     }
                 }
@@ -358,15 +368,23 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //    @Override
+//    protected void onStart() {
+//        super.onStart();
+//
+//
+//    }
     @Override
     protected void onStart() {
         super.onStart();
-        currentUser = auth.getCurrentUser();
         if (currentUser != null) {
-            startActivity(new Intent(getBaseContext(), MainActivity.class));
-            finish();
+            String accountType = sp.getString("accountType", "worker");
+            if (accountType.equals("worker")) {
+                startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+            } else if (accountType.equals("work owner")) {
+                startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+            }
         }
-
     }
 
 //    @Override

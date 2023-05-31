@@ -22,7 +22,6 @@ import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.workersapp.R;
-import com.example.workersapp.Utilities.User;
 import com.example.workersapp.databinding.ActivityRegisterBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +34,8 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.StorageTask;
 import com.google.firebase.storage.UploadTask;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class RegisterActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
@@ -80,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                     public void onActivityResult(Uri result) {
                         if (result != null) {
                             Glide.with(getBaseContext()).load(result).circleCrop().error(R.drawable.user).into(binding.personImgUser);
-                            StorageReference reference = storage.getReference("users/"+"images/" + firebaseUser.getPhoneNumber());
+                            StorageReference reference = storage.getReference("users/" + "images/" + firebaseUser.getPhoneNumber());
 
                             StorageTask<UploadTask.TaskSnapshot> uploadTask =
                                     reference.putFile(result);
@@ -91,9 +92,8 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                                     reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
                                         @Override
                                         public void onComplete(@NonNull Task<Uri> task) {
-                                            if (task.isSuccessful()){
+                                            if (task.isSuccessful()) {
                                                 image = task.getResult().toString();
-//                                                Toast.makeText(RegisterActivity.this, "image yes", Toast.LENGTH_SHORT).show();
                                             }
                                         }
                                     });
@@ -135,17 +135,18 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                     gender = "أنثى";
                 }
 
-                User user = new User();
-                user.setFullName(fullName);
-                user.setNickName(nickName);
-                user.setBirth(birth);
-                user.setGender(gender);
-                user.setImage(image);
+
+                Map<String, Object> data = new HashMap<>();
+                data.put("fullName", fullName);
+                data.put("nickName", nickName);
+                data.put("birth", birth);
+                data.put("gender", gender);
+                data.put("image", image);
 
                 if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
 
                     db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                            .set(user)
+                            .set(data)
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
@@ -154,7 +155,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                             });
                     Intent intent = new Intent(getBaseContext(), MapsActivity.class);
                     intent.putExtra("accountType", accountType);
-                    intent.putExtra("source",RegisterActivity.class.getSimpleName());
+                    intent.putExtra("source", RegisterActivity.class.getSimpleName());
                     startActivity(intent);
                 } else {
                     if (fullName.isEmpty()) {
@@ -194,4 +195,5 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         String date = dayOfMonth + "/" + (month + 1) + "/" + year;
         binding.personBirth.setText(date);
     }
+
 }
