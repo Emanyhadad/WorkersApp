@@ -82,6 +82,7 @@ FragmentPostsBinding binding;
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
+
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
                 .collection("userPost")
