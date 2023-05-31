@@ -27,7 +27,6 @@
 
         <activity android:name=".Activities.EditWorkerProfileActivity"
             android:exported="false"/>
-
         <activity
             android:name=".Activities.EmptyActivity"
             android:exported="false" />
