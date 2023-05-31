@@ -24,25 +24,22 @@ public class WorkOwnerProfileActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerProfileFragment()).commit();
-        NavigationBarView.OnItemSelectedListener listener = new NavigationBarView.OnItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.itProfile:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerProfileFragment()).commit();
-                        return true;
-                    case R.id.itInProgress:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerInProgressFragment1()).commit();
-                        return true;
-                    case R.id.itOpenJobs:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerPostsFragment()).commit();
-                        return true;
-                    case R.id.itNewJob:
-                        getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewJobFragment()).commit();
-                        return true;
-                    default:
-                        return false;
-                }
+        NavigationBarView.OnItemSelectedListener listener = item -> {
+            switch (item.getItemId()) {
+                case R.id.itProfile:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerProfileFragment()).commit();
+                    return true;
+                case R.id.itInProgress:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerInProgressFragment1()).commit();
+                    return true;
+                case R.id.itOpenJobs:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, new OwnerPostsFragment()).commit();
+                    return true;
+                case R.id.itNewJob:
+                    getSupportFragmentManager().beginTransaction().replace(R.id.container, new NewJobFragment()).commit();
+                    return true;
+                default:
+                    return false;
             }
         };
         // تنشيط itProfile

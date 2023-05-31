@@ -69,6 +69,8 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
         fetchDataCity();
         fetchDataCategory();
 
+        binding.inculd.tvPageTitle.setText( "البيانات الشخصية" );
+        binding.inculd.editIcon.setVisibility( View.GONE );
         ActivityResultLauncher al1 = registerForActivityResult(
                 new ActivityResultContracts.GetContent(),
                 new ActivityResultCallback<Uri>() {

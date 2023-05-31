@@ -55,10 +55,13 @@ public class OwnerProfileFragment extends Fragment {
     List< Post > postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
 
-    int openCount,closeCount,inWorkCount,doneCount,jobsCount;
+    int openCount,inWorkCount,doneCount,jobsCount;
     boolean isWorkCountDone=false;
     boolean isdoneCountDone=false;
     boolean isjobsCountDone=false;
+
+    boolean userData = false;
+    boolean jobData = false;
 
     public OwnerProfileFragment() {
         // Required empty public constructor
@@ -96,6 +99,8 @@ public class OwnerProfileFragment extends Fragment {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
+                    binding.ProgressBar.setVisibility( View.GONE );
+                    binding.AppBar.setVisibility( View.VISIBLE );
                     String nickName = document.getString("nickName");
                     binding.tvWorkOwnerNickName.setText( nickName );
                     String city = document.getString("city");
@@ -178,6 +183,7 @@ public class OwnerProfileFragment extends Fragment {
                 .collection("userPost").whereEqualTo( "jobState","done" )
                 .get()
                 .addOnCompleteListener(task -> {
+                    jobData = true;
                     Log.e( "Posts",task.getResult().toString() );
 
                     if ( task.getResult().isEmpty() ){
@@ -252,7 +258,7 @@ public class OwnerProfileFragment extends Fragment {
             int roundedRate = ( int ) Math.round( employmentRate ); // round to nearest integer
             Log.d( "roundedRate",roundedRate+"" );
             // String rateString = Integer.toString( roundedRate ); // convert to string
-            binding.tvEmploymentRate.setText( roundedRate+"" );
+            binding.tvEmploymentRate.setText( roundedRate+"%" );
         }
     }
 }

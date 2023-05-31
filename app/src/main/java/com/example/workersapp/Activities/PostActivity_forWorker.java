@@ -85,7 +85,8 @@ ActivityPostForWorkerBinding binding;
         user = firebaseAuth.getCurrentUser();
 
 
-
+binding.inculd.editIcon.setVisibility( View.GONE );
+binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
         //GetPost
         clintID = getIntent().getStringExtra("OwnerId").trim();
         postId = getIntent().getStringExtra("PostId").trim();

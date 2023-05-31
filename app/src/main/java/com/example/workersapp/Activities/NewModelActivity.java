@@ -73,6 +73,8 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
         uriFromStorage = new ArrayList<>();
 
 
+        binding.inculd.tvPageTitle.setText( "نموذج عمل جديد" );
+        binding.inculd.editIcon.setVisibility( View.GONE );
         binding.formLinearCalender.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

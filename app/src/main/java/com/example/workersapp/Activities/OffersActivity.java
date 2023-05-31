@@ -51,6 +51,8 @@ ActivityOffersBinding binding;
         super.onCreate( savedInstanceState );
         binding = ActivityOffersBinding.inflate( getLayoutInflater() );
         setContentView( binding.getRoot() );
+        binding.inculd.tvPageTitle.setText( "العروض:" );
+        binding.inculd.editIcon.setVisibility( View.GONE );
         binding.ProgressBar.setVisibility( View.VISIBLE );
         offerList=new ArrayList <>();
         //Hire Dialog
@@ -59,6 +61,8 @@ ActivityOffersBinding binding;
         HireDialog_builder.setView(hireDialogView);
         HireDialog = HireDialog_builder.create();
 
+        binding.inculd.tvPageTitle.setText( "العروض" );
+        binding.inculd.editIcon.setVisibility( View.GONE );
 
          firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();

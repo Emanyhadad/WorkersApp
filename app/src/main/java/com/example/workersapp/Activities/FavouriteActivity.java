@@ -2,6 +2,7 @@ package com.example.workersapp.Activities;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +32,9 @@ public class FavouriteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityFavouriteBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        binding.inculd.editIcon.setVisibility( View.GONE );
+        binding.inculd.tvPageTitle.setText( "الوظائف المحفوظة" );
         firestore = FirebaseFirestore.getInstance();
         favouritePosts = new ArrayList<>();
 

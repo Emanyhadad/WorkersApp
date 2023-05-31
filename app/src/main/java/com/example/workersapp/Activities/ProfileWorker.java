@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.workersapp.R;
@@ -36,6 +37,7 @@ public class ProfileWorker extends AppCompatActivity {
         firebaseUser = firebaseAuth.getCurrentUser();
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+        binding.inculd.editIcon.setVisibility( View.GONE );
 
         if (LoginActivity.sp.getString("accountType", "").equals("worker")) {
             workerId = getIntent().getStringExtra("workerId");

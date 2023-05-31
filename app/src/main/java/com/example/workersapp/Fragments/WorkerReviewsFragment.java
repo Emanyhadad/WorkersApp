@@ -56,7 +56,8 @@ public class WorkerReviewsFragment extends Fragment {
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-
+binding.inculd.editIcon.setVisibility( View.GONE );
+binding.inculd.tvPageTitle.setText( "آراء العملاء" );
         categoryList=new ArrayList <>(  );
         reviewsList = new ArrayList <>(  );
         List decoumtId = new ArrayList(  );

@@ -17,11 +17,14 @@ import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
+import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
 import com.example.workersapp.databinding.FragmentPostsBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -33,7 +36,9 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class PostFragment_inWorker extends Fragment{
     FragmentPostInWorkerBinding binding;
@@ -172,7 +177,7 @@ public class PostFragment_inWorker extends Fragment{
                 .document("favorites")
                 .collection("favorites")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
