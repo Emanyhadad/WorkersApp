@@ -5,6 +5,7 @@ import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -31,7 +32,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -39,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class NewModelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -133,20 +134,33 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                 al1.launch("image/*");
             }
         });
-        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
+
+        firebaseFirestore.collection("workCategoryAuto").document("category")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                        if (categoryMap != null) {
+                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                                String fieldName = entry.getKey();
+                                List<String> fieldData = entry.getValue();
+                                Log.d("Field Name", fieldName);
+                                Log.d("Field Data", fieldData.toString());
+                                for (String cat : fieldData) {
+                                    categoriesListF.add(cat);
+                                }
+                                Log.e("Category", categoriesListF.toString());
+                            }
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getBaseContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             binding.formEtoJobType.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                         }
+                    } else {
+                        Log.d("Error", "No such document");
                     }
+                })
+                .addOnFailureListener(e -> {
+                    Log.d("Error", "Error getting document: " + e.getMessage());
                 });
-
 
         binding.formEtoJobType.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -183,9 +197,9 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                 } else if (TextUtils.isEmpty(date) || date.equals("تاريخ الإنجاز")) {
                     binding.formTvCalender.setError("يجب ملء هذا الحقل");
                 }
-//                else if (jobCategory.size() == 0) {
-//                    Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
-//                }
+                else if (jobCategory.size() == 0) {
+                    Toast.makeText(getBaseContext(), "قم باختيار فئة عمل واحدة على الاقل", Toast.LENGTH_SHORT).show();
+                }
                 else {
                     binding.progressBar.setVisibility(View.VISIBLE);
                     binding.formBtnAddForm.setVisibility(View.GONE);

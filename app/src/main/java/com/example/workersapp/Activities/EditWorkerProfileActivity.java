@@ -78,8 +78,7 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                             Glide.with(getBaseContext()).load(result).circleCrop().error(R.drawable.user).into(binding.editImgUser);
                             StorageReference reference = firebaseStorage.getReference("users/"+"images/" + firebaseUser.getPhoneNumber());
 
-                            uploadTask =
-                                    reference.putFile(result);
+                            uploadTask = reference.putFile(result);
                             uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                                 @Override
                                 public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -131,12 +130,6 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
               }
 
               Map<String, Object> data = new HashMap<>();
-              data.put("fullName",fullName);
-              data.put("nickName",nickName);
-              data.put("birth",birth);
-              data.put("city",city);
-              data.put("gender",gender);
-              data.put("image",image);
 
               if (account.equals("worker")){
                   String cv = binding.editCv.getText().toString();
@@ -146,6 +139,12 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
               } else if (account.equals("work owner")) {
 //                  Toast.makeText(EditWorkerProfileActivity.this, "null", Toast.LENGTH_SHORT).show();
               }
+              data.put("fullName",fullName);
+              data.put("nickName",nickName);
+              data.put("birth",birth);
+              data.put("city",city);
+              data.put("gender",gender);
+              data.put("image",image);
 
               firebaseFirestore.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                       .update(data)
@@ -179,7 +178,6 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                         String image = documentSnapshot.getString("image");
                         String accountType = documentSnapshot.getString("accountType");
 
-                        Toast.makeText(EditWorkerProfileActivity.this, "imageget: "+image, Toast.LENGTH_SHORT).show();
                         editor.putString("account",accountType);
                         editor.apply();
 

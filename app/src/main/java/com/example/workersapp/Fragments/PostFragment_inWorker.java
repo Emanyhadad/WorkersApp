@@ -154,7 +154,6 @@ public class PostFragment_inWorker extends Fragment{
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        // معالجة فشل جلب العناصر المفضلة من Firebase Firestore
                         Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
                     }
                 });
