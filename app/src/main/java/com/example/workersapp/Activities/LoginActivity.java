@@ -29,6 +29,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.chaos.view.PinView;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.User;
 import com.example.workersapp.databinding.ActivityLoginBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -38,6 +39,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -144,7 +146,7 @@ public class LoginActivity extends AppCompatActivity {
                                             @Override
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 dialogInterface.dismiss();
-                                                builder=null;
+                                                builder = null;
                                             }
                                         })
                                         .setPositiveButton("سجل الان", new DialogInterface.OnClickListener() {
@@ -152,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                                             public void onClick(DialogInterface dialogInterface, int i) {
                                                 showDialog();
                                                 dialogInterface.dismiss();
-                                                builder=null;
+                                                builder = null;
 //                                            Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
 //                                            intent.putExtra("phoneNum", phoneNum);
 //                                            startActivity(intent);
@@ -284,10 +286,27 @@ public class LoginActivity extends AppCompatActivity {
                         .addOnCompleteListener(task -> {
                             binding.progressBarLogin.setVisibility(View.GONE);
                             if (task.isSuccessful()) {
-                                ////////////////////////////////////////////////////////////////////////
-                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-                                startActivity(intent);
-                                finish();
+                                firestore.collection("users").document("+970" + phoneNum).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            User user = task.getResult().toObject(User.class);
+                                            if (user != null) {
+                                                if (user.getAccountType().equals("worker")) {
+                                                    startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+                                                    finish();
+                                                } else if (user.getAccountType().equals("work owner")) {
+                                                    startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+                                                    finish();
+                                                }
+                                            }
+                                        }
+                                    }
+                                });
+//                                ////////////////////////////////////////////////////////////////////////
+//                                Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
+//                                startActivity(intent);
+//                                finish();
 
                             } else {
                                 Toast.makeText(LoginActivity.this, "Verification Code Invalid", Toast.LENGTH_SHORT).show();

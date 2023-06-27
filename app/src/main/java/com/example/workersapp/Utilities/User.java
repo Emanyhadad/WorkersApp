@@ -119,4 +119,12 @@ public class User{
     public void setWork(String work) {
         this.work = work;
     }
+
+    public String getAccountType() {
+        return accountType;
+    }
+
+    public void setAccountType(String accountType) {
+        this.accountType = accountType;
+    }
 }
