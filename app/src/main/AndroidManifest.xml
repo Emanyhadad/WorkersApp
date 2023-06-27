@@ -19,14 +19,27 @@
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
         <activity
+            android:name=".Activities.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.OnboardingActivity"
+            android:exported="false"/>
+
+        <activity
             android:name=".Activities.FavouriteActivity"
             android:exported="false" />
         <activity
             android:name=".Activities.EditModelActivity"
             android:exported="false" />
-
-        <activity android:name=".Activities.EditWorkerProfileActivity"
-            android:exported="false"/>
+        <activity
+            android:name=".Activities.EditWorkerProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".Activities.EmptyActivity"
             android:exported="false" />
@@ -92,11 +105,13 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            <!-- <intent-filter> -->
+            <!-- <action android:name="android.intent.action.MAIN" /> -->
+
+
+            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+            <!-- </intent-filter> -->
         </activity>
         <activity
             android:name=".Activities.RegisterActivity"
