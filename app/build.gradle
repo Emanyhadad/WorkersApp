@@ -88,5 +88,12 @@ dependencies {
 
     //RatingBar
     implementation 'me.zhanghai.android.materialratingbar:library:1.4.0'
+
+    //ViewPager
+    implementation 'androidx.viewpager2:viewpager2:1.0.0'
+
+
+
+
 }
 apply plugin: 'com.google.gms.google-services'
