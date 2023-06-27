@@ -41,6 +41,9 @@ dependencies {
     //imageSlider
     implementation 'com.github.denzcoskun:ImageSlideshow:0.1.2'
 
+    //Ads
+    implementation 'com.google.android.gms:play-services-ads:22.1.0'
+
 
     //flexbox
     implementation 'com.google.android.flexbox:flexbox:3.0.0'
