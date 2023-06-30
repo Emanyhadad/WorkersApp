@@ -20,8 +20,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Activities.EditWorkerProfileActivity;
 import com.example.workersapp.Activities.NewModelActivity;
+import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
+import com.example.workersapp.Adapters.ReviewsAdapter;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.WorkerReviews;
 import com.example.workersapp.databinding.FragmentWorkerProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -60,21 +63,15 @@ public class WorkerProfileFragment extends Fragment {
     FirebaseUser firebaseUser;
     List<String> imagesList;
     ImageModelFragAdapter adapter;
-
+    List< String > DoneList;
+    List< String > inWorkList;
+    private boolean jobCount;
+    private boolean userData;
 
     public WorkerProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WorkerProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static WorkerProfileFragment newInstance(String param1, String param2) {
         WorkerProfileFragment fragment = new WorkerProfileFragment();
         Bundle args = new Bundle();
@@ -95,7 +92,6 @@ public class WorkerProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragmentWorkerProfileBinding.inflate(inflater, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -106,14 +102,14 @@ public class WorkerProfileFragment extends Fragment {
         ArrayList<String> tabs = new ArrayList<>();
         sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
         editor = sp.edit();
-
+        DoneList = new ArrayList <>(  );
+        inWorkList = new ArrayList <>(  );
 
         getData();
 
         String token = sp.getString("token", "");
 
         Log.d("tokenWorker",token);
-//        Toast.makeText(getContext(), "token: "+token, Toast.LENGTH_SHORT).show();
 
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
@@ -124,14 +120,11 @@ public class WorkerProfileFragment extends Fragment {
         adapter = new ImageModelFragAdapter(getActivity(), fragments);
         binding.FragPager.setAdapter(adapter);
 
-        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position < tabs.size()) {
-                    tab.setText(tabs.get(position));
-                }
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, ( tab , position ) -> {
+            if (position < tabs.size()) {
+                tab.setText(tabs.get(position));
             }
-        }).attach();
+        } ).attach();
 
         ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -139,27 +132,26 @@ public class WorkerProfileFragment extends Fragment {
             }
         });
 
+        binding.fab.setOnClickListener( view -> {
+            Intent intent = new Intent(getContext(), NewModelActivity.class);
+            arl.launch(intent);
+        } );
 
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), NewModelActivity.class);
-                arl.launch(intent);
-            }
-        });
+        binding.pWorkerImgEdit.setOnClickListener( view -> {
+            Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
+            startActivity(intent);
+        } );
 
-        binding.pWorkerImgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        if ( jobCount && userData ){
+            binding.ProgressBar.setVisibility( View.GONE );
+            binding.ScrollView.setVisibility( View.VISIBLE );
+            binding.fab.setVisibility( View.VISIBLE );
+        }
         return binding.getRoot();
     }
 
     private void getData() {
+        List decoumtId = new ArrayList(  );
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber())).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -184,16 +176,45 @@ public class WorkerProfileFragment extends Fragment {
                     SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
                     String formattedDate = dateFormat.format(date);
                     binding.pWorkerJoinDate.setText(formattedDate);
-
+                    userData = true;
 
                 }
             }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
-            }
-        });
+        }).addOnFailureListener( e -> Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show() );
+        db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                decoumtId.add(documentSnapshot1);
+                db.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").get()
+                        .addOnCompleteListener(task -> {
+                            jobCount=true;
+                            for (DocumentSnapshot document : task.getResult()) {
+                                String jobState = document.getString("jobState");
+                                String workerId = document.getString("workerId");
+                                if (jobState != null && jobState.equals("done") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
+                                    Log.e("workerId", workerId.equals(firebaseUser.getPhoneNumber()) + "");
+                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
+                                    String postId = document.getString("postId");
+                                    if (postId != null) {
+                                        DoneList.add( postId );
+                                    }
+                                }
+                                if (jobState != null && jobState.equals("inWork") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
+                                    Log.e("workerId", workerId.equals(firebaseUser.getPhoneNumber()) + "");
+                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
+                                    String postId = document.getString("postId");
+                                    if (postId != null) {
+                                        inWorkList.add( postId );
+                                    }
+                                }
+                                int jobCount=inWorkList.size()+DoneList.size();
+                                binding.pWorkerJobNum.setText( jobCount+"" );
+                                binding.pWorkerEndNum.setText( DoneList.size()+"" );
+                                binding.pWorkerCurrentNum.setText( inWorkList.size()+"" );
+
+                            }
+                        })
+                        .addOnFailureListener(runnable -> { }); } });
     }
 
     @Override
@@ -203,21 +224,7 @@ public class WorkerProfileFragment extends Fragment {
     }
 
 
-//    private void updateToken(String refreshToken) {
-//        // قم بإنشاء كائن Token باستخدام رمز الاشتراك المحدث
-//        Token token = new Token(refreshToken);
-//
-//        // استعراض العملاء المسجلين في التطبيق وتحديث رمز الاشتراك الخاص بهم
-//        FirebaseFirestore db = FirebaseFirestore.getInstance();
-//        DocumentReference documentReference = db.collection("tokens").document(firebaseUser.getUid());
-//        documentReference.set(token)
-//                .addOnSuccessListener(aVoid -> Log.d(TAG, "Token updated successfully"))
-//                .addOnFailureListener(e -> Log.d(TAG, "Failed to update token: " + e.getMessage()));
-//
-//        // حفظ رمز الاشتراك في SharedPreferences (اختياري)
-//        editor.putString("FCM_TOKEN", token.getToken());
-//        editor.apply();
-//    }
+
 
 
 }

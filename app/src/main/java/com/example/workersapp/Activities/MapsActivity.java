@@ -152,8 +152,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                                 });
                         if (accountType.equals("worker")) {
                             startActivity(new Intent(getBaseContext(), CvActivity.class));
+                            finish();
                         } else if (accountType.equals("work owner")) {
                             startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+                            finish();
                         }
                     } else if (title.isEmpty()) {
                         sheet.setError("يرجى تعبئة هذا الحقل");

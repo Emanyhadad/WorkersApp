@@ -7,20 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.ReviewsAdapter;
-import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Utilities.WorkerReviews;
-import com.example.workersapp.databinding.FragmentBlankBinding;
+import com.example.workersapp.databinding.FragmentWorkerReviewsBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,8 +28,6 @@ public class WorkerReviewsFragment extends Fragment {
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
-    FirebaseStorage firebaseStorage;
-    ShowCategoryAdapter adapter;
     List <String> categoryList;
     List< WorkerReviews > reviewsList;
 
@@ -45,23 +42,22 @@ public class WorkerReviewsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
+
     }
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        FragmentBlankBinding binding = FragmentBlankBinding.inflate(inflater,container,false);
+    public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container,
+                              Bundle savedInstanceState) {
+        FragmentWorkerReviewsBinding binding = FragmentWorkerReviewsBinding.inflate(inflater,container,false);
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
 
         categoryList=new ArrayList <>(  );
         reviewsList = new ArrayList <>(  );
-        List decoumtId = new ArrayList(  );
+        List documentId = new ArrayList(  );
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                decoumtId.add(documentSnapshot1);
+                documentId.add(documentSnapshot1);
                 firebaseFirestore.collection("posts").document(documentSnapshot1.getId())
                         .collection("userPost").get()
                         .addOnCompleteListener(task -> {
@@ -70,7 +66,7 @@ public class WorkerReviewsFragment extends Fragment {
                                 String workerId = document.getString("workerId");
                                 if (jobState != null && jobState.equals("done") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
                                     Log.e("workerId", workerId.equals(firebaseUser.getPhoneNumber()) + "");
-                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
+                                    Log.e("DocumentCount", String.valueOf(task.getResult().size()));
                                     String postId = document.getString("postId");
                                     if (postId != null) {
                                         WorkerReviews workerReviews = new WorkerReviews();

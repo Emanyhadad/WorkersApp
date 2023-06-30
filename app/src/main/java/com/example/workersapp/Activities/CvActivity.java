@@ -46,49 +46,39 @@ public class CvActivity extends AppCompatActivity {
         list = new ArrayList<>();
 
         insertData();
-        binding.CvNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String work = binding.CvWork.getText().toString();
-                String cv = binding.Cv.getText().toString();
+        binding.CvNext.setOnClickListener( view -> {
+            String work = binding.CvWork.getText().toString();
+            String cv = binding.Cv.getText().toString();
 
-                if (!work.isEmpty() && !cv.isEmpty()) {
-                    Map<String, Object> data = new HashMap<>();
-                    data.put("work", work);
-                    data.put("cv", cv);
+            if (!work.isEmpty() && !cv.isEmpty()) {
+                Map<String, Object> data = new HashMap<>();
+                data.put("work", work);
+                data.put("cv", cv);
 
-                    db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                            .update(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(CvActivity.this, "success cv and work", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    Intent intent = new Intent(getBaseContext(),WorkerActivities.class);
-                    startActivity(intent);
-                } else {
-                    binding.CvWork.setError("يرجى تعبئة هذا الحقل");
-                }
-
+                Task < Void > voidTask = db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
+                        .update( data )
+                        .addOnSuccessListener( unused -> Toast.makeText( CvActivity.this , "success cv and work" , Toast.LENGTH_SHORT ).show( ) );
+                Intent intent = new Intent(getBaseContext(),WorkerActivities.class);
+                startActivity(intent);
+                finish();
+            } else {
+                binding.CvWork.setError("يرجى تعبئة هذا الحقل");
             }
-        });
+
+        } );
     }
 
     public void insertData() {
         db.collection("category").document("category")
                 .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            categoriesListF = (List<String>) task.getResult().get("categories");
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
-                            binding.CvWork.setAdapter(adapter);
-                        } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                .addOnCompleteListener( task -> {
+                    if (task.isSuccessful()) {
+                        categoriesListF = (List<String>) task.getResult().get("categories");
+                        ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
+                        binding.CvWork.setAdapter(adapter);
+                    } else {
+                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                });
+                } );
     }
 }

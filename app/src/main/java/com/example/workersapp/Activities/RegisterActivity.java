@@ -157,6 +157,7 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                     intent.putExtra("accountType", accountType);
                     intent.putExtra("source", RegisterActivity.class.getSimpleName());
                     startActivity(intent);
+
                 } else {
                     if (fullName.isEmpty()) {
                         binding.personFullName.setError("يرجى تعبئة هذا الحقل");
