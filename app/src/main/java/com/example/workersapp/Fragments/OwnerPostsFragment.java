@@ -74,13 +74,14 @@ FragmentPostsBinding binding;
                               Bundle savedInstanceState ) {
          binding= FragmentPostsBinding.inflate( inflater,container,false );
         sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-
+        binding.inculd.tvPageTitle.setText( "الوظائف" );
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
 
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
+
 
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
@@ -148,7 +149,7 @@ FragmentPostsBinding binding;
 
 
 
-        binding.button2.setOnClickListener( view -> {
+        binding.inculd.editIcon.setOnClickListener( view -> {
             FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
             bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
         } );

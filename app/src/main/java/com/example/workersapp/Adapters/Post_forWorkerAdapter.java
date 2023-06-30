@@ -3,6 +3,7 @@ package com.example.workersapp.Adapters;
 import static android.content.ContentValues.TAG;
 import static android.content.Context.MODE_PRIVATE;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
@@ -23,8 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.NativeTemplateStyle;
 import com.example.workersapp.Utilities.Post;
+import com.example.workersapp.Utilities.TemplateView;
 import com.example.workersapp.databinding.ItemPostBinding;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.textview.MaterialTextView;
@@ -33,7 +37,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAdapter.myViewHolder> {
+public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     List<Post> postList;
     FirebaseFirestore firestore;
     public static SharedPreferences sp;
@@ -43,6 +47,27 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
     Post currentPost;
     private FavoriteItemClickListener favoriteItemClickListener;
 
+    private static final int IS_AD = 0;
+    private static final int NOT_Ad = 1;
+
+    private final ArrayList<Object> objects = new ArrayList<>();
+
+    public void setList(List<Post> list){
+        this.objects.addAll(list);
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setAd(List<NativeAd> nativeAd){
+        this.objects.addAll(nativeAd);
+        notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public void setObject (ArrayList<Object> object){
+        this.objects.clear();
+        this.objects.addAll(object);
+        notifyDataSetChanged();
+    }
 
     public Post_forWorkerAdapter(List<Post> postList, Context context, ItemClickListener listener) {
         this.postList = postList;
@@ -65,91 +90,116 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
 
     @NonNull
     @Override
-    public myViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        return new myViewHolder(binding);
+    public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+
+        if(viewType == IS_AD){
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ad,parent,false);
+            return new AdViewHolder(view);
+        }else{
+            ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+            return new myViewHolder(binding);
+        }
+
     }
 
     @Override
-    public void onBindViewHolder(@NonNull myViewHolder holder, int position) {
-        firestore = FirebaseFirestore.getInstance();
-        sp = context.getSharedPreferences("shared", MODE_PRIVATE);
-        editor = sp.edit();
-        currentPost = postList.get(holder.getAdapterPosition());
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        holder.PostTitle.setText(currentPost.getTitle());
-        holder.PostDescription.setText(currentPost.getDescription());
-        holder.PostBudget.setText(currentPost.getProjectedBudget());
-        holder.PostLoc.setText(currentPost.getJobLocation());
-        holder.favoriteButton.setVisibility(View.VISIBLE);
+        if(getItemViewType(position)==IS_AD){
+            AdViewHolder adv =  (AdViewHolder) holder;
+            adv.setNativeAd((NativeAd) objects.get(position));
+        }else{
+            myViewHolder ivh = (myViewHolder) holder;
 
-        //Todo: Put Post Time her
-        holder.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
-        holder.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+            firestore = FirebaseFirestore.getInstance();
+            sp = context.getSharedPreferences("shared", MODE_PRIVATE);
+            editor = sp.edit();
+            currentPost = postList.get(holder.getAdapterPosition());
 
-        holder.favoriteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                int adapterPosition = holder.getAdapterPosition();
-                Post clickedPost = postList.get(adapterPosition);
+            ivh.PostTitle.setText(currentPost.getTitle());
+            ivh.PostDescription.setText(currentPost.getDescription());
+            ivh.PostBudget.setText(currentPost.getProjectedBudget());
+            ivh.PostLoc.setText(currentPost.getJobLocation());
+            ivh.favoriteButton.setVisibility(View.VISIBLE);
 
-                if (clickedPost.isFavorite()) {
-                    removeImageFromFavorites(clickedPost);
-                    editor.putBoolean(clickedPost.getPostId(), false).apply();
-                    if (favoriteItemClickListener != null) {
-                        favoriteItemClickListener.onFavoriteItemRemoved(adapterPosition);
+            //Todo: Put Post Time her
+            ivh.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
+            ivh.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+
+            ivh.favoriteButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int adapterPosition = holder.getAdapterPosition();
+                    Post clickedPost = postList.get(adapterPosition);
+
+                    if (clickedPost.isFavorite()) {
+                        removeImageFromFavorites(clickedPost);
+                        editor.putBoolean(clickedPost.getPostId(), false).apply();
+                        if (favoriteItemClickListener != null) {
+                            favoriteItemClickListener.onFavoriteItemRemoved(adapterPosition);
+                        }
+                    } else {
+                        addImageToFavorites(clickedPost);
+                        editor.putBoolean(clickedPost.getPostId(), true).apply();
                     }
-                } else {
-                    addImageToFavorites(clickedPost);
-                    editor.putBoolean(clickedPost.getPostId(), true).apply();
+
+                    notifyDataSetChanged();
                 }
+            });
 
-                notifyDataSetChanged();
+
+            boolean isFavorite = sp.getBoolean(currentPost.getPostId(), false);
+            if (isFavorite) {
+                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite);
+            } else {
+                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
             }
-        });
+
+            currentPost.getPostId();
+            ivh.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
+            firestore.collection("users").document(currentPost.getOwnerId())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot1 -> {
+                        if (documentSnapshot1.exists()) {
+                            String fullName = documentSnapshot1.getString("fullName");
+                            ivh.ClintName.setText(fullName);
+                            String image = documentSnapshot1.getString("image");
+                            Glide.with(context)
+                                    .load(image)
+                                    .circleCrop()
+                                    .error(R.drawable.worker)
+                                    .into(ivh.clintImage);
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                    });
 
 
-        boolean isFavorite = sp.getBoolean(currentPost.getPostId(), false);
-        if (isFavorite) {
-            holder.favoriteButton.setImageResource(R.drawable.ic_favorite);
-        } else {
-            holder.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+            firestore.collection("offers").document(currentPost.getPostId()).
+                    collection("workerOffers")
+                    .get()
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            int count = task.getResult().size();
+                            ivh.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
+                        }
+                    });
         }
 
-        currentPost.getPostId();
-        holder.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
-        firestore.collection("users").document(currentPost.getOwnerId())
-                .get()
-                .addOnSuccessListener(documentSnapshot1 -> {
-                    if (documentSnapshot1.exists()) {
-                        String fullName = documentSnapshot1.getString("fullName");
-                        holder.ClintName.setText(fullName);
-                        String image = documentSnapshot1.getString("image");
-                        Glide.with(context)
-                                .load(image)
-                                .circleCrop()
-                                .error(R.drawable.worker)
-                                .into(holder.clintImage);
-                    }
-                })
-                .addOnFailureListener(e -> {
-                });
-
-
-        firestore.collection("offers").document(currentPost.getPostId()).
-                collection("workerOffers")
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        int count = task.getResult().size();
-                        holder.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
-                    }
-                });
     }
 
     @Override
     public int getItemCount() {
         return postList.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        if(objects.get(position) instanceof NativeAd){
+            return IS_AD;
+        }else{
+            return NOT_Ad;
+        }
     }
 
     static class myViewHolder extends RecyclerView.ViewHolder {
@@ -177,7 +227,25 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
             favoriteButton = binding.favoriteButton;
         }
     }
+    public class AdViewHolder extends RecyclerView.ViewHolder {
+        public TemplateView template;
 
+        public AdViewHolder(@NonNull View itemView) {
+            super(itemView);
+
+            template = itemView.findViewById(R.id.id_ad_template_view);
+
+            NativeTemplateStyle styles = new
+                    NativeTemplateStyle.Builder().build();
+
+            template.setStyles(styles);
+        }
+
+        public void setNativeAd(NativeAd nativeAd){
+
+            template.setNativeAd(nativeAd);
+        }
+    }
 
     public void addImageToFavorites(Post post) {
         post.setFavorite(true);
