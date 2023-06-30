@@ -30,6 +30,7 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class BusinessModelsFragment extends Fragment {
 
@@ -47,11 +48,9 @@ public class BusinessModelsFragment extends Fragment {
     String firstImageUrl;
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
-    //    String documentId;
     List<Model> models;
 
     public BusinessModelsFragment() {
-        // Required empty public constructor
     }
 
 
@@ -93,38 +92,32 @@ public class BusinessModelsFragment extends Fragment {
     public void onResume() {
         super.onResume();
         models.clear();
-        firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
+        firebaseFirestore.collection("forms").document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
                 .collection("userForm")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                    @Override
-                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                            List<String> images = (List<String>) document.get("images");
-                            String doc = (String) document.get("documentId");
-                            if (!images.isEmpty()) {
-//                                firstImageUrl = images.get(0);// الحصول على الصورة الأولى
-//                                imagesList.add(firstImageUrl);
-
-                                models.add(new Model(images, doc));
-                                adapter = new ImageModelAdapter(models, getContext(), new clickListener() {
-                                    @Override
-                                    public void click(String documentId) {
+                .addOnSuccessListener( queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        List<String> images = (List<String>) document.get("images");
+                        String doc = (String) document.get("documentId");
+                        if (!images.isEmpty()) {
+                            models.add(new Model(images, doc));
+                            adapter = new ImageModelAdapter(models,
+                                    getContext(),
+                                    documentId -> {
                                         Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
                                         intent.putExtra("documentId", documentId);
                                         startActivity(intent);
-                                    }
-                                });
-                                RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
-                                fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                                fragRv.setAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                            } else {
-                                Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
-                            }
+                                    } );
+                            RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
+                            fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                            fragRv.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
                         }
                     }
-                });
+
+                } );
 
     }
 }

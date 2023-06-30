@@ -399,10 +399,11 @@ public class LoginActivity extends AppCompatActivity {
         if (currentUser != null) {
             String accountType = sp.getString("accountType", "worker");
             if (accountType.equals("worker")) {
-                startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+                startActivity(new Intent(getBaseContext(), WorkerActivities.class));finish();
             } else if (accountType.equals("work owner")) {
-                startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+                startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));finish();
             }
+
         }
     }
 
