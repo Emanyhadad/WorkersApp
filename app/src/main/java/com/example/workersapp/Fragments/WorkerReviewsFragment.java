@@ -24,7 +24,6 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class WorkerReviewsFragment extends Fragment {
     FirebaseFirestore firebaseFirestore;
@@ -56,7 +55,6 @@ public class WorkerReviewsFragment extends Fragment {
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-
 
         categoryList=new ArrayList <>(  );
         reviewsList = new ArrayList <>(  );

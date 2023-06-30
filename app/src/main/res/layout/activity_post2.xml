@@ -484,8 +484,7 @@
                     android:layout_height="wrap_content"
                     app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob"
                     android:gravity="center_vertical"
-                    android:layout_marginTop="@dimen/_6sdp"
-                    >
+                    android:layout_marginTop="@dimen/_6sdp">
 
                     <com.google.android.material.textview.MaterialTextView
                         android:id="@+id/tv_ClintComment"
@@ -521,6 +520,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/AP_CL_inWork" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

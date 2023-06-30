@@ -1,9 +1,12 @@
 package com.example.workersapp.Fragments;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +40,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
 public class WorkerProfileFragment extends Fragment {
 
     FragmentWorkerProfileBinding binding;
@@ -47,12 +51,16 @@ public class WorkerProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+
     FirebaseFirestore db;
     FirebaseStorage storage;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     List<String> imagesList;
     ImageModelFragAdapter adapter;
+
 
     public WorkerProfileFragment() {
         // Required empty public constructor
@@ -86,8 +94,7 @@ public class WorkerProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding = FragmentWorkerProfileBinding.inflate(inflater, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -97,8 +104,16 @@ public class WorkerProfileFragment extends Fragment {
         imagesList = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
+        sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+        editor = sp.edit();
+
 
         getData();
+
+        String token = sp.getString("token", "");
+
+        Log.d("tokenWorker",token);
+//        Toast.makeText(getContext(), "token: "+token, Toast.LENGTH_SHORT).show();
 
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
@@ -118,12 +133,11 @@ public class WorkerProfileFragment extends Fragment {
             }
         }).attach();
 
-        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
+            }
+        });
 
 
         binding.fab.setOnClickListener(new View.OnClickListener() {
@@ -146,47 +160,40 @@ public class WorkerProfileFragment extends Fragment {
     }
 
     private void getData() {
-        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String fullName = documentSnapshot.getString("fullName");
-                            String nickName = documentSnapshot.getString("nickName");
-                            String work = documentSnapshot.getString("work");
-                            String cv = documentSnapshot.getString("cv");
-                            String city = documentSnapshot.getString("city");
-                            String image = documentSnapshot.getString("image");
-                            binding.pWorkerUserName.setText(fullName);
-                            binding.pWorkerNickName.setText("( " + nickName + " )");
-                            binding.pWorkerJobName.setText(work);
-                            binding.pWorkerCv.setText(cv);
-                            binding.pWorkerLocation.setText(city);
-                            binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-                            Glide.with(getContext())
-                                    .load(image)
-                                    .circleCrop()
-                                    .error(R.drawable.worker)
-                                    .into(binding.pWorkerImg);
+        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber())).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String fullName = documentSnapshot.getString("fullName");
+                    String nickName = documentSnapshot.getString("nickName");
+                    String work = documentSnapshot.getString("work");
+                    String cv = documentSnapshot.getString("cv");
+                    String city = documentSnapshot.getString("city");
+                    String image = documentSnapshot.getString("image");
+                    binding.pWorkerUserName.setText(fullName);
+                    binding.pWorkerNickName.setText("( " + nickName + " )");
+                    binding.pWorkerJobName.setText(work);
+                    binding.pWorkerCv.setText(cv);
+                    binding.pWorkerLocation.setText(city);
+                    binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+                    Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
 
-                            long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
-                            // حولنا long -> date
-                            Date date = new Date(timestamp);
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                            String formattedDate = dateFormat.format(date);
-                            binding.pWorkerJoinDate.setText(formattedDate);
+                    long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
+                    // حولنا long -> date
+                    Date date = new Date(timestamp);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    String formattedDate = dateFormat.format(date);
+                    binding.pWorkerJoinDate.setText(formattedDate);
 
 
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                }
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override
@@ -194,4 +201,23 @@ public class WorkerProfileFragment extends Fragment {
         super.onResume();
         getData();
     }
+
+
+//    private void updateToken(String refreshToken) {
+//        // قم بإنشاء كائن Token باستخدام رمز الاشتراك المحدث
+//        Token token = new Token(refreshToken);
+//
+//        // استعراض العملاء المسجلين في التطبيق وتحديث رمز الاشتراك الخاص بهم
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//        DocumentReference documentReference = db.collection("tokens").document(firebaseUser.getUid());
+//        documentReference.set(token)
+//                .addOnSuccessListener(aVoid -> Log.d(TAG, "Token updated successfully"))
+//                .addOnFailureListener(e -> Log.d(TAG, "Failed to update token: " + e.getMessage()));
+//
+//        // حفظ رمز الاشتراك في SharedPreferences (اختياري)
+//        editor.putString("FCM_TOKEN", token.getToken());
+//        editor.apply();
+//    }
+
+
 }
