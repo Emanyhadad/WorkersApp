@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/back_activity"
+    tools:context=".Activities.SearchActivity">
+
+    <EditText
+        android:id="@+id/searchEt"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_31sdp"
+        android:background="@drawable/et_search"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_margin="@dimen/_15sdp"
+        app:layout_constraintTop_toTopOf="parent"
+        android:hint="البحث"
+        android:textSize="@dimen/_13ssp"
+        android:textColorHint="@color/gray"
+        android:inputType="textPersonName"
+        android:layout_marginBottom="@dimen/_8sdp"
+        android:fontFamily="@font/cairo_regular"
+        android:paddingEnd="@dimen/_8sdp"
+        android:paddingStart="@dimen/_8sdp"
+        android:drawableEnd="@drawable/ic_serch"
+        android:layoutDirection="rtl"
+        />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/imageView7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:visibility="gone"
+            app:srcCompat="@drawable/no_data_search" />
+
+        <ProgressBar
+            android:id="@+id/ProgressBarSearch"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal|center_vertical"/>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/RVSearch"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_marginTop="@dimen/_40sdp"
+            tools:listitem="@layout/item_post" />
+    </FrameLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
