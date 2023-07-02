@@ -33,8 +33,7 @@ public class OnboardingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_onboarding);
         sp = getSharedPreferences("shared", MODE_PRIVATE);
         editor=sp.edit();
-        editor.putBoolean("appUp-lode", true);
-        editor.apply();
+
         viewPager = findViewById(R.id.viewPager);
         btnSkip = findViewById(R.id.btnSkip);
         dotsLayout = findViewById(R.id.dotsLayout);

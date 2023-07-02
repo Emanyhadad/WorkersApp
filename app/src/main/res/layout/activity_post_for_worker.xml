@@ -136,11 +136,12 @@
                 android:id="@+id/linearLayoutCompat"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_8sdp"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/border_et"
                 android:orientation="vertical"
                 android:padding="@dimen/_8sdp"
                 app:layout_constraintEnd_toEndOf="@+id/projectstateLayout"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/projectstateLayout"
                 app:layout_constraintTop_toBottomOf="@+id/projectstateLayout">
 
