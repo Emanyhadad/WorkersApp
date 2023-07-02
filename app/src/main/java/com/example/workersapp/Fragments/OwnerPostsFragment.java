@@ -84,9 +84,6 @@ FragmentPostsBinding binding;
 
         binding.inculd.editIcon.setVisibility( View.GONE );
         binding.inculd.fillterIcon.setVisibility( View.VISIBLE );
-        List <String> jobStates = new ArrayList <>();
-        jobStates.add("open");
-        jobStates.add("close");
 
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
@@ -180,4 +177,9 @@ FragmentPostsBinding binding;
         }));
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getData();
+    }
 }

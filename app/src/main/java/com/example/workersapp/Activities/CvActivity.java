@@ -54,7 +54,7 @@ public class CvActivity extends AppCompatActivity {
                 Map<String, Object> data = new HashMap<>();
                 data.put("work", work);
                 data.put("cv", cv);
-
+//f
                 Task < Void > voidTask = db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
                         .update( data )
                         .addOnSuccessListener( unused -> Toast.makeText( CvActivity.this , "success cv and work" , Toast.LENGTH_SHORT ).show( ) );
@@ -64,6 +64,7 @@ public class CvActivity extends AppCompatActivity {
             } else {
                 binding.CvWork.setError("يرجى تعبئة هذا الحقل");
             }
+
 
         } );
     }

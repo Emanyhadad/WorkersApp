@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String verificationID;
 
-    //me
+
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
 
@@ -264,8 +264,43 @@ public class LoginActivity extends AppCompatActivity {
             dialogAccountType.show( );
         }
 
-        View workerLayout = dialogAccountType.findViewById( R.id.workerLayout );
-        View workOwnerLayout = dialogAccountType.findViewById( R.id.workOwnerLayout );
+// <<<<<<< eman
+//         View workerLayout = dialogAccountType.findViewById( R.id.workerLayout );
+//         View workOwnerLayout = dialogAccountType.findViewById( R.id.workOwnerLayout );
+// =======
+//         View workerLayout = dialogAccountType.findViewById(R.id.workerLayout);
+//         View workOwnerLayout = dialogAccountType.findViewById(R.id.workOwnerLayout);
+
+//         Window window = dialogAccountType.getWindow();
+//         window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+//         window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//         window.getAttributes().windowAnimations = R.style.DialogAnimation;
+//         window.setGravity(Gravity.BOTTOM);
+
+//         dialogAccountType.show();
+
+//         workerLayout.setOnClickListener(view -> {
+//             String accountType = "worker";
+//             dialogAccountType.dismiss();
+
+//             editor.putString("accountType", "worker");
+//             editor.apply();
+//             Toast.makeText(this, sp.getString("accountTypeWorker", ""), Toast.LENGTH_SHORT).show();
+//             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+//             startActivity(intent);
+//             finish();
+//         });
+//         workOwnerLayout.setOnClickListener(view -> {
+//             String accountType = "work owner";
+
+//             editor.putString("accountType", "work owner");
+//             editor.apply();
+//             dialogAccountType.dismiss();
+//             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
+//             startActivity(intent);
+//             finish();
+//         });
+// >>>>>>> master
 
         Window window = dialogAccountType.getWindow( );
         window.setLayout( ViewGroup.LayoutParams.MATCH_PARENT , ViewGroup.LayoutParams.WRAP_CONTENT );
