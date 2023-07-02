@@ -1,9 +1,12 @@
 package com.example.workersapp.Fragments;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,8 +20,11 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Activities.EditWorkerProfileActivity;
 import com.example.workersapp.Activities.NewModelActivity;
+import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
+import com.example.workersapp.Adapters.ReviewsAdapter;
 import com.example.workersapp.R;
+import com.example.workersapp.Utilities.WorkerReviews;
 import com.example.workersapp.databinding.FragmentWorkerProfileBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,6 +43,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
+
 public class WorkerProfileFragment extends Fragment {
 
     FragmentWorkerProfileBinding binding;
@@ -47,26 +54,24 @@ public class WorkerProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    SharedPreferences sp;
+    SharedPreferences.Editor editor;
+
     FirebaseFirestore db;
     FirebaseStorage storage;
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     List<String> imagesList;
     ImageModelFragAdapter adapter;
+    List< String > DoneList;
+    List< String > inWorkList;
+    private boolean jobCount;
+    private boolean userData;
 
     public WorkerProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment WorkerProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static WorkerProfileFragment newInstance(String param1, String param2) {
         WorkerProfileFragment fragment = new WorkerProfileFragment();
         Bundle args = new Bundle();
@@ -86,9 +91,7 @@ public class WorkerProfileFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentWorkerProfileBinding.inflate(inflater, container, false);
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -97,8 +100,16 @@ public class WorkerProfileFragment extends Fragment {
         imagesList = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
+        sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+        editor = sp.edit();
+        DoneList = new ArrayList <>(  );
+        inWorkList = new ArrayList <>(  );
 
         getData();
+
+        String token = sp.getString("token", "");
+
+        Log.d("tokenWorker",token);
 
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
@@ -109,84 +120,101 @@ public class WorkerProfileFragment extends Fragment {
         adapter = new ImageModelFragAdapter(getActivity(), fragments);
         binding.FragPager.setAdapter(adapter);
 
-        new TabLayoutMediator(binding.FragTab, binding.FragPager, new TabLayoutMediator.TabConfigurationStrategy() {
-            @Override
-            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                if (position < tabs.size()) {
-                    tab.setText(tabs.get(position));
-                }
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, ( tab , position ) -> {
+            if (position < tabs.size()) {
+                tab.setText(tabs.get(position));
             }
-        }).attach();
+        } ).attach();
 
-        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    if (result.getResultCode() == RESULT_OK) {
-                        Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
-                    }
-                });
-
-
-        binding.fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), NewModelActivity.class);
-                arl.launch(intent);
+        ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+            if (result.getResultCode() == RESULT_OK) {
+                Snackbar.make(binding.pWorkerCv, "تم الحفظ بنجاح", Snackbar.LENGTH_SHORT).show();
             }
         });
 
-        binding.pWorkerImgEdit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
-                startActivity(intent);
-            }
-        });
+        binding.fab.setOnClickListener( view -> {
+            Intent intent = new Intent(getContext(), NewModelActivity.class);
+            arl.launch(intent);
+        } );
 
+        binding.pWorkerImgEdit.setOnClickListener( view -> {
+            Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
+            startActivity(intent);
+        } );
+
+        if ( jobCount && userData ){
+            binding.ProgressBar.setVisibility( View.GONE );
+            binding.ScrollView.setVisibility( View.VISIBLE );
+            binding.fab.setVisibility( View.VISIBLE );
+        }
         return binding.getRoot();
     }
 
     private void getData() {
-        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String fullName = documentSnapshot.getString("fullName");
-                            String nickName = documentSnapshot.getString("nickName");
-                            String work = documentSnapshot.getString("work");
-                            String cv = documentSnapshot.getString("cv");
-                            String city = documentSnapshot.getString("city");
-                            String image = documentSnapshot.getString("image");
-                            binding.pWorkerUserName.setText(fullName);
-                            binding.pWorkerNickName.setText("( " + nickName + " )");
-                            binding.pWorkerJobName.setText(work);
-                            binding.pWorkerCv.setText(cv);
-                            binding.pWorkerLocation.setText(city);
-                            binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-                            Glide.with(getContext())
-                                    .load(image)
-                                    .circleCrop()
-                                    .error(R.drawable.worker)
-                                    .into(binding.pWorkerImg);
+        List decoumtId = new ArrayList(  );
+        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber())).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    String fullName = documentSnapshot.getString("fullName");
+                    String nickName = documentSnapshot.getString("nickName");
+                    String work = documentSnapshot.getString("work");
+                    String cv = documentSnapshot.getString("cv");
+                    String city = documentSnapshot.getString("city");
+                    String image = documentSnapshot.getString("image");
+                    binding.pWorkerUserName.setText(fullName);
+                    binding.pWorkerNickName.setText("( " + nickName + " )");
+                    binding.pWorkerJobName.setText(work);
+                    binding.pWorkerCv.setText(cv);
+                    binding.pWorkerLocation.setText(city);
+                    binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+                    Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
 
-                            long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
-                            // حولنا long -> date
-                            Date date = new Date(timestamp);
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                            String formattedDate = dateFormat.format(date);
-                            binding.pWorkerJoinDate.setText(formattedDate);
+                    long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
+                    // حولنا long -> date
+                    Date date = new Date(timestamp);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                    String formattedDate = dateFormat.format(date);
+                    binding.pWorkerJoinDate.setText(formattedDate);
+                    userData = true;
 
+                }
+            }
+        }).addOnFailureListener( e -> Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show() );
+        db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                decoumtId.add(documentSnapshot1);
+                db.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").get()
+                        .addOnCompleteListener(task -> {
+                            jobCount=true;
+                            for (DocumentSnapshot document : task.getResult()) {
+                                String jobState = document.getString("jobState");
+                                String workerId = document.getString("workerId");
+                                if (jobState != null && jobState.equals("done") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
+                                    Log.e("workerId", workerId.equals(firebaseUser.getPhoneNumber()) + "");
+                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
+                                    String postId = document.getString("postId");
+                                    if (postId != null) {
+                                        DoneList.add( postId );
+                                    }
+                                }
+                                if (jobState != null && jobState.equals("inWork") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
+                                    Log.e("workerId", workerId.equals(firebaseUser.getPhoneNumber()) + "");
+                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
+                                    String postId = document.getString("postId");
+                                    if (postId != null) {
+                                        inWorkList.add( postId );
+                                    }
+                                }
+                                int jobCount=inWorkList.size()+DoneList.size();
+                                binding.pWorkerJobNum.setText( jobCount+"" );
+                                binding.pWorkerEndNum.setText( DoneList.size()+"" );
+                                binding.pWorkerCurrentNum.setText( inWorkList.size()+"" );
 
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                            }
+                        })
+                        .addOnFailureListener(runnable -> { }); } });
     }
 
     @Override
@@ -194,4 +222,9 @@ public class WorkerProfileFragment extends Fragment {
         super.onResume();
         getData();
     }
+
+
+
+
+
 }

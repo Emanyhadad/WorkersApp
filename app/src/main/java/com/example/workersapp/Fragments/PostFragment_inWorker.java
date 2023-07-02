@@ -1,15 +1,8 @@
 package com.example.workersapp.Fragments;
 
-import static android.content.ContentValues.TAG;
-
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,16 +10,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.workersapp.Activities.PostActivity2;
+import androidx.annotation.NonNull;
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
+import com.example.workersapp.Activities.FavouriteActivity;
 import com.example.workersapp.Activities.PostActivity_forWorker;
+import com.example.workersapp.Activities.SearchActivity;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Listeneres.ItemClickListener;
-import com.example.workersapp.R;
 import com.example.workersapp.Utilities.AdClass;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
-import com.example.workersapp.databinding.FragmentPostsBinding;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdLoader;
 import com.google.android.gms.ads.AdRequest;
@@ -34,15 +30,12 @@ import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.ads.nativead.NativeAdOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -50,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class PostFragment_inWorker extends Fragment {
     FragmentPostInWorkerBinding binding;
@@ -156,7 +148,7 @@ public class PostFragment_inWorker extends Fragment {
                                                     post.setOwnerId(documentSnapshot1.getId());
 
                                                     postList.add(post);
-                                                     postAdapter = new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
+                                                    postAdapter = new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
                                                         @Override
                                                         public void OnClick(int pos) {
                                                             Log.e("ItemClik", postList.get(pos).getPostId());
@@ -186,14 +178,27 @@ public class PostFragment_inWorker extends Fragment {
                             }
                         }).addOnFailureListener(runnable -> {
                         });
+            }
+        });
 
+        binding.etSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), SearchActivity.class));
+            }
+        });
 
+        binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getContext(), FavouriteActivity.class));
             }
         });
 
 
         return binding.getRoot();
     }
+
 
     @Override
     public void onResume() {
@@ -203,16 +208,21 @@ public class PostFragment_inWorker extends Fragment {
                 .document("favorites")
                 .collection("favorites")
                 .get()
-                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
+                .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
                         List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
-                        binding.RV.setAdapter( new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
-                            @Override
-                            public void OnClick(int pos) {
+                        // تأكد من أن الـ binding ليس قيمة null قبل استخدامه
+                        if (binding != null && binding.RV != null) {
+                            binding.RV.setVisibility(View.VISIBLE);
+                            binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                            binding.RV.setAdapter(new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
+                                @Override
+                                public void OnClick(int pos) {
 
-                            }
-                        }));
+                                }
+                            }));
+                        }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -221,9 +231,36 @@ public class PostFragment_inWorker extends Fragment {
                         Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
                     }
                 });
-        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
-                LinearLayoutManager.VERTICAL, false));
     }
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        firebaseFirestore.collection("offers")
+//                .document("favorites")
+//                .collection("favorites")
+//                .get()
+//                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
+//                    @Override
+//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+//                        List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
+//                        binding.RV.setAdapter( new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
+//                            @Override
+//                            public void OnClick(int pos) {
+//
+//                            }
+//                        }));
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+//                LinearLayoutManager.VERTICAL, false));
+//    }
 
     String workType = null;
 

@@ -32,7 +32,7 @@ public class WorkerSubmittedJobFragment extends Fragment {
     FirebaseUser firebaseUser;
     List <String> categoryList;
     List< Offer > offerList;
-
+    FragmentBlank3Binding binding;
 
     public WorkerSubmittedJobFragment() { }
 
@@ -50,59 +50,66 @@ public class WorkerSubmittedJobFragment extends Fragment {
 
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        FragmentBlank3Binding binding = FragmentBlank3Binding.inflate(inflater, container, false);
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        categoryList = new ArrayList<>();
-        offerList = new ArrayList<>();
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        List<DocumentSnapshot> documentList = new ArrayList<>();
-
-        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                documentList.add(documentSnapshot1);
-            }
-
-            for (DocumentSnapshot documentSnapshot : documentList) {
-                firebaseFirestore.collection("posts").document(documentSnapshot.getId())
-                        .collection("userPost")
-                        .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
-                            for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
-                                firebaseFirestore.collection("offers").document(postDocumentSnapshot.getId())
-                                        .collection("workerOffers")
-                                        .document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                                        .get().addOnSuccessListener(documentSnapshot2 -> {
-                                            String clintID = documentSnapshot2.getString("clintID");
-                                            String offerBudget = documentSnapshot2.getString("offerBudget");
-                                            String offerDescription = documentSnapshot2.getString("offerDescription");
-                                            String offerDuration = documentSnapshot2.getString("offerDuration");
-                                            String postID = documentSnapshot2.getString("postID");
-                                            String workerID = documentSnapshot2.getString("workerID");
-                                            Offer offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clintID, postID);
-                                            if ( offerBudget != null ){
-                                                offerList.add(offer);
-                                            }
-                                            Log.e("offers", offer.toString());
-
-                                            // Place the code snippet here
-                                            binding.RV.setAdapter(new SubmittedJobAdapter(offerList, getContext(), pos -> {
-                                                Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
-                                                intent.putExtra("PostId", offerList.get(pos).getPostID());
-                                                intent.putExtra("OwnerId", offerList.get(pos).getClintID());
-                                                startActivity(intent);
-                                            }));
-                                        });
-                                Log.e("OffersList", offerList.toString());
-                            }
-                        });
-            }
-
-            binding.progressBar4.setVisibility(View.GONE);
-            binding.RV.setVisibility(View.VISIBLE);
-            binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        });
-
+         binding = FragmentBlank3Binding.inflate(inflater, container, false);
+         getData();
         return binding.getRoot();
     }
+void getData(){
+    firebaseFirestore = FirebaseFirestore.getInstance();
+    categoryList = new ArrayList<>();
+    offerList = new ArrayList<>();
+    firebaseAuth = FirebaseAuth.getInstance();
+    firebaseUser = firebaseAuth.getCurrentUser();
+    List<DocumentSnapshot> documentList = new ArrayList<>();
 
+    firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+            documentList.add(documentSnapshot1);
+        }
+
+        for (DocumentSnapshot documentSnapshot : documentList) {
+            firebaseFirestore.collection("posts").document(documentSnapshot.getId())
+                    .collection("userPost")
+                    .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                        for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
+                            firebaseFirestore.collection("offers").document(postDocumentSnapshot.getId())
+                                    .collection("workerOffers")
+                                    .document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                                    .get().addOnSuccessListener(documentSnapshot2 -> {
+                                        String clintID = documentSnapshot2.getString("clintID");
+                                        String offerBudget = documentSnapshot2.getString("offerBudget");
+                                        String offerDescription = documentSnapshot2.getString("offerDescription");
+                                        String offerDuration = documentSnapshot2.getString("offerDuration");
+                                        String postID = documentSnapshot2.getString("postID");
+                                        String workerID = documentSnapshot2.getString("workerID");
+                                        Offer offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clintID, postID);
+                                        if ( offerBudget != null ){
+                                            offerList.add(offer);
+                                        }
+                                        Log.e("offers", offer.toString());
+
+                                        // Place the code snippet here
+                                        binding.RV.setAdapter(new SubmittedJobAdapter(offerList, getContext(), pos -> {
+                                            Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
+                                            intent.putExtra("PostId", offerList.get(pos).getPostID());
+                                            intent.putExtra("OwnerId", offerList.get(pos).getClintID());
+                                            startActivity(intent);
+                                        }));
+                                    });
+                            Log.e("OffersList", offerList.toString());
+                        }
+                    });
+        }
+
+        binding.progressBar4.setVisibility(View.GONE);
+        binding.RV.setVisibility(View.VISIBLE);
+        binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+    });
+}
+    @Override
+    public void onResume( ) {
+        super.onResume( );
+        getData();
+
+    }
 }
