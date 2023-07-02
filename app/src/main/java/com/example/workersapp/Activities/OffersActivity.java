@@ -2,16 +2,16 @@ package com.example.workersapp.Activities;
 
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.app.AlertDialog;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Adapters.OffersAdapter;
 import com.example.workersapp.Listeneres.OfferListener;
@@ -51,6 +51,8 @@ ActivityOffersBinding binding;
         super.onCreate( savedInstanceState );
         binding = ActivityOffersBinding.inflate( getLayoutInflater() );
         setContentView( binding.getRoot() );
+
+
         binding.inculd.tvPageTitle.setText( "العروض:" );
         binding.inculd.editIcon.setVisibility( View.GONE );
         binding.ProgressBar.setVisibility( View.VISIBLE );
@@ -67,6 +69,7 @@ ActivityOffersBinding binding;
          firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
+
 
         //TODO INTENT
         String clientId = user.getPhoneNumber();

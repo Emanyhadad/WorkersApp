@@ -16,16 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Activities.DetailsModelsActivity;
 import com.example.workersapp.Adapters.ImageModelAdapter;
-import com.example.workersapp.Listeneres.clickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Model;
 import com.example.workersapp.databinding.FragmentBusinessModelsBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
@@ -36,6 +33,7 @@ public class BusinessModelsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    FragmentBusinessModelsBinding binding;
     private static final String ARG_PARAM1_IMAGE = "image";
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
@@ -75,7 +73,7 @@ public class BusinessModelsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentBusinessModelsBinding binding = FragmentBusinessModelsBinding.inflate(inflater, container, false);
+        binding = FragmentBusinessModelsBinding.inflate(inflater, container, false);
         sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
         editor = sp.edit();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -96,6 +94,9 @@ public class BusinessModelsFragment extends Fragment {
                 .collection("userForm")
                 .get()
                 .addOnSuccessListener( queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()){
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         List<String> images = (List<String>) document.get("images");
                         String doc = (String) document.get("documentId");
