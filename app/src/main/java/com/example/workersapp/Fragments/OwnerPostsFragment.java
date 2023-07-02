@@ -87,7 +87,6 @@ FragmentPostsBinding binding;
         List <String> jobStates = new ArrayList <>();
         jobStates.add("open");
         jobStates.add("close");
-        binding.inculd.fillterIcon.setOnClickListener( view -> applyFilter(jobStates  ) );
 
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
@@ -154,7 +153,7 @@ FragmentPostsBinding binding;
 
 
 
-        binding.inculd.editIcon.setOnClickListener( view -> {
+        binding.inculd.fillterIcon.setOnClickListener( view -> {
             FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
             bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
         } );
