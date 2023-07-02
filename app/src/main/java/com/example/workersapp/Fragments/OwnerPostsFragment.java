@@ -82,6 +82,12 @@ FragmentPostsBinding binding;
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
+        binding.inculd.editIcon.setVisibility( View.GONE );
+        binding.inculd.fillterIcon.setVisibility( View.VISIBLE );
+        List <String> jobStates = new ArrayList <>();
+        jobStates.add("open");
+        jobStates.add("close");
+        binding.inculd.fillterIcon.setOnClickListener( view -> applyFilter(jobStates  ) );
 
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
@@ -126,7 +132,6 @@ FragmentPostsBinding binding;
                                         if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
                                         postList.add( post );
                                             binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
-                                                Log.e( "ItemClik",postList.get( pos ).getPostId());
                                                 Intent intent = new Intent(getActivity(), PostActivity2.class);
                                                 intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
                                                 startActivity(intent);
@@ -137,7 +142,7 @@ FragmentPostsBinding binding;
 
                                     } } )
                                 .addOnFailureListener( e -> {
-                                    Log.e( "Field",e.getMessage());
+
                                 } );
                         binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
                                 LinearLayoutManager.VERTICAL, false));

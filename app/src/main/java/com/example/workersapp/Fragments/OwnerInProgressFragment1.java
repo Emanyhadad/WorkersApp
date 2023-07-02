@@ -57,7 +57,8 @@ public class OwnerInProgressFragment1 extends Fragment {
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-
+binding.inculd.tvPageTitle.setText( "وظائف  قيد العمل" );
+binding.inculd.editIcon.setVisibility( View.GONE );
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
         firebaseFirestore.collection("posts")

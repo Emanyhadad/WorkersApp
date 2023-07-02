@@ -6,16 +6,12 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
-import android.net.Uri;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.DatePicker;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -23,9 +19,6 @@ import androidx.core.content.ContextCompat;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityRegisterBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -52,149 +45,102 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     public static String image;
 
 
-    @SuppressLint("MissingPermission")
+    @SuppressLint( "MissingPermission" )
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        binding = ActivityRegisterBinding.inflate(getLayoutInflater());
-        setContentView(binding.getRoot());
+    protected void onCreate( Bundle savedInstanceState ) {
+        super.onCreate( savedInstanceState );
+        binding = ActivityRegisterBinding.inflate( getLayoutInflater( ) );
+        setContentView( binding.getRoot( ) );
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        db = FirebaseFirestore.getInstance();
-        storage = FirebaseStorage.getInstance();
+        firebaseAuth = FirebaseAuth.getInstance( );
+        firebaseUser = firebaseAuth.getCurrentUser( );
+        db = FirebaseFirestore.getInstance( );
+        storage = FirebaseStorage.getInstance( );
 
-        // التحقق مما إذا كان التطبيق يملك إذن الوصول إلى معرض الصور أم لا
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            // إذا لم يكن لديك إذن ، فقم بطلبه من المستخدم.
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_CODE);
-        } else {
-            // إذا كان لديك إذن ، قم بتنفيذ الإجراءات اللازمة للوصول إلى معرض الصور هنا.
+        if ( ContextCompat.checkSelfPermission( this , Manifest.permission.READ_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions( this , new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE } , REQUEST_CODE );
         }
-        ActivityResultLauncher al1 = registerForActivityResult(
-                new ActivityResultContracts.GetContent(),
-                new ActivityResultCallback<Uri>() {
-                    @Override
-                    public void onActivityResult(Uri result) {
-                        if (result != null) {
-                            Glide.with(getBaseContext()).load(result).circleCrop().error(R.drawable.user).into(binding.personImgUser);
-                            StorageReference reference = storage.getReference("users/" + "images/" + firebaseUser.getPhoneNumber());
+        ActivityResultLauncher < String > al1 = registerForActivityResult( new ActivityResultContracts.GetContent( ) , result -> {
+            if ( result != null ) {
+                Glide.with( getBaseContext( ) ).load( result ).circleCrop( ).error( R.drawable.user ).into( binding.personImgUser );
+                StorageReference reference = storage.getReference( "users/" + "images/" + firebaseUser.getPhoneNumber( ) );
 
-                            StorageTask<UploadTask.TaskSnapshot> uploadTask =
-                                    reference.putFile(result);
+                StorageTask < UploadTask.TaskSnapshot > uploadTask = reference.putFile( result );
 
-                            uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                                @Override
-                                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                    reference.getDownloadUrl().addOnCompleteListener(new OnCompleteListener<Uri>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<Uri> task) {
-                                            if (task.isSuccessful()) {
-                                                image = task.getResult().toString();
-                                            }
-                                        }
-                                    });
-                                }
-                            });
-
-                        }
+                uploadTask.addOnSuccessListener( taskSnapshot -> reference.getDownloadUrl( ).addOnCompleteListener( task -> {
+                    if ( task.isSuccessful( ) ) {
+                        image = task.getResult( ).toString( );
                     }
-                }
-        );
+                } ) );
 
-        binding.personBirth.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                showDatePickerDialog();
             }
-        });
+        } );
 
-        binding.personAddImgUser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                al1.launch("image/*");
+        binding.personBirth.setOnClickListener( view -> showDatePickerDialog( ) );
+
+        binding.personAddImgUser.setOnClickListener( v -> al1.launch( "image/*" ) );
+
+        binding.personBtnNext.setOnClickListener( view -> {
+            fullName = Objects.requireNonNull( binding.personFullName.getText( ) ).toString( );
+            nickName = Objects.requireNonNull( binding.personNickName.getText( ) ).toString( );
+            birth = Objects.requireNonNull( binding.personBirth.getText( ) ).toString( );
+            genderId = binding.personRadioGroup.getCheckedRadioButtonId( );
+            gender = findViewById( genderId ).toString( );
+            accountType = LoginActivity.sp.getString( "accountType" , "" );
+
+            if ( binding.personMale.isChecked( ) ) {
+                gender = getString( R.string.male );
+            } else {
+                gender = getString( R.string.female );
             }
-        });
-
-        binding.personBtnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fullName = binding.personFullName.getText().toString();
-                nickName = binding.personNickName.getText().toString();
-                birth = binding.personBirth.getText().toString();
-                genderId = binding.personRadioGroup.getCheckedRadioButtonId();
-                gender = findViewById(genderId).toString();
-                accountType = LoginActivity.sp.getString("accountType", "");
-
-                if (binding.personMale.isChecked()) {
-                    gender = "ذكر";
-                } else {
-                    gender = "أنثى";
-                }
 
 
-                Map<String, Object> data = new HashMap<>();
-                data.put("fullName", fullName);
-                data.put("nickName", nickName);
-                data.put("birth", birth);
-                data.put("gender", gender);
-                data.put("image", image);
+            Map < String, Object > data = new HashMap <>( );
+            data.put( "fullName" , fullName );
+            data.put( "nickName" , nickName );
+            data.put( "birth" , birth );
+            data.put( "gender" , gender );
+            data.put( "image" , image );
 
-                if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
+            if ( !fullName.isEmpty( ) && !nickName.isEmpty( ) && !birth.isEmpty( ) ) {
 
-                    db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                            .set(data)
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void unused) {
-                                    Toast.makeText(RegisterActivity.this, "success phone", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                    Intent intent = new Intent(getBaseContext(), MapsActivity.class);
-                    intent.putExtra("accountType", accountType);
-                    intent.putExtra("source", RegisterActivity.class.getSimpleName());
-                    startActivity(intent);
+                db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener( unused -> Toast.makeText( RegisterActivity.this , "success phone" , Toast.LENGTH_SHORT ).show( ) );
+                Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
+                intent.putExtra( "accountType" , accountType );
+                intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
+                startActivity( intent );
 
-                } else {
-                    if (fullName.isEmpty()) {
-                        binding.personFullName.setError("يرجى تعبئة هذا الحقل");
-                    } else if (nickName.isEmpty()) {
-                        binding.personNickName.setError("يرجى تعبئة هذا الحقل");
-                    } else if (birth.isEmpty()) {
-                        binding.personBirth.setError("يرجى تعبئة هذا الحقل");
-                    }
+            } else {
+                if ( fullName.isEmpty( ) ) {
+                    binding.personFullName.setError( getString( R.string.tvFill ) );
+                } else if ( nickName.isEmpty( ) ) {
+                    binding.personNickName.setError( getString( R.string.tvFill ) );
+                } else if ( birth.isEmpty( ) ) {
+                    binding.personBirth.setError( getString( R.string.tvFill ) );
                 }
             }
-        });
+        } );
     }
 
-    private void showDatePickerDialog() {
-        Calendar calendar = null;
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-            calendar = Calendar.getInstance();
-            int year = calendar.get(Calendar.YEAR);
-            int month = calendar.get(Calendar.MONTH);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+    private void showDatePickerDialog( ) {
+        Calendar calendar;
+        if ( android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N ) {
+            calendar = Calendar.getInstance( );
+            int year = calendar.get( Calendar.YEAR );
+            int month = calendar.get( Calendar.MONTH );
+            int dayOfMonth = calendar.get( Calendar.DAY_OF_MONTH );
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    this,
-                    this,
-                    year,
-                    month,
-                    dayOfMonth
-            );
-            datePickerDialog.show();
+            DatePickerDialog datePickerDialog = new DatePickerDialog( this , this , year , month , dayOfMonth );
+            datePickerDialog.show( );
         }
 
     }
 
     @Override
-    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        String date = dayOfMonth + "/" + (month + 1) + "/" + year;
-        binding.personBirth.setText(date);
+    public void onDateSet( DatePicker view , int year , int month , int dayOfMonth ) {
+        String date = dayOfMonth + "/" + ( month + 1 ) + "/" + year;
+        binding.personBirth.setText( date );
     }
 
 }

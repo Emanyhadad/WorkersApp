@@ -181,12 +181,7 @@ public class PostFragment_inWorker extends Fragment {
             }
         });
 
-        binding.etSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), SearchActivity.class));
-            }
-        });
+        binding.etSearch.setOnClickListener( view -> startActivity(new Intent(getContext(), SearchActivity.class)) );
 
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,35 +227,7 @@ public class PostFragment_inWorker extends Fragment {
                     }
                 });
     }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        firebaseFirestore.collection("offers")
-//                .document("favorites")
-//                .collection("favorites")
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
-//                        binding.RV.setAdapter( new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
-//                            @Override
-//                            public void OnClick(int pos) {
-//
-//                            }
-//                        }));
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
-//                LinearLayoutManager.VERTICAL, false));
-//    }
+
 
     String workType = null;
 
