@@ -26,20 +26,10 @@ public class MessageClass extends FirebaseMessagingService {
         // استخراج المعلومات من الإشعار المستلم
         String comment = remoteMessage.getData().get("comment");
 
+        Log.d("commentMessage",comment);
+
         // استخدام المعلومات لعرض إشعار للعامل
         showNotification(comment);
-    }
-
-    @Override
-    public void onNewToken(String token) {
-        super.onNewToken(token);
-
-        // يتم استدعاء هذه الطريقة عند إنشاء الرمز (Token) أو تجديده
-        // يمكنك استخدامه لتحديث الرمز على الخادم الخاص بك
-
-        Log.d(TAG, "New Token: " + token);
-
-        // TODO: Perform token update logic here
     }
 
     private void showNotification(String comment) {
