@@ -65,6 +65,7 @@ public class CvActivity extends AppCompatActivity {
                 binding.CvWork.setError("يرجى تعبئة هذا الحقل");
             }
 
+
         } );
     }
 
