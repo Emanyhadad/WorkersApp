@@ -61,7 +61,7 @@ public class LoginActivity extends AppCompatActivity {
 
     String verificationID;
 
-    //me
+
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
 
@@ -366,6 +366,7 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, sp.getString("accountTypeWorker", ""), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
+            finish();
         });
         workOwnerLayout.setOnClickListener(view -> {
             String accountType = "work owner";
@@ -375,6 +376,7 @@ public class LoginActivity extends AppCompatActivity {
             dialogAccountType.dismiss();
             Intent intent = new Intent(getBaseContext(), PhoneRegistrationActivity.class);
             startActivity(intent);
+            finish();
         });
 
     }

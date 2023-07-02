@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class WorkerReviewsFragment extends Fragment {
+    FragmentWorkerReviewsBinding binding;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -47,7 +48,7 @@ public class WorkerReviewsFragment extends Fragment {
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container,
                               Bundle savedInstanceState) {
-        FragmentWorkerReviewsBinding binding = FragmentWorkerReviewsBinding.inflate(inflater,container,false);
+        binding = FragmentWorkerReviewsBinding.inflate(inflater,container,false);
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
@@ -56,6 +57,9 @@ public class WorkerReviewsFragment extends Fragment {
         reviewsList = new ArrayList <>(  );
         List documentId = new ArrayList(  );
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            if (queryDocumentSnapshots.isEmpty()){
+                binding.progressBar3.setVisibility(View.GONE);
+            }
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 documentId.add(documentSnapshot1);
                 firebaseFirestore.collection("posts").document(documentSnapshot1.getId())
@@ -86,6 +90,8 @@ public class WorkerReviewsFragment extends Fragment {
                                             intent.putExtra("OwnerId", documentSnapshot1.getId()); // pass data to new activity
                                             startActivity(intent);
                                         }));
+                                        Log.d("PostId",postId+"");
+                                        Log.d("OwnerId",documentSnapshot1.getId());
                                         binding.progressBar3.setVisibility(View.GONE);
                                         binding.RV.setVisibility(View.VISIBLE);
                                     }
@@ -96,13 +102,6 @@ public class WorkerReviewsFragment extends Fragment {
                         });
             }
         });
-
-
-
-
-
-
-
 
         binding.RV.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
 

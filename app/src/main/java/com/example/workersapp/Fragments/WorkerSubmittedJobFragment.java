@@ -110,6 +110,5 @@ void getData(){
     public void onResume( ) {
         super.onResume( );
         getData();
-
     }
 }
