@@ -5,8 +5,14 @@
     <string name="btnSendVerificationCode">أرسل كود التحقق</string>
     <string name="tvPalestinePhone">+970</string>
     <string name="btnLogin">دخول</string>
-    <string name="tvRegisterNow">سجل الان</string>
+    <string name="tvRegisterNow">سجل الأن</string>
+    <string name="tvInAnotherTime">في وقت لاحق</string>
+    <string name="DoNotHave">ليس لديك حساب، قم بالتسجيل الأن!</string>
     <string name="tvDoNotHaveAnAccount">ليس لديك حساب؟</string>
+    <string name="tvFill">يرجى تعبئة هذا الحقل</string>
+    <string name="female">أنثى</string>
+    <string name="male">ذكر</string>
+
     <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
     <string name="etPhoneHint">592 777 888</string>
     <string name="tvAccountType">نوع الحساب</string>

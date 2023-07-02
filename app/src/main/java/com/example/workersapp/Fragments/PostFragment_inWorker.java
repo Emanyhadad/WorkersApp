@@ -181,12 +181,7 @@ public class PostFragment_inWorker extends Fragment {
             }
         });
 
-        binding.etSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), SearchActivity.class));
-            }
-        });
+        binding.etSearch.setOnClickListener( view -> startActivity(new Intent(getContext(), SearchActivity.class)) );
 
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,6 +227,7 @@ public class PostFragment_inWorker extends Fragment {
                     }
                 });
     }
+
 
     String workType = null;
 

@@ -1,16 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layoutDirection="rtl"
+    android:orientation="vertical"
     tools:context=".Fragments.OwnerInProgressFragment1">
-
+    <include
+        android:id="@+id/inculd"
+        layout="@layout/toolbar_layout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
     <ProgressBar
         android:id="@+id/ProgressBar"
         android:visibility="visible"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|center_vertical"/>
     <LinearLayout
         android:id="@+id/LL_empty"
@@ -57,4 +64,4 @@
         tools:listitem="@layout/item_post" />
 
 
-</FrameLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

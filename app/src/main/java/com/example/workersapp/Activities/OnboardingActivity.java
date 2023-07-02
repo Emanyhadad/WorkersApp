@@ -21,7 +21,7 @@ public class OnboardingActivity extends AppCompatActivity {
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
 
-    private int[] imageResources = { R.drawable.bording1, R.drawable.bording1, R.drawable.bording3};
+    private int[] imageResources = { R.drawable.bording1, R.drawable.bording2, R.drawable.bording3};
     private String[] texts = {"شغيل، المنصةالفلسطينية الأولى لدمج السوق المهني في قطاعات التكنولوجيا ",
             "مرحبًا بك في تطبيق شغيل! نحن هنا لمساعدتك على توسيع دائرة عملك وتحقيق المزيد من العمل. ",
             "استعد لتجربة رائعة وفرص مثيرة. دعنا نبدأ!"};
@@ -33,8 +33,7 @@ public class OnboardingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_onboarding);
         sp = getSharedPreferences("shared", MODE_PRIVATE);
         editor=sp.edit();
-        editor.putBoolean("appUp-lode", true);
-        editor.apply();
+
         viewPager = findViewById(R.id.viewPager);
         btnSkip = findViewById(R.id.btnSkip);
         dotsLayout = findViewById(R.id.dotsLayout);
@@ -65,7 +64,7 @@ public class OnboardingActivity extends AppCompatActivity {
         btnSkip.setOnClickListener( v -> {
             int currentItem = viewPager.getCurrentItem();
             if (currentItem == imageResources.length - 1) {
-                startActivity( new Intent( OnboardingActivity.this,LoginActivity.class ) );
+                startActivity( new Intent( OnboardingActivity.this,GuestActivity.class ) );
                 finish();
                 editor.putBoolean("appUp-lode", true);
                 editor.apply();

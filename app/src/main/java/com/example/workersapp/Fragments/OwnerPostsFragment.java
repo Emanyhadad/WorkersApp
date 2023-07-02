@@ -81,6 +81,12 @@ FragmentPostsBinding binding;
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
+        binding.inculd.editIcon.setVisibility( View.GONE );
+        binding.inculd.fillterIcon.setVisibility( View.VISIBLE );
+        List <String> jobStates = new ArrayList <>();
+        jobStates.add("open");
+        jobStates.add("close");
+        binding.inculd.fillterIcon.setOnClickListener( view -> applyFilter(jobStates  ) );
 
         getData();
 
@@ -115,6 +121,49 @@ FragmentPostsBinding binding;
                         });
                     }
                     else {
+                    for ( DocumentSnapshot document : task.getResult()) {
+                        firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
+                                .addOnSuccessListener( documentSnapshot -> {
+                                    binding.ProgressBar.setVisibility( View.GONE );
+                                    binding.LLEmpty.setVisibility( View.GONE );
+                                    binding.RV.setVisibility( View.VISIBLE );
+                                    if (documentSnapshot.exists()) {
+
+                                        jobState = documentSnapshot.getString("jobState");
+                                        title = documentSnapshot.getString("title");
+                                        description= documentSnapshot.getString( "description" );
+                                        List<String> images = (List<String>) documentSnapshot.get("images");
+                                        List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
+
+                                        expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
+                                        projectedBudget= documentSnapshot.getString( "projectedBudget" );
+                                        jobLocation= documentSnapshot.getString( "jobLocation" );
+
+                                        Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                        post.setPostId( document.getId() );
+                                        post.setOwnerId( firebaseUser.getPhoneNumber() );
+                                        if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
+                                        postList.add( post );
+                                            binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
+                                                Intent intent = new Intent(getActivity(), PostActivity2.class);
+                                                intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
+                                                startActivity(intent);
+                                            } ));
+
+                                        }
+
+
+                                    } } )
+                                .addOnFailureListener( e -> {
+
+                                } );
+                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                LinearLayoutManager.VERTICAL, false));
+                        Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
+
+
+                    }}
+
                         for ( DocumentSnapshot document : task.getResult()) {
                             firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
                                     .addOnSuccessListener( documentSnapshot -> {

@@ -80,6 +80,7 @@ public class OwnerProfileFragment extends Fragment {
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
+
         //For User Data:
         DocumentReference userRef = firebaseFirestore.collection("users").document(firebaseUser.getPhoneNumber());
 
