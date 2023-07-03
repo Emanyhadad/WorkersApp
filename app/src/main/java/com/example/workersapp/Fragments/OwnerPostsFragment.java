@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
-import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostsBinding;
@@ -26,10 +25,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,8 +40,7 @@ public class OwnerPostsFragment extends Fragment {
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
-    FirebaseStorage firebaseStorage;
-    ShowCategoryAdapter adapter;
+
     List<String> categoryList;
     List<Post> postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
@@ -63,18 +61,16 @@ FragmentPostsBinding binding;
     @Override
     public void onCreate( Bundle savedInstanceState ) {
         super.onCreate( savedInstanceState );
-        if ( getArguments( ) != null ) {
 
-        }
     }
     public static SharedPreferences sharedPreferences;
 
     @Override
-    public View onCreateView( LayoutInflater inflater , ViewGroup container ,
+    public View onCreateView( @NonNull LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
          binding= FragmentPostsBinding.inflate( inflater,container,false );
         sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        binding.inculd.tvPageTitle.setText( "الوظائف" );
+        binding.inculd.tvPageTitle.setText( getString( R.string.jobs ));
         firebaseFirestore=FirebaseFirestore.getInstance();
         auth=FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
@@ -84,6 +80,10 @@ FragmentPostsBinding binding;
 
         binding.inculd.editIcon.setVisibility( View.GONE );
         binding.inculd.fillterIcon.setVisibility( View.VISIBLE );
+        binding.inculd.fillterIcon.setOnClickListener( view -> {
+            FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
+            bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
+        } );
 
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
@@ -99,64 +99,123 @@ FragmentPostsBinding binding;
                             FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                             NewJobFragment jobFragment = new NewJobFragment();
                             fragmentTransaction.replace( R.id.container, jobFragment);
-                            fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                            fragmentTransaction.addToBackStack(null);
                             fragmentTransaction.commit();
                         });
                     }
                     else {
-                    for ( DocumentSnapshot document : task.getResult()) {
-                        firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
-                                .addOnSuccessListener( documentSnapshot -> {
-                                    binding.ProgressBar.setVisibility( View.GONE );
-                                    binding.LLEmpty.setVisibility( View.GONE );
-                                    binding.RV.setVisibility( View.VISIBLE );
-                                    if (documentSnapshot.exists()) {
+                        for ( DocumentSnapshot document : task.getResult()) {
+                            firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
+                                    .addOnSuccessListener( documentSnapshot -> {
+                                        binding.ProgressBar.setVisibility( View.GONE );
+                                        binding.LLEmpty.setVisibility( View.GONE );
+                                        binding.RV.setVisibility( View.VISIBLE );
+                                        if (documentSnapshot.exists()) {
+                                            jobState = documentSnapshot.getString("jobState");
+                                            title = documentSnapshot.getString("title");
+                                            description= documentSnapshot.getString( "description" );
+                                            List<String> images = (List<String>) documentSnapshot.get("images");
+                                            List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
 
-                                        jobState = documentSnapshot.getString("jobState");
-                                        title = documentSnapshot.getString("title");
-                                        description= documentSnapshot.getString( "description" );
-                                        List<String> images = (List<String>) documentSnapshot.get("images");
-                                        List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
+                                            expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
+                                            projectedBudget= documentSnapshot.getString( "projectedBudget" );
+                                            jobLocation= documentSnapshot.getString( "jobLocation" );
 
-                                        expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
-                                        projectedBudget= documentSnapshot.getString( "projectedBudget" );
-                                        jobLocation= documentSnapshot.getString( "jobLocation" );
+                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                            post.setPostId( document.getId() );
+                                            post.setOwnerId( firebaseUser.getPhoneNumber() );
+                                            if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
+                                                postList.add( post );
+                                                binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
+                                                    Intent intent = new Intent(getActivity(), PostActivity2.class);
+                                                    intent.putExtra("PostId", postList.get( pos ).getPostId());
+                                                    startActivity(intent);
+                                                } ));
 
-                                        Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
-                                        post.setPostId( document.getId() );
-                                        post.setOwnerId( firebaseUser.getPhoneNumber() );
-                                        if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
-                                        postList.add( post );
-                                            binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
-                                                Intent intent = new Intent(getActivity(), PostActivity2.class);
-                                                intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
-                                                startActivity(intent);
-                                            } ));
-
-                                        }
-
-
-                                    } } )
-                                .addOnFailureListener( e -> {
-
-                                } );
-                        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
-                                LinearLayoutManager.VERTICAL, false));
-                        Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
+                                            }
 
 
-                    }}
+                                        } } )
+                                    .addOnFailureListener( e -> {
+
+                                    } );
+                            binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                    LinearLayoutManager.VERTICAL, false));
+                            Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
+
+
+                        }}
                 } ).addOnFailureListener( runnable -> {} );
 
 
 
-        binding.inculd.fillterIcon.setOnClickListener( view -> {
-            FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
-            bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");
-        } );
-
         return binding.getRoot();
     }
+    void getData(){
+
+        firebaseFirestore.collection("posts")
+                .document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
+                .collection("userPost")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if ( task.getResult().isEmpty() ){
+                        binding.ProgressBar.setVisibility( View.GONE );
+                        binding.LLEmpty.setVisibility( View.VISIBLE );
+                        binding.btnAddpost.setOnClickListener(v -> {
+                            FragmentManager fragmentManager = getParentFragmentManager();
+                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                            NewJobFragment jobFragment = new NewJobFragment();
+                            fragmentTransaction.replace( R.id.container, jobFragment);
+                            fragmentTransaction.addToBackStack(null);
+                            fragmentTransaction.commit();
+                        });
+                    }
+                    else {
+                        for ( DocumentSnapshot document : task.getResult()) {
+                            firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
+                                    .addOnSuccessListener( documentSnapshot -> {
+                                        binding.ProgressBar.setVisibility( View.GONE );
+                                        binding.LLEmpty.setVisibility( View.GONE );
+                                        binding.RV.setVisibility( View.VISIBLE );
+                                        if (documentSnapshot.exists()) {
+
+                                            jobState = documentSnapshot.getString("jobState");
+                                            title = documentSnapshot.getString("title");
+                                            description= documentSnapshot.getString( "description" );
+                                            List<String> images = (List<String>) documentSnapshot.get("images");
+                                            List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
+
+                                            expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
+                                            projectedBudget= documentSnapshot.getString( "projectedBudget" );
+                                            jobLocation= documentSnapshot.getString( "jobLocation" );
+
+                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                            post.setPostId( document.getId() );
+                                            post.setOwnerId( firebaseUser.getPhoneNumber() );
+                                            if (!( jobState.equals( "inWork" )||jobState.equals( "done" )) ){
+                                                postList.add( post );
+                                                binding.RV.setAdapter( new PostAdapter( postList , getContext( ), pos -> {
+                                                    Intent intent = new Intent(getActivity(), PostActivity2.class);
+                                                    intent.putExtra("PostId", postList.get( pos ).getPostId());
+                                                    startActivity(intent);
+                                                } ));
+
+                                            }
+
+
+                                        } } )
+                                    .addOnFailureListener( e -> {
+
+                                    } );
+                            binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
+                                    LinearLayoutManager.VERTICAL, false));
+                            Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
+
+
+                        }}
+                } ).addOnFailureListener( runnable -> {} );
+    }
+
 
     public void applyFilter(List<String> jobStates) {
         if (sharedPreferences.getString( "jobStatesOpen","open" ).equals( "open" )  ){

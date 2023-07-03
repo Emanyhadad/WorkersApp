@@ -96,66 +96,38 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             }
 
 
-// <<<<<<< eman
-//             Map < String, Object > data = new HashMap <>( );
-//             data.put( "fullName" , fullName );
-//             data.put( "nickName" , nickName );
-//             data.put( "birth" , birth );
-//             data.put( "gender" , gender );
-//             data.put( "image" , image );
 
-//             if ( !fullName.isEmpty( ) && !nickName.isEmpty( ) && !birth.isEmpty( ) ) {
+             if ( !fullName.isEmpty( ) && !nickName.isEmpty( ) && !birth.isEmpty( ) ) {
 
-//                 db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener( unused -> Toast.makeText( RegisterActivity.this , "success phone" , Toast.LENGTH_SHORT ).show( ) );
-//                 Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
-//                 intent.putExtra( "accountType" , accountType );
-//                 intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
-//                 startActivity( intent );
+                 Map < String, Object > data = new HashMap <>( );
+                 data.put( "fullName" , fullName );
+                 data.put( "nickName" , nickName );
+                 data.put( "birth" , birth );
+                 data.put( "gender" , gender );
+                 data.put( "image" , image );
 
-//             } else {
-//                 if ( fullName.isEmpty( ) ) {
-//                     binding.personFullName.setError( getString( R.string.tvFill ) );
-//                 } else if ( nickName.isEmpty( ) ) {
-//                     binding.personNickName.setError( getString( R.string.tvFill ) );
-//                 } else if ( birth.isEmpty( ) ) {
-//                     binding.personBirth.setError( getString( R.string.tvFill ) );
-// =======
-//                 Map<String, Object> data = new HashMap<>();
-//                 data.put("fullName", fullName);
-//                 data.put("nickName", nickName);
-//                 data.put("birth", birth);
-//                 data.put("gender", gender);
-//                 data.put("image", image);
 
-//                 if (!fullName.isEmpty() && !nickName.isEmpty() && !birth.isEmpty()) {
+                 db.collection( "users" ).document( Objects.requireNonNull
+                         ( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener(
+                                 unused -> Toast.makeText( RegisterActivity.this , "success phone" , Toast.LENGTH_SHORT ).show( ) );
+                 Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
+                 intent.putExtra( "accountType" , accountType );
+                 intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
+                 startActivity( intent );
 
-//                     db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-//                             .set(data)
-//                             .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                 @Override
-//                                 public void onSuccess(Void unused) {
-//                                     Toast.makeText(RegisterActivity.this, "success phone", Toast.LENGTH_SHORT).show();
-//                                 }
-//                             });
-//                     Intent intent = new Intent(getBaseContext(), MapsActivity.class);
-//                     intent.putExtra("accountType", accountType);
-//                     intent.putExtra("source", RegisterActivity.class.getSimpleName());
-//                     startActivity(intent);
-//                     finish();
+             } else {
+                 if ( fullName.isEmpty( ) ) {
+                     binding.personFullName.setError( getString( R.string.tvFill ) );
+                 } else if ( nickName.isEmpty( ) ) {
+                     binding.personNickName.setError( getString( R.string.tvFill ) );
+                 } else if ( birth.isEmpty( ) ) {
+                     binding.personBirth.setError( getString( R.string.tvFill ) );
 
-//                 } else {
-//                     if (fullName.isEmpty()) {
-//                         binding.personFullName.setError("يرجى تعبئة هذا الحقل");
-//                     } else if (nickName.isEmpty()) {
-//                         binding.personNickName.setError("يرجى تعبئة هذا الحقل");
-//                     } else if (birth.isEmpty()) {
-//                         binding.personBirth.setError("يرجى تعبئة هذا الحقل");
-//                     }
-// >>>>>>> master
-                }
+
+
             }
-        } );
-    }
+        } });}
+
 
     private void showDatePickerDialog( ) {
         Calendar calendar;

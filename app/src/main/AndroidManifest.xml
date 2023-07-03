@@ -27,7 +27,7 @@
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
         <activity
-            android:name=".GuestActivity"
+            android:name=".Activities.GuestActivity"
             android:exported="false" />
         <!-- إضافة خاصية الخدمة -->
         <service
@@ -75,7 +75,7 @@
             android:name=".Activities.OffersActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.PostActivity"
+            android:name=".Activities.PostActivity2"
             android:exported="true">
 
             <!-- <intent-filter> -->
@@ -124,20 +124,11 @@
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activities.PostActivity2"
-            android:exported="false" />
+
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true">
+            android:exported="false"/>
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity
             android:name=".Activities.RegisterActivity"
             android:exported="false" />

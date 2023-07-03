@@ -12,6 +12,7 @@
     <string name="tvFill">يرجى تعبئة هذا الحقل</string>
     <string name="female">أنثى</string>
     <string name="male">ذكر</string>
+    <string name="jobs">الوظائف</string>
 
     <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
     <string name="etPhoneHint">592 777 888</string>
