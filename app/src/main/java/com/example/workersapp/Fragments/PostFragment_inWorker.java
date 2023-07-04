@@ -20,6 +20,7 @@ import com.example.workersapp.Activities.SearchActivity;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Listeneres.ItemClickListener;
+import com.example.workersapp.R;
 import com.example.workersapp.Utilities.AdClass;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
@@ -57,6 +58,7 @@ public class PostFragment_inWorker extends Fragment {
     List<Post> postList;
     Post_forWorkerAdapter post_forWorkerAdapter;
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
+    long addedTime;
 
 
     public PostFragment_inWorker() {
@@ -90,7 +92,7 @@ public class PostFragment_inWorker extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-
+binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
         List decoumtId = new ArrayList();
@@ -142,8 +144,9 @@ public class PostFragment_inWorker extends Fragment {
                                                     expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
                                                     projectedBudget = documentSnapshot.getString("projectedBudget");
                                                     jobLocation = documentSnapshot.getString("jobLocation");
+                                                    addedTime = documentSnapshot.getLong("addedTime");
 
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState);
+                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
                                                     post.setPostId(document.getId());
                                                     post.setOwnerId(documentSnapshot1.getId());
 

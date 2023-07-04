@@ -121,7 +121,7 @@
     <string name="tv_projectstate">حالة المشروع</string>
     <string name="tv_now">الآن</string>
     <string name="tv_duration">مايو/2023 -</string>
-    <string name="_4_5i">4.5i</string>
+    <string name="_4_5i">4</string>
     <string name="tv_workerName">عبدالله يوسف</string>
     <string name="_37i">37i</string>
     <string name="tv_finishproject">إنهاء المشروع</string>
@@ -139,6 +139,7 @@
     <string name="itOpenJobs">وظائف مفتوحة</string>
     <string name="itInProgress">قيد العمل</string>
     <string name="itNewJob">عمل جديد</string>
+    <string name="sherch">بحث</string>
 
 
 </resources>

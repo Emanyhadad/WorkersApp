@@ -28,7 +28,7 @@
             android:visibility="gone"
             android:textColor="@color/white"
             android:paddingStart="@dimen/_8sdp"
-            android:textSize="@dimen/_10ssp"
+            android:textSize="@dimen/_11ssp"
             android:background="@drawable/border_colseitem"
             />
 
@@ -54,7 +54,7 @@
                 android:text="@string/jobTitle"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_11ssp" />
+                android:textSize="@dimen/_12ssp" />
 
 <!--                <ToggleButton-->
 <!--                    android:id="@+id/favoriteButton"-->
@@ -86,7 +86,7 @@
                 android:text="@string/post_paragraph"
                 android:textAlignment="textStart"
                 android:textColor="@color/black"
-                android:textSize="@dimen/_9ssp" />
+                android:textSize="@dimen/_11ssp" />
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/tv_postTime"
@@ -97,7 +97,7 @@
                 android:text="@string/_2"
                 android:textAlignment="textStart"
                 android:textColor="@color/black0"
-                android:textSize="@dimen/_8ssp" />
+                android:textSize="@dimen/_10ssp" />
 
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
@@ -119,7 +119,7 @@
                         android:gravity="start"
                         android:text="@string/ile"
                         android:textColor="@color/green"
-                        android:textSize="@dimen/_10ssp"
+                        android:textSize="@dimen/_11ssp"
                         />
                     <androidx.appcompat.widget.AppCompatTextView
                         android:id="@+id/tv_postBudget"
@@ -132,7 +132,7 @@
                         android:gravity="start"
                         android:text="@string/_200"
                         android:textColor="@color/blue"
-                        android:textSize="@dimen/_10ssp" />
+                        android:textSize="@dimen/_11ssp" />
 
                 </androidx.appcompat.widget.LinearLayoutCompat>
                 <androidx.appcompat.widget.AppCompatTextView
@@ -147,7 +147,7 @@
                     android:layout_gravity="end"
                     android:textAlignment="textEnd"
                     android:textColor="@color/blue"
-                    android:textSize="@dimen/_10ssp" />
+                    android:textSize="@dimen/_11ssp" />
 
             </androidx.appcompat.widget.LinearLayoutCompat>
 
@@ -155,9 +155,8 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/CategoryRecycle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_19sdp"
-                android:layout_marginTop="@dimen/_5sdp"
-                />
+                android:layout_height="@dimen/_27sdp"
+                android:layout_marginTop="@dimen/_5sdp" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -186,11 +185,11 @@
                     android:fontFamily="@font/cairo_semi_bold"
                     android:text="@string/tv_workerName"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_9ssp" />
+                    android:textSize="@dimen/_10ssp" />
 
                 <TextView
                     android:id="@+id/item_tv_clintRating"
-                    android:layout_width="@dimen/_30sdp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_4sdp"
                     android:layout_marginRight="@dimen/_4sdp"
@@ -198,7 +197,7 @@
                     android:gravity="center_vertical"
                     android:text="@string/_4_5i"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/_9ssp"
+                    android:textSize="@dimen/_10ssp"
                     app:drawableEndCompat="@drawable/baseline_star_24" />
 
 

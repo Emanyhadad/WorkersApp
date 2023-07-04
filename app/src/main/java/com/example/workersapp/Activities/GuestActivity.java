@@ -34,6 +34,7 @@ ActivityGuestBinding binding ;
     Post_forWorkerAdapter postAdapter;
     List <String> categoryList;
     List< Post > postList;
+    long addedTime;
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
 
     @Override
@@ -44,12 +45,14 @@ ActivityGuestBinding binding ;
 
         firebaseFirestore = FirebaseFirestore.getInstance();
 
+        binding.inculd.tvPageTitle.setText( getString( R.string.jobs ));
 
         categoryList = new ArrayList <>();
         postList = new ArrayList<>();
         List decoumtId = new ArrayList();
         List<String> Category = new ArrayList<>();
-        firebaseFirestore.collection("workCategoryAuto").document("category")
+        firebaseFirestore.collection("workCategoryAuto").
+                document("category")
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -91,8 +94,9 @@ ActivityGuestBinding binding ;
                                                     expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
                                                     projectedBudget = documentSnapshot.getString("projectedBudget");
                                                     jobLocation = documentSnapshot.getString("jobLocation");
+                                                    addedTime = documentSnapshot.getLong("addedTime");
 
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState);
+                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
                                                     post.setPostId(document.getId());
                                                     post.setOwnerId(documentSnapshot1.getId());
 
@@ -101,10 +105,19 @@ ActivityGuestBinding binding ;
                                                         RegisterDialog();
                                                     } );
                                                 }
-                                                binding.RV.setAdapter(postAdapter);
-                                                postAdapter.setList(postList);
-                                                binding.ProgressBar.setVisibility( View.GONE);
-                                                binding.RV.setVisibility(View.VISIBLE);
+
+                                                        if (postList.isEmpty()) {
+                                                            binding.RV.setVisibility( View.GONE );
+                                                            binding.ProgressBar.setVisibility( View.GONE );
+                                                            binding.LLEmpty.setVisibility(View.VISIBLE);
+                                                    } else {
+                                                            binding.LLEmpty.setVisibility(View.GONE);
+                                                            binding.RV.setAdapter(postAdapter);
+
+                                                            postAdapter.setList(postList);
+                                                            binding.ProgressBar.setVisibility( View.GONE);
+                                                            binding.RV.setVisibility(View.VISIBLE);
+                                                        }
                                             })
                                             .addOnFailureListener(e -> Log.e("Field", e.getMessage()));
                                     binding.RV.setLayoutManager(new LinearLayoutManager(getBaseContext(),
@@ -114,9 +127,12 @@ ActivityGuestBinding binding ;
 
                                 }
                             }
-                        }).addOnFailureListener(runnable -> { });
+                        }).addOnFailureListener(runnable -> {
+                            binding.RV.setVisibility( View.GONE );
+                            binding.ProgressBar.setVisibility( View.GONE );
+                            binding.LLEmpty.setVisibility(View.VISIBLE);});
             }
-        });
+        }).addOnFailureListener( runnable -> {binding.ProgressBar.setVisibility( View.GONE );} );
 
         binding.etSearch.setOnClickListener( view -> RegisterDialog()  );
 
