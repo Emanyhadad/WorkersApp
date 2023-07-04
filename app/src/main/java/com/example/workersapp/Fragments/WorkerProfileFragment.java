@@ -156,6 +156,9 @@ public class WorkerProfileFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
+                    if (!isAdded()){
+                        return;
+                    }
                     String fullName = documentSnapshot.getString("fullName");
                     String nickName = documentSnapshot.getString("nickName");
                     String work = documentSnapshot.getString("work");

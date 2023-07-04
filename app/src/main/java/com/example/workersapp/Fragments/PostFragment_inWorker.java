@@ -289,12 +289,13 @@ public class PostFragment_inWorker extends Fragment {
     private void createNativeAd() {
 
         objects = new ArrayList<>();
+        objects.addAll(postList);
 
         AdClass adClass = new AdClass();
 
         Log.d(TAG, "Google SDK Initialized");
 
-        AdLoader adLoader = new AdLoader.Builder(getContext(), "ca-app-pub-4163051235104500/8636857436")
+        AdLoader adLoader = new AdLoader.Builder(getContext(), "ca-app-pub-4163051235104500/1257264129")
                 .forNativeAd(nativeAd -> {
                     Log.d(TAG, "Native Ad Loaded");
 
@@ -309,17 +310,20 @@ public class PostFragment_inWorker extends Fragment {
                     nativeAdList.add(nativeAd);
 
                     if (!adClass.getAdLoader().isLoading()) {
-                        objects.add(postList.get(0));
-                        objects.add(postList.get(1));
-                        objects.add(postList.get(2));
-                        objects.add(nativeAdList.get(0));
-                        objects.add(postList.get(3));
-                        objects.add(postList.get(4));
-                        objects.add(postList.get(5));
-                        objects.add(nativeAdList.get(1));
-                        objects.add(postList.get(6));
-                        postAdapter.setObject(objects);
+//                        objects.add(postList.get(0));
+//                        objects.add(postList.get(1));
+//                        objects.add(postList.get(2));
+//                        objects.add(nativeAdList.get(0));
+//                        objects.add(postList.get(3));
+//                        objects.add(postList.get(4));
+//                        objects.add(postList.get(5));
+//                        objects.add(nativeAdList.get(1));
+//                        objects.add(postList.get(6));
 
+                        for (int i = 0; i < objects.size(); i++) {
+                            if (i%5==0 && ! (objects.get(i) instanceof NativeAd))
+                              objects.add(i,nativeAd);
+                        }
                     }
 
                 })
@@ -329,21 +333,23 @@ public class PostFragment_inWorker extends Fragment {
                     public void onAdFailedToLoad(@NonNull LoadAdError adError) {
                         // Handle the failure by logging, altering the UI, and so on.
                         Log.d(TAG, "Native Ad Failed To Load");
+                        Log.d(TAG, adError.getMessage());
+                        Log.d(TAG, adError.toString());
 
-                        new CountDownTimer(10000, 1000) {
-
-                            @Override
-                            public void onTick(long millisUntilFinished) {
-                                Log.d(TAG, "Timer : " + millisUntilFinished / 1000);
-                            }
-
-                            @Override
-                            public void onFinish() {
-                                Log.d(TAG, "Reloading NativeAd");
-
-                                createNativeAd();
-                            }
-                        }.start();
+//                        new CountDownTimer(10000, 1000) {
+//
+//                            @Override
+//                            public void onTick(long millisUntilFinished) {
+//                                Log.d(TAG, "Timer : " + millisUntilFinished / 1000);
+//                            }
+//
+//                            @Override
+//                            public void onFinish() {
+//                                Log.d(TAG, "Reloading NativeAd");
+//
+//                                createNativeAd();
+//                            }
+//                        }.start();
 
                     }
                 })
@@ -353,6 +359,8 @@ public class PostFragment_inWorker extends Fragment {
 
         adLoader.loadAds(new AdRequest.Builder().build(), 2);
         adClass.setAdLoader(adLoader);
+        postAdapter.setObject(objects);
+
     }
 
 
