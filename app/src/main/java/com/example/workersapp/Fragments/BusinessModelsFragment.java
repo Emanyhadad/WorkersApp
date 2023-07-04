@@ -82,7 +82,35 @@ public class BusinessModelsFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         imagesList = new ArrayList<>();
         models = new ArrayList<>();
+        firebaseFirestore.collection("forms").document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
+                .collection("userForm")
+                .get()
+                .addOnSuccessListener( queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()){
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        List<String> images = (List<String>) document.get("images");
+                        String doc = (String) document.get("documentId");
+                        if (!images.isEmpty()) {
+                            models.add(new Model(images, doc));
+                            adapter = new ImageModelAdapter(models,
+                                    getContext(),
+                                    documentId -> {
+                                        Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
+                                        intent.putExtra("documentId", documentId);
+                                        startActivity(intent);
+                                    } );
+                            RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
+                            fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                            fragRv.setAdapter(adapter);
+                            adapter.notifyDataSetChanged();
+                        } else {
+                            Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
+                        }
+                    }
 
+                } );
         return binding.getRoot();
     }
 

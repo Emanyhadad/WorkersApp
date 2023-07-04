@@ -2,22 +2,19 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:paddingStart="@dimen/sdp_10"
-    android:paddingTop="@dimen/sdp_5"
-    android:paddingBottom="@dimen/sdp_10">
+    android:layout_margin="@dimen/_3sdp"
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/textViewCategory"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/sdp_25"
+        android:layout_height="@dimen/_25sdp"
         android:background="@drawable/category_bg"
         android:fontFamily="@font/cairo_regular"
         android:gravity="center"
-        android:paddingTop="@dimen/_1sdp"
-        android:paddingBottom="@dimen/_1sdp"
-        android:paddingEnd="@dimen/sdp_10"
-        android:paddingStart="@dimen/sdp_10"
+        android:paddingStart="@dimen/_6sdp"
+        android:paddingEnd="@dimen/_6sdp"
+
         android:text="عامل"
         android:textColor="@color/blue_dark"
         android:textSize="@dimen/sdp_textSize_10"

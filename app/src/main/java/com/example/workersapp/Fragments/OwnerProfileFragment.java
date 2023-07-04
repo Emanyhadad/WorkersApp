@@ -50,6 +50,8 @@ public class OwnerProfileFragment extends Fragment {
 
     boolean userData = false;
     boolean jobData = false;
+    long addedTime;
+
 
     public OwnerProfileFragment() {
         // Required empty public constructor
@@ -176,11 +178,10 @@ public class OwnerProfileFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     jobData = true;
-                    Log.e( "Posts",task.getResult().toString() );
-
                     if ( task.getResult().isEmpty() ){
                         binding.PB.setVisibility( View.GONE );
                         binding.SV.setVisibility( View.GONE );
+                        binding.LL.setVisibility( View.VISIBLE );
                         binding.LLEmpty.setVisibility( View.VISIBLE );
                     }
                     else {
@@ -188,6 +189,7 @@ public class OwnerProfileFragment extends Fragment {
                             firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
                                     .addOnSuccessListener( documentSnapshot -> {
                                         binding.PB.setVisibility( View.GONE );
+                                        binding.LL.setVisibility( View.VISIBLE );
                                         binding.LLEmpty.setVisibility( View.GONE );
                                         binding.SV.setVisibility( View.VISIBLE );
                                         if (documentSnapshot.exists()) {
@@ -201,8 +203,9 @@ public class OwnerProfileFragment extends Fragment {
                                             expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
                                             projectedBudget= documentSnapshot.getString( "projectedBudget" );
                                             jobLocation= documentSnapshot.getString( "jobLocation" );
+                                            addedTime = documentSnapshot.getLong("addedTime");
 
-                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState ,addedTime);
                                             post.setPostId( document.getId() );
                                             post.setOwnerId( firebaseUser.getPhoneNumber() );
                                             post.setWorkerId( documentSnapshot.getString( "workerId" ) );

@@ -32,7 +32,8 @@ public class OwnerInProgressFragment1 extends Fragment {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     List <String> categoryList;
-    List< Post > postList;
+    List< Post > postList;    long addedTime;
+
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
 
     FragmentBlank5Binding binding;
@@ -100,8 +101,9 @@ binding.inculd.editIcon.setVisibility( View.GONE );
                                             expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
                                             projectedBudget= documentSnapshot.getString( "projectedBudget" );
                                             jobLocation= documentSnapshot.getString( "jobLocation" );
+                                            addedTime = documentSnapshot.getLong("addedTime");
 
-                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState,addedTime );
                                             post.setPostId( document.getId() );
                                             post.setOwnerId( firebaseUser.getPhoneNumber() );
                                             post.setWorkerId( documentSnapshot.getString( "workerId" ) );

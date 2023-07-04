@@ -359,9 +359,31 @@ public class PostActivity2 extends AppCompatActivity {
 
                         jobLocation = documentSnapshot.getString("jobLocation");
                         binding.APTvJobLoc.setText(jobLocation);
+
+                        long currentTimeMillis = System.currentTimeMillis();
+                        long storageTimeMillis = documentSnapshot.getLong( "addedTime" );
+                        long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
+
+                        long seconds = timeDifferenceMillis / 1000;
+                        long minutes = seconds / 60;
+                        long hours = minutes / 60;
+
+                        String timeDifference;
+                        if (hours > 0) {
+                            timeDifference ="قبل "+ hours + "  ساعة";
+                        } else if (minutes > 0) {
+                            timeDifference = "قبل "+minutes + "  دقيقة";
+                        } else {
+                            timeDifference = "قبل "+seconds + " ثانية";
+                        }
+
+                        binding.APtvJobShareTime.setText( timeDifference );
+
                         //TODO GET Timestamp
                         binding.progressBar.setVisibility(View.GONE);
                         binding.SV.setVisibility(View.VISIBLE);
+
+
 
                     } else {
                         Toast.makeText(this, "Prop", Toast.LENGTH_SHORT).show();

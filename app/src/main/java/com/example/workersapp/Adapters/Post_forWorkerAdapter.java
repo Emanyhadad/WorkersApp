@@ -122,6 +122,26 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ivh.PostLoc.setText(currentPost.getJobLocation());
             ivh.favoriteButton.setVisibility(View.VISIBLE);
 
+            long currentTimeMillis = System.currentTimeMillis();
+            long storageTimeMillis = currentPost.getAddedTime();
+            long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
+
+            long seconds = timeDifferenceMillis / 1000;
+            long minutes = seconds / 60;
+            long hours = minutes / 60;
+
+            String timeDifference;
+            if (hours > 0) {
+                timeDifference = hours + " قبل ساعة";
+            } else if (minutes > 0) {
+                timeDifference = minutes + " قبل دقيقة";
+            } else {
+                timeDifference = seconds + " قبل ثانية";
+            }
+
+            ivh.PostTime.setText(timeDifference);
+
+
             //Todo: Put Post Time her
             ivh.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
             ivh.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
