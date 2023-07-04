@@ -5,8 +5,15 @@
     <string name="btnSendVerificationCode">أرسل كود التحقق</string>
     <string name="tvPalestinePhone">+970</string>
     <string name="btnLogin">دخول</string>
-    <string name="tvRegisterNow">سجل الان</string>
+    <string name="tvRegisterNow">سجل الأن</string>
+    <string name="tvInAnotherTime">في وقت لاحق</string>
+    <string name="DoNotHave">ليس لديك حساب، قم بالتسجيل الأن!</string>
     <string name="tvDoNotHaveAnAccount">ليس لديك حساب؟</string>
+    <string name="tvFill">يرجى تعبئة هذا الحقل</string>
+    <string name="female">أنثى</string>
+    <string name="male">ذكر</string>
+    <string name="jobs">الوظائف</string>
+
     <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
     <string name="etPhoneHint">592 777 888</string>
     <string name="tvAccountType">نوع الحساب</string>
@@ -114,7 +121,7 @@
     <string name="tv_projectstate">حالة المشروع</string>
     <string name="tv_now">الآن</string>
     <string name="tv_duration">مايو/2023 -</string>
-    <string name="_4_5i">4.5i</string>
+    <string name="_4_5i">4</string>
     <string name="tv_workerName">عبدالله يوسف</string>
     <string name="_37i">37i</string>
     <string name="tv_finishproject">إنهاء المشروع</string>
@@ -132,6 +139,7 @@
     <string name="itOpenJobs">وظائف مفتوحة</string>
     <string name="itInProgress">قيد العمل</string>
     <string name="itNewJob">عمل جديد</string>
+    <string name="sherch">بحث</string>
 
 
 </resources>

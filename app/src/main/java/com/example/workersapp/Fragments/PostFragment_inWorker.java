@@ -20,6 +20,7 @@ import com.example.workersapp.Activities.SearchActivity;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Listeneres.ItemClickListener;
+import com.example.workersapp.R;
 import com.example.workersapp.Utilities.AdClass;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
@@ -57,6 +58,7 @@ public class PostFragment_inWorker extends Fragment {
     List<Post> postList;
     Post_forWorkerAdapter post_forWorkerAdapter;
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
+    long addedTime;
 
 
     public PostFragment_inWorker() {
@@ -90,7 +92,7 @@ public class PostFragment_inWorker extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-
+binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
         List decoumtId = new ArrayList();
@@ -142,8 +144,9 @@ public class PostFragment_inWorker extends Fragment {
                                                     expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
                                                     projectedBudget = documentSnapshot.getString("projectedBudget");
                                                     jobLocation = documentSnapshot.getString("jobLocation");
+                                                    addedTime = documentSnapshot.getLong("addedTime");
 
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState);
+                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
                                                     post.setPostId(document.getId());
                                                     post.setOwnerId(documentSnapshot1.getId());
 
@@ -181,12 +184,7 @@ public class PostFragment_inWorker extends Fragment {
             }
         });
 
-        binding.etSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(getContext(), SearchActivity.class));
-            }
-        });
+        binding.etSearch.setOnClickListener( view -> startActivity(new Intent(getContext(), SearchActivity.class)) );
 
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -232,35 +230,7 @@ public class PostFragment_inWorker extends Fragment {
                     }
                 });
     }
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        firebaseFirestore.collection("offers")
-//                .document("favorites")
-//                .collection("favorites")
-//                .get()
-//                .addOnSuccessListener(new OnSuccessListener <QuerySnapshot>() {
-//                    @Override
-//                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-//                        List<Post> updatedFavorites = queryDocumentSnapshots.toObjects(Post.class);
-//                        binding.RV.setAdapter( new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
-//                            @Override
-//                            public void OnClick(int pos) {
-//
-//                            }
-//                        }));
-//                    }
-//                })
-//                .addOnFailureListener(new OnFailureListener() {
-//                    @Override
-//                    public void onFailure(@NonNull Exception e) {
-//                        Toast.makeText(getActivity(), "Failed to retrieve favorite items", Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//        binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
-//                LinearLayoutManager.VERTICAL, false));
-//    }
+
 
     String workType = null;
 

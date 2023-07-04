@@ -23,6 +23,22 @@
           }
         },
         {
+          "client_id": "209911816588-5olb17fenjesj2otbd2073ibo6uhl7ni.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.workersapp",
+            "certificate_hash": "5bb3adecb8a801af3843c687cfda982d8222e769"
+          }
+        },
+        {
+          "client_id": "209911816588-7ab1e0k04mfor3uqpokosb78809cv5a8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.workersapp",
+            "certificate_hash": "59d58ed38ced0cd7d7c6cd0fe24f33c14d6d533b"
+          }
+        },
+        {
           "client_id": "209911816588-3kinb66cdogotk5k5kkfl7nu32eonb4n.apps.googleusercontent.com",
           "client_type": 3
         }

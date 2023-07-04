@@ -26,7 +26,7 @@
         android:id="@+id/SV"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -478,33 +478,33 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/linearLayout_rateClint"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob"
-                    android:gravity="center_vertical"
-                    android:layout_marginTop="@dimen/_6sdp">
+<!--                <LinearLayout-->
+<!--                    android:id="@+id/linearLayout_rateClint"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob"-->
+<!--                    android:gravity="center_vertical"-->
+<!--                    android:layout_marginTop="@dimen/_6sdp">-->
 
-                    <com.google.android.material.textview.MaterialTextView
-                        android:id="@+id/tv_ClintComment"
+<!--                    <com.google.android.material.textview.MaterialTextView-->
+<!--                        android:id="@+id/tv_ClintComment"-->
 
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="عبدالله نجار رائع وملتزم بالوقت"
-                        android:layout_weight="1"
-                        />
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:text="عبدالله نجار رائع وملتزم بالوقت"-->
+<!--                        android:layout_weight="1"-->
+<!--                        />-->
 
-                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
-                        android:id="@+id/ratingBar_Clint"
+<!--                    <me.zhanghai.android.materialratingbar.MaterialRatingBar-->
+<!--                        android:id="@+id/ratingBar_Clint"-->
 
-                        android:layout_width="@dimen/_50sdp"
-                        android:layout_height="@dimen/_10sdp"
-                        android:numStars="5"
-                        android:clickable="false"
-                        android:isIndicator="true"
-                        />
-                </LinearLayout>
+<!--                        android:layout_width="@dimen/_50sdp"-->
+<!--                        android:layout_height="@dimen/_10sdp"-->
+<!--                        android:numStars="5"-->
+<!--                        android:clickable="false"-->
+<!--                        android:isIndicator="true"-->
+<!--                        />-->
+<!--                </LinearLayout>-->
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

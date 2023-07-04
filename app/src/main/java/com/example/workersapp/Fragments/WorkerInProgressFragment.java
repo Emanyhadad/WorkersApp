@@ -45,6 +45,7 @@ public class WorkerInProgressFragment extends Fragment {
 
     FirebaseUser firebaseUser;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
+    long addedTime;
 
 
     public WorkerInProgressFragment() {
@@ -93,8 +94,9 @@ public class WorkerInProgressFragment extends Fragment {
                                     expectedWorkDuration= postDocumentSnapshot.getString( "expectedWorkDuration" );
                                     projectedBudget= postDocumentSnapshot.getString( "projectedBudget" );
                                     jobLocation= postDocumentSnapshot.getString( "jobLocation" );
+                                    addedTime = documentSnapshot.getLong("addedTime");
 
-                                    Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                    Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState,addedTime );
                                     post.setPostId( postDocumentSnapshot.getId() );
                                     post.setOwnerId( firebaseUser.getPhoneNumber() );
                                     post.setWorkerId( postDocumentSnapshot.getString( "workerId" ) );

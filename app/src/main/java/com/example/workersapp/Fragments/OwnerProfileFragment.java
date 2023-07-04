@@ -4,32 +4,21 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
+import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.FinishedJobsAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
-import com.example.workersapp.Adapters.WorkInProgressAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentWorkOwnerProfileBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -37,7 +26,6 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
@@ -62,6 +50,8 @@ public class OwnerProfileFragment extends Fragment {
 
     boolean userData = false;
     boolean jobData = false;
+    long addedTime;
+
 
     public OwnerProfileFragment() {
         // Required empty public constructor
@@ -92,6 +82,7 @@ public class OwnerProfileFragment extends Fragment {
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
 
+
         //For User Data:
         DocumentReference userRef = firebaseFirestore.collection("users").document(firebaseUser.getPhoneNumber());
 
@@ -106,11 +97,14 @@ public class OwnerProfileFragment extends Fragment {
                     String city = document.getString("city");
                     binding.tvWorkOwnerCity.setText( city );
                     String image = document.getString("image");
-                    Glide.with(OwnerProfileFragment.this)
-                            .load(image)
-                            .circleCrop()
-                            .error(R.drawable.worker)
-                            .into(binding.imgProfileOwner);
+
+                    if (getContext() != null) {
+                        Glide.with(OwnerProfileFragment.this)
+                                .load(image)
+                                .circleCrop()
+                                .error(R.drawable.worker)
+                                .into(binding.imgProfileOwner);                    }
+
                     String fullName = document.getString("fullName");
                     binding.tvWorkOwnerName.setText( fullName );
                     long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
@@ -184,11 +178,10 @@ public class OwnerProfileFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     jobData = true;
-                    Log.e( "Posts",task.getResult().toString() );
-
                     if ( task.getResult().isEmpty() ){
                         binding.PB.setVisibility( View.GONE );
                         binding.SV.setVisibility( View.GONE );
+                        binding.LL.setVisibility( View.VISIBLE );
                         binding.LLEmpty.setVisibility( View.VISIBLE );
                     }
                     else {
@@ -196,6 +189,7 @@ public class OwnerProfileFragment extends Fragment {
                             firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
                                     .addOnSuccessListener( documentSnapshot -> {
                                         binding.PB.setVisibility( View.GONE );
+                                        binding.LL.setVisibility( View.VISIBLE );
                                         binding.LLEmpty.setVisibility( View.GONE );
                                         binding.SV.setVisibility( View.VISIBLE );
                                         if (documentSnapshot.exists()) {
@@ -209,8 +203,9 @@ public class OwnerProfileFragment extends Fragment {
                                             expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
                                             projectedBudget= documentSnapshot.getString( "projectedBudget" );
                                             jobLocation= documentSnapshot.getString( "jobLocation" );
+                                            addedTime = documentSnapshot.getLong("addedTime");
 
-                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState );
+                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState ,addedTime);
                                             post.setPostId( document.getId() );
                                             post.setOwnerId( firebaseUser.getPhoneNumber() );
                                             post.setWorkerId( documentSnapshot.getString( "workerId" ) );

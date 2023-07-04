@@ -5,6 +5,7 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
@@ -17,7 +18,6 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -26,16 +26,13 @@ import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityPost2Binding;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -73,11 +70,8 @@ public class PostActivity2 extends AppCompatActivity {
     float rating;
     String comment;
     String workerId;
-    private static final String TOPIC_NAME = "weather";
 
-    public static SharedPreferences sp;
-    public static SharedPreferences.Editor editor;
-
+    public static SharedPreferences sharedPreferences;
 
 
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation, projectState;
@@ -89,29 +83,26 @@ public class PostActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPost2Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        sp = getSharedPreferences("Login", MODE_PRIVATE);
-        editor = sp.edit();
+        sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
 
-        subscribeToTopic();
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // تم استرداد التوكن بنجاح
-                        String token = task.getResult();
-                        // قم بتخزين التوكن في مكان مناسب (مثل قاعدة البيانات أو ملف التفضيلات)
-                        // يتم استخدامه لإرسال الإشعارات للعمال
-                        editor.putString("token",token);
-                        editor.apply();
-
-                        Log.d("tokenOwner", token);
-                    } else {
-                        // حدث خطأ في استرداد التوكن
-                        Log.d("Token", "Failed to retrieve token: " + task.getException().getMessage());
-                    }
-                });
-
-
+//        FirebaseMessaging.getInstance().getToken()
+//                .addOnCompleteListener(task -> {
+//                    if (task.isSuccessful()) {
+//                        // تم استرداد التوكن بنجاح
+//                        String token = task.getResult();
+//                        // قم بتخزين التوكن في مكان مناسب (مثل قاعدة البيانات أو ملف التفضيلات)
+//                        // يتم استخدامه لإرسال الإشعارات للعمال
+//                        editor.putString("token",token);
+//                        editor.apply();
+//
+//                        Log.d("tokenOwner", token);
+//                    } else {
+//                        // حدث خطأ في استرداد التوكن
+//                        Log.d("Token", "Failed to retrieve token: " + task.getException().getMessage());
+//                    }
+//                });
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -142,9 +133,17 @@ public class PostActivity2 extends AppCompatActivity {
 
 //        Toast.makeText(this, Objects.requireNonNull(postId), Toast.LENGTH_SHORT).show();
 
+        getData();
+
+
+    }
+
+    void getData(){
+
         firestore.collection("posts").document(user.getPhoneNumber()).
                 collection("userPost").document(Objects.requireNonNull(postId)).get()
                 .addOnSuccessListener(documentSnapshot -> {
+
                     if (documentSnapshot.exists()) {
                         jobState = documentSnapshot.getString("jobState");
                         projectState = jobState;
@@ -192,7 +191,7 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.ApBtnFinishJob.setVisibility(View.VISIBLE);
                                 binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
                                 binding.linearLayoutRateWorker.setVisibility(View.GONE);
-                                binding.linearLayoutRateClint.setVisibility(View.GONE);
+//                                binding.linearLayoutRateClint.setVisibility(View.GONE);
 
                                 CollectionReference workerOffersRef = firestore.collection("offers").document(postId).collection("workerOffers");
                                 workerOffersRef.document(Objects.requireNonNull(documentSnapshot.getString("workerId"))).get().addOnCompleteListener(task -> {
@@ -251,7 +250,7 @@ public class PostActivity2 extends AppCompatActivity {
                                             binding.APTvJobData.setVisibility(View.VISIBLE);
                                             binding.APCLInWork.setVisibility(View.VISIBLE);
                                             binding.ApBtnFinishJob.setVisibility(View.GONE);
-                                            binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
+//                                            binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
                                             binding.linearLayoutRateWorker.setVisibility(View.VISIBLE);
                                             //Todo: How get in same time
 //                                                    binding.tvWorkerComment.setText( documentSnapshot.getString( "Comment-worker" ) );
@@ -271,7 +270,7 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.APTvJobData.setVisibility(View.VISIBLE);
                                 binding.APCLInWork.setVisibility(View.VISIBLE);
                                 binding.ApBtnFinishJob.setVisibility(View.GONE);
-                                binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
+//                                binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
                                 binding.linearLayoutRateWorker.setVisibility(View.VISIBLE);
                                 binding.tvWorkerComment.setText(documentSnapshot.getString("Comment-worker"));
                                 double ratingWorker = documentSnapshot.getDouble("Rating-worker");
@@ -325,6 +324,16 @@ public class PostActivity2 extends AppCompatActivity {
                         description = documentSnapshot.getString("description");
                         binding.APTvJobDec.setText(description);
 
+                        firestore.collection("offers").document(Objects.requireNonNull(postId))
+                                .collection("workerOffers")
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        int count = task.getResult().size();
+                                        binding.APbtnComments.setText(count == 0 ? "0" : String.valueOf(count));
+                                    }
+                                });
+
                         List<String> images = (List<String>) documentSnapshot.get("images");
                         if (images == null || images.isEmpty()) {
                             binding.APImageRV.setVisibility(View.GONE);
@@ -350,16 +359,37 @@ public class PostActivity2 extends AppCompatActivity {
 
                         jobLocation = documentSnapshot.getString("jobLocation");
                         binding.APTvJobLoc.setText(jobLocation);
-//TODO GET Timestamp
+
+                        long currentTimeMillis = System.currentTimeMillis();
+                        long storageTimeMillis = documentSnapshot.getLong( "addedTime" );
+                        long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
+
+                        long seconds = timeDifferenceMillis / 1000;
+                        long minutes = seconds / 60;
+                        long hours = minutes / 60;
+
+                        String timeDifference;
+                        if (hours > 0) {
+                            timeDifference ="قبل "+ hours + "  ساعة";
+                        } else if (minutes > 0) {
+                            timeDifference = "قبل "+minutes + "  دقيقة";
+                        } else {
+                            timeDifference = "قبل "+seconds + " ثانية";
+                        }
+
+                        binding.APtvJobShareTime.setText( timeDifference );
+
+                        //TODO GET Timestamp
                         binding.progressBar.setVisibility(View.GONE);
                         binding.SV.setVisibility(View.VISIBLE);
+
+
 
                     } else {
                         Toast.makeText(this, "Prop", Toast.LENGTH_SHORT).show();
                     }
                 })
                 .addOnFailureListener(e -> Log.e("GettingPost", e.getMessage()));
-
 
     }
 
@@ -371,8 +401,8 @@ public class PostActivity2 extends AppCompatActivity {
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
                             workerId = documentSnapshot.getString("workerId");
-                            Log.d("userActivity",user.getPhoneNumber());
-                            Log.d("workerActivity",workerId);
+                            Log.d("userActivity", user.getPhoneNumber());
+                            Log.d("workerActivity", workerId);
                         }
                     }
                 });
@@ -408,7 +438,7 @@ public class PostActivity2 extends AppCompatActivity {
 
             documentReference.update(updates1).addOnSuccessListener(aVoid -> {
                 // Handle the case when the update is successful
-                sendNotification(workerId,comment);
+                sendNotification(workerId, comment);
             }).addOnFailureListener(e -> {
                 // Handle the case when the update fails
             });
@@ -464,7 +494,6 @@ public class PostActivity2 extends AppCompatActivity {
             // Handle the case when the update fails
         });
     }
-
     private void sendNotification(String workerId, String comment) {
         // استعداد بناء الطلب لإرسال الإشعار عبر FCM
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -486,6 +515,8 @@ public class PostActivity2 extends AppCompatActivity {
         JSONObject jsonRequest = new JSONObject();
         try {
 //            jsonRequest.put("to", "/topics/" + workerId);
+
+//            jsonRequest.put("to", token);
             jsonRequest.put("to", workerId);
             Log.d("Topic", workerId);
             jsonRequest.put("data", jsonNotification);
@@ -501,7 +532,7 @@ public class PostActivity2 extends AppCompatActivity {
                 .url("https://fcm.googleapis.com/fcm/send")
                 .post(requestBody)
                 .addHeader("Content-Type", "application/json")
-                .addHeader("Authorization", "Bearer " + service_key)
+                .addHeader("Authorization", "Bearer "+service_key)
                 .build();
 
         client.newCall(request).enqueue(new okhttp3.Callback() {
@@ -518,37 +549,75 @@ public class PostActivity2 extends AppCompatActivity {
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-
-                    // استجابة ناجحة من خادم FCM
-                    String responseData = response.body().string();
-                    Log.d("responseActivity", responseData);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(PostActivity2.this, "تم إرسال الإشعار بنجاح", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                // استجابة ناجحة من خادم FCM
+                String responseData = response.body().string();
+                Log.d("responseActivity", responseData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(PostActivity2.this, "تم إرسال الإشعار بنجاح", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
         });
     }
 
 
-    private void subscribeToTopic() {
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NAME).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    // تم الاشتراك بنجاح
-                    Log.d("Subscribe", "Subscribed to topic: " + TOPIC_NAME);
-                } else {
-                    // حدث خطأ أثناء الاشتراك
-                    Log.d("Subscribe", "Failed to subscribe to topic: " + TOPIC_NAME);
-                }
-            }
-        });
+//    private void sendNotification(String workerId, String comment) {
+//        // استعادة التوكن المخزن لصاحب العمل
+//        String ownerToken = sharedPreferences.getString("worker_token", "");
+//
+//        Toast.makeText(this, "ownerToken: " + ownerToken, Toast.LENGTH_SHORT).show();
+//
+//        JSONObject notificationData = new JSONObject();
+//        try {
+//            notificationData.put("comment", comment);
+//            String c = notificationData.getString("comment");
+//            Log.d("notificationData", c);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        JSONObject jsonRequest = new JSONObject();
+//        try {
+//            jsonRequest.put("to", workerId);
+//            jsonRequest.put("data", notificationData);
+//            Log.d("jsonRequest", jsonRequest.toString());
+//            String j = jsonRequest.getString("data");
+//            Log.d("jsonRequestData", j);
+//        } catch (JSONException e) {
+//            e.printStackTrace();
+//        }
+//
+//        RequestQueue requestQueue = Volley.newRequestQueue(getApplicationContext());
+//        String url = "https://fcm.googleapis.com/fcm/send";
+//        JsonObjectRequest request = new JsonObjectRequest(Request.Method.POST, url, jsonRequest,
+//                response -> {
+//                    // تم إرسال الإشعار بنجاح
+//                    Log.d("Notification", "تم إرسال الإشعار بنجاح");
+//                },
+//                error -> {
+//                    // حدث خطأ أثناء إرسال الإشعار
+//                    Log.d("Notification", "حدث خطأ أثناء إرسال الإشعار: " + error.getMessage());
+//                }) {
+//            @Override
+//            public Map<String, String> getHeaders() throws AuthFailureError {
+//                Map<String, String> headers = new HashMap<>();
+//                headers.put("Authorization", "Bearer AAAAMN-4IYw:APA91bEuml1NnrGH04Jm4fNA3x7TSVs8yDYdj_TWecffStxyyBFeG0cld069_Fj55o80eM3mCygYonNe5vAwyxVIjFh4P2DhL0ZJ9fwM7-EUxQzd5LaPWtfB1ch01_4MHx1m0utma6_z"); // استبدل YOUR_SERVER_KEY بمفتاح الخادم الخاص بك
+//                headers.put("Content-Type", "application/json");
+//                return headers;
+//            }
+//        };
+//
+//        requestQueue.add(request);
+//
+//    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
     }
-
-
-
 }

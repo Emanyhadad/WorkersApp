@@ -32,6 +32,8 @@ public class OwnerInProgressFragment extends Fragment {
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
     List <String> categoryList;
+    long addedTime;
+
     List< Post > postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
     public OwnerInProgressFragment() {
@@ -85,8 +87,9 @@ public class OwnerInProgressFragment extends Fragment {
                                             String expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
                                             String projectedBudget = documentSnapshot.getString("projectedBudget");
                                             String jobLocation = documentSnapshot.getString("jobLocation");
+                                                addedTime = documentSnapshot.getLong("addedTime");
 
-                                            Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState);
+                                            Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
                                             post.setPostId(document.getId());
                                             post.setOwnerId(firebaseUser.getPhoneNumber());
                                             postList.add(post);

@@ -1,8 +1,8 @@
 package com.example.workersapp.Fragments;
 
 import static android.app.Activity.RESULT_OK;
-import static android.content.Context.MODE_PRIVATE;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -20,21 +20,19 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Activities.EditWorkerProfileActivity;
 import com.example.workersapp.Activities.NewModelActivity;
-import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
-import com.example.workersapp.Adapters.ReviewsAdapter;
 import com.example.workersapp.R;
-import com.example.workersapp.Utilities.WorkerReviews;
 import com.example.workersapp.databinding.FragmentWorkerProfileBinding;
-import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
@@ -54,8 +52,8 @@ public class WorkerProfileFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    SharedPreferences sp;
-    SharedPreferences.Editor editor;
+    public static SharedPreferences sharedPreferences;
+
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -67,6 +65,10 @@ public class WorkerProfileFragment extends Fragment {
     List< String > inWorkList;
     private boolean jobCount;
     private boolean userData;
+    String workerToken;
+
+    private static final String TOPIC_NAME = "weather";
+
 
     public WorkerProfileFragment() {
         // Required empty public constructor
@@ -100,16 +102,30 @@ public class WorkerProfileFragment extends Fragment {
         imagesList = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
-        sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
-        editor = sp.edit();
+        sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
         DoneList = new ArrayList <>(  );
         inWorkList = new ArrayList <>(  );
 
         getData();
+        subscribeToTopic();
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        // تم استرداد التوكن بنجاح
+                        workerToken = task.getResult();
+                        // قم بتخزين التوكن في مكان مناسب (مثل قاعدة البيانات أو ملف التفضيلات)
+                        // يتم استخدامه لتلقي الإشعارات
+                        editor.putString("worker_token", workerToken);
+                        editor.apply();
 
-        String token = sp.getString("token", "");
-
-        Log.d("tokenWorker",token);
+                        Toast.makeText(getContext(), "workerToken: "+workerToken, Toast.LENGTH_SHORT).show();
+                        Log.d("WorkerToken", workerToken);
+                    } else {
+                        // حدث خطأ في استرداد التوكن
+                        Log.d("WorkerToken", "Failed to retrieve token: " + task.getException().getMessage());
+                    }
+                });
 
         tabs.add("آراء العملاء");
         tabs.add("نماذج الأعمال");
@@ -152,6 +168,9 @@ public class WorkerProfileFragment extends Fragment {
 
     private void getData() {
         List decoumtId = new ArrayList(  );
+
+        binding.ProgressBar.setVisibility(View.VISIBLE);
+        binding.ScrollView.setVisibility(View.GONE);
         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber())).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
@@ -159,6 +178,12 @@ public class WorkerProfileFragment extends Fragment {
                     if (!isAdded()){
                         return;
                     }
+
+
+                    binding.ProgressBar.setVisibility( View.GONE );
+                    binding.ScrollView.setVisibility(View.VISIBLE);
+
+
                     String fullName = documentSnapshot.getString("fullName");
                     String nickName = documentSnapshot.getString("nickName");
                     String work = documentSnapshot.getString("work");
@@ -171,7 +196,10 @@ public class WorkerProfileFragment extends Fragment {
                     binding.pWorkerCv.setText(cv);
                     binding.pWorkerLocation.setText(city);
                     binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-                    Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
+
+                    if (getContext() != null) {
+                        Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
+                    }
 
                     long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
                     // حولنا long -> date
@@ -180,7 +208,6 @@ public class WorkerProfileFragment extends Fragment {
                     String formattedDate = dateFormat.format(date);
                     binding.pWorkerJoinDate.setText(formattedDate);
                     userData = true;
-
                 }
             }
         }).addOnFailureListener( e -> Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show() );
@@ -219,15 +246,26 @@ public class WorkerProfileFragment extends Fragment {
                         })
                         .addOnFailureListener(runnable -> { }); } });
     }
+    private void subscribeToTopic() {
+        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NAME).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()) {
+                    // تم الاشتراك بنجاح
+                    Log.d("Subscribe", "Subscribed to topic: " + TOPIC_NAME);
+                } else {
+                    // حدث خطأ أثناء الاشتراك
+                    Log.d("Subscribe", "Failed to subscribe to topic: " + TOPIC_NAME);
+                }
+            }
+        });
+    }
+
 
     @Override
     public void onResume() {
         super.onResume();
         getData();
     }
-
-
-
-
 
 }

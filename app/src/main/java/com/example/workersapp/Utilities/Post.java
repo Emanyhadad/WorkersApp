@@ -14,10 +14,11 @@ public class Post {
     String workerId;
     String postId;
     String OwnerId;
+    long addedTime;
     private boolean isFavorite;
 
     public Post(String title, String description, List<String> images, List<String> categoriesList,
-                String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState) {
+                String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState,long addedTime) {
         this.title = title;
         this.description = description;
         this.images = images;
@@ -26,6 +27,15 @@ public class Post {
         this.projectedBudget = projectedBudget;
         this.jobLocation = jobLocation;
         this.jobState = jobState;
+        this.addedTime=addedTime;
+    }
+
+    public long getAddedTime( ) {
+        return addedTime;
+    }
+
+    public void setAddedTime( long addedTime ) {
+        this.addedTime = addedTime;
     }
 
     public Post() {

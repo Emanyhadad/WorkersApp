@@ -1,9 +1,5 @@
 package com.example.workersapp.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -17,6 +13,10 @@ import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
@@ -35,39 +35,40 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-@SuppressLint( "Registered" )
+@SuppressLint("Registered")
 public class PostActivity_forWorker extends AppCompatActivity {
-    String offerDes,offerPrice,offerDuration;
+    String offerDes, offerPrice, offerDuration;
     ShowCategoryAdapter showCategoryAdapter;
     ShowImagesAdapter showImagesAdapter;
-    String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation,projectState;
+    String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation, projectState;
 
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    String clintID,postId,path,duration,budget;
+    String clintID, postId, path, duration, budget;
     int formsCount;
     private Dialog evaluationDialog;
     float rating;
     String comment;
     DocumentReference documentReference;
 
+    ActivityPostForWorkerBinding binding;
 
-ActivityPostForWorkerBinding binding;
     @Override
-    protected void onCreate( @NonNull Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        binding = ActivityPostForWorkerBinding.inflate( getLayoutInflater() );
-        setContentView( binding.getRoot() );
-        binding.progressBar.setVisibility( View.VISIBLE );
+    protected void onCreate(@NonNull Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityPostForWorkerBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+        binding.progressBar.setVisibility(View.VISIBLE);
+
 
         //For duration
         //Todo put in Util
         String[] durationList = {"يوم", "يومين", "3 ايام", "4 ايام", "5 ايام", "اسبوع", "اسبوعين", "3 اسابيع", "شهر", "شهرين"};
-        ArrayAdapter <String> durationAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.list_item, durationList);
+        ArrayAdapter<String> durationAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.list_item, durationList);
         AutoCompleteTextView autoCompleteDuration = (AutoCompleteTextView) binding.PAsplOfferDuration.getEditText();
         autoCompleteDuration.setAdapter(durationAdapter);
-        autoCompleteDuration.setOnItemClickListener( ( adapterView , view , i , l ) -> duration = adapterView.getItemAtPosition(i).toString() );
+        autoCompleteDuration.setOnItemClickListener((adapterView, view, i, l) -> duration = adapterView.getItemAtPosition(i).toString());
 
         //For budgetList
         //Todo put in Util
@@ -75,9 +76,7 @@ ActivityPostForWorkerBinding binding;
         ArrayAdapter<String> budgetAdapter = new ArrayAdapter<>(getBaseContext(), R.layout.list_item, budgetList);
         AutoCompleteTextView autoCompleteBudget = (AutoCompleteTextView) binding.PASpLProjectedBudget.getEditText();
         autoCompleteBudget.setAdapter(budgetAdapter);
-        autoCompleteBudget.setOnItemClickListener( ( adapterView , view , i , l ) -> budget = adapterView.getItemAtPosition(i).toString() );
-
-
+        autoCompleteBudget.setOnItemClickListener((adapterView, view, i, l) -> budget = adapterView.getItemAtPosition(i).toString());
 
 
         firestore = FirebaseFirestore.getInstance();
@@ -85,54 +84,66 @@ ActivityPostForWorkerBinding binding;
         user = firebaseAuth.getCurrentUser();
 
 
-binding.inculd.editIcon.setVisibility( View.GONE );
-binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
+        binding.inculd.editIcon.setVisibility( View.GONE );
+        binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
+
         //GetPost
         clintID = getIntent().getStringExtra("OwnerId").trim();
         postId = getIntent().getStringExtra("PostId").trim();
+
 
         //Get userForms Count
         firestore.collection("forms").document(user.getPhoneNumber()).collection("userForm").get()
                 .addOnSuccessListener(runnable -> formsCount = runnable.size());
 
         path = "posts/" + clintID + "/userPost/" + postId;
-        String offerId = user.getPhoneNumber()+">"+postId;
+        String offerId = user.getPhoneNumber() + ">" + postId;
 
         //Get Post
         getPostData();
 
         //store Offer in Worker
-        firestore.collection( "offers" ).document( postId ).collection( "workerOffers" ).document(user.getPhoneNumber()  ).get().addOnSuccessListener(
+        firestore.collection("offers").document(postId).collection("workerOffers").document(user.getPhoneNumber()).get().addOnSuccessListener(
                 documentSnapshot -> {
-                    if ( documentSnapshot.exists() ){
+                    if (documentSnapshot.exists()) {
                         binding.PB2.setVisibility(View.GONE);
                         Toast.makeText(getApplicationContext(), "You have already applied for a job", Toast.LENGTH_SHORT).show();
                         binding.tvWriteOffer.setText("العرض الخاص بك");
 
                         //Get Worker Data
                         GetUserData();
-                        binding.tvSendOfferDuration.setText( documentSnapshot.getString( "offerDuration" ) );
-                        binding.tvSendOfferDec.setText( documentSnapshot.getString( "offerDescription" ) );
-                        binding.tvSendOfferPrice.setText( documentSnapshot.getString( "offerBudget" ) );
+                        binding.tvSendOfferDuration.setText(documentSnapshot.getString("offerDuration"));
+                        binding.tvSendOfferDec.setText(documentSnapshot.getString("offerDescription"));
+                        binding.tvSendOfferPrice.setText(documentSnapshot.getString("offerBudget"));
 
-                    }                    else {
+                        firestore.collection("forms").document(user.getPhoneNumber()).collection("userForm").get()
+                                .addOnSuccessListener(queryDocumentSnapshots -> {
+                                    int numDocs = queryDocumentSnapshots.size();
+                                    binding.tvCountWorks.setText(String.valueOf(numDocs));
+                                })
+                                .addOnFailureListener(e -> {
+                                    // handle the case when the query fails
+                                });
+
+                    } else {
                         binding.LLWriteOffer.setVisibility(View.VISIBLE);
 
                         binding.btnSendOffer.setOnClickListener(view -> {
                             offerDes = binding.etOfferDes.getText().toString().trim();
                             offerPrice = binding.PASpOfferPrice.getText().toString().trim();
                             offerDuration = binding.PAspOfferDuration.getText().toString().trim();
-                            Offer offer = new Offer(offerPrice, offerDuration, offerDes, user.getPhoneNumber(),clintID,postId);
+                            Offer offer = new Offer(offerPrice, offerDuration, offerDes, user.getPhoneNumber(), clintID, postId);
 
                             new AlertDialog.Builder(PostActivity_forWorker.this)
                                     .setMessage("هل أنت متأكد أنك تريد تقديم عرضك؟")
-                                    .setNegativeButton("لا، تعديل", (dialogInterface, i) -> {})
+                                    .setNegativeButton("لا، تعديل", (dialogInterface, i) -> {
+                                    })
                                     .setPositiveButton("نعم، أرسل", (dialogInterface, i) -> {
                                         binding.PB2.setVisibility(View.VISIBLE);
 
 
-                                        firestore.collection( "offers" ).document( postId )
-                                                .collection( "workerOffers" ).document(user.getPhoneNumber()  ).set( offer );
+                                        firestore.collection("offers").document(postId)
+                                                .collection("workerOffers").document(user.getPhoneNumber()).set(offer);
 
                                         binding.LLWriteOffer.setVisibility(View.GONE);
                                         binding.tvWriteOffer.setText("العرض الخاص بك");
@@ -146,18 +157,20 @@ binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
                                     })
                                     .create()
                                     .show();
-                        } );
+                        });
                     }
 
                 }
-        ).addOnFailureListener( e -> {} );}
+        ).addOnFailureListener(e -> {
+        });
+    }
 
-        void GetUserData(){
+    void GetUserData() {
         // Get user details and set them in the view
         firestore.collection("users").document(Objects.requireNonNull(user.getPhoneNumber()))
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
-                    binding.PB2.setVisibility( View.GONE );
+                    binding.PB2.setVisibility(View.GONE);
                     binding.LLSendedOffer.setVisibility(View.VISIBLE);
 
                     if (documentSnapshot1.exists()) {
@@ -171,10 +184,12 @@ binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
                                 .into(binding.OfferImgWorker);
                     }
                 })
-                .addOnFailureListener(e -> {});
+                .addOnFailureListener(e -> {
+                });
 
     }
-    void getPostData(){
+
+    void getPostData() {
         //Get Post
         firestore.document(path).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -202,9 +217,9 @@ binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
                         //TODO GET Timestamp
 
                         List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
-                        showCategoryAdapter = new ShowCategoryAdapter( ( ArrayList < String > ) categoriesList );
-                        binding.CategoryRecycle.setAdapter( showCategoryAdapter );
-                        binding.CategoryRecycle.setLayoutManager( new LinearLayoutManager(getBaseContext(),
+                        showCategoryAdapter = new ShowCategoryAdapter((ArrayList<String>) categoriesList);
+                        binding.CategoryRecycle.setAdapter(showCategoryAdapter);
+                        binding.CategoryRecycle.setLayoutManager(new LinearLayoutManager(getBaseContext(),
                                 LinearLayoutManager.HORIZONTAL, false));
                         List<String> images = (List<String>) documentSnapshot.get("images");
 
@@ -215,25 +230,27 @@ binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
                             binding.ImageRecycle.setAdapter(showImagesAdapter);
                             binding.ImageRecycle.setLayoutManager(new LinearLayoutManager(this,
                                     LinearLayoutManager.HORIZONTAL, false));
-                        }}
+                        }
+                    }
                 })
-                .addOnFailureListener(e -> Log.e("getPot", "Error getting documents: ", e) );
+                .addOnFailureListener(e -> Log.e("getPot", "Error getting documents: ", e));
 
     }
-    void Rating(){
-        documentReference = firestore.collection("posts").document( clintID).
+
+    void Rating() {
+        documentReference = firestore.collection("posts").document(clintID).
                 collection("userPost").document(postId);
         RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
         EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
         Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
-        TextView title = evaluationDialog.findViewById( R.id.tv_title );
-        title.setText( "تقيم العميل" );
+        TextView title = evaluationDialog.findViewById(R.id.tv_title);
+        title.setText("تقيم العميل");
 
         sendButton.setOnClickListener(v -> {
             rating = ratingBar.getRating();
             comment = commentEditText.getText().toString();
 
-            Map <String, Object> updates1 = new HashMap <>();
+            Map<String, Object> updates1 = new HashMap<>();
             updates1.put("Comment-clint", comment);
             updates1.put("Rating-clint", (int) rating);
             updates1.put("jobState", "done");

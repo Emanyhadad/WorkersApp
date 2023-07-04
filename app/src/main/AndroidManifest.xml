@@ -9,13 +9,11 @@
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
 
 
     <application
@@ -28,7 +26,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.WorkersApp"
         tools:targetApi="31">
-
+        <activity
+            android:name=".Activities.GuestActivity"
+            android:exported="false" />
         <!-- إضافة خاصية الخدمة -->
         <service
             android:name=".Notification.MessageClass"
@@ -37,7 +37,6 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
 
         <activity
             android:name=".Activities.SplashActivity"
@@ -50,8 +49,7 @@
         </activity>
         <activity
             android:name=".Activities.OnboardingActivity"
-            android:exported="false"/>
-
+            android:exported="false" />
         <activity
             android:name=".Activities.FavouriteActivity"
             android:exported="false" />
@@ -70,7 +68,6 @@
         <activity
             android:name=".Activities.SearchActivity"
             android:exported="false" />
-
         <activity
             android:name=".Activities.PostActivity_forWorker"
             android:exported="false" />
@@ -78,7 +75,7 @@
             android:name=".Activities.OffersActivity"
             android:exported="false" />
         <activity
-            android:name=".Activities.PostActivity"
+            android:name=".Activities.PostActivity2"
             android:exported="true">
 
             <!-- <intent-filter> -->
@@ -127,20 +124,11 @@
         <activity
             android:name=".Activities.WorkOwnerProfileActivity"
             android:exported="false" />
-        <activity
-            android:name=".Activities.PostActivity2"
-            android:exported="false" />
+
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="true">
+            android:exported="false"/>
 
-            <!-- <intent-filter> -->
-            <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
-            <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-            <!-- </intent-filter> -->
-        </activity>
         <activity
             android:name=".Activities.RegisterActivity"
             android:exported="false" />
@@ -150,13 +138,10 @@
 
         <meta-data
             android:name="android.app.lib_name"
-            android:value="" />
-
-        <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
+            android:value="" /> <!-- Sample AdMob app ID: ca-app-pub-3940256099942544~3347511713 -->
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
-            android:value="ca-app-pub-4163051235104500~9233438013"/>
-
+            android:value="ca-app-pub-4163051235104500~9233438013" />
     </application>
 
 </manifest>

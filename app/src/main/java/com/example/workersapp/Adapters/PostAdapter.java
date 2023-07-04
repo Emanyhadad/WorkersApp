@@ -60,6 +60,23 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
         holder.PostDescription.setText( postList.get( pos ).getDescription() );
         holder.PostBudget.setText( postList.get( pos ).getProjectedBudget() );
         holder.PostLoc.setText( postList.get( pos ).getJobLocation() );
+        long currentTimeMillis = System.currentTimeMillis();
+        long storageTimeMillis = postList.get( pos ).getAddedTime();
+        long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
+
+        long seconds = timeDifferenceMillis / 1000;
+        long minutes = seconds / 60;
+        long hours = minutes / 60;
+
+        String timeDifference;
+        if (hours > 0) {
+            timeDifference ="قبل "+ hours + "  ساعة";
+        } else if (minutes > 0) {
+            timeDifference = "قبل "+minutes + "  دقيقة";
+        } else {
+            timeDifference = "قبل "+seconds + " ثانية";
+        }
+        holder.PostTime.setText( timeDifference );
         //Todo: Put Post Time her
         holder.CategoryRecycle.setAdapter( new ShowCategoryAdapter( ( ArrayList < String > ) postList.get( pos ).getCategoriesList() ) );
         holder.CategoryRecycle.setLayoutManager( new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
