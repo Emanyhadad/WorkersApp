@@ -175,6 +175,10 @@ public class WorkerProfileFragment extends Fragment {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
+                    if (!isAdded()){
+                        return;
+                    }
+
 
                     binding.ProgressBar.setVisibility( View.GONE );
                     binding.ScrollView.setVisibility(View.VISIBLE);

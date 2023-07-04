@@ -46,7 +46,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     ItemClickListener listener;
     Post currentPost;
     private FavoriteItemClickListener favoriteItemClickListener;
-
+//
     private static final int IS_AD = 0;
     private static final int NOT_Ad = 1;
 
@@ -68,7 +68,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         this.objects.addAll(object);
         notifyDataSetChanged();
     }
-
+//
     public Post_forWorkerAdapter(List<Post> postList, Context context, ItemClickListener listener) {
         this.postList = postList;
         this.context = context;
@@ -114,7 +114,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             firestore = FirebaseFirestore.getInstance();
             sp = context.getSharedPreferences("shared", MODE_PRIVATE);
             editor = sp.edit();
-            currentPost = postList.get(holder.getAdapterPosition());
+            currentPost = (Post) objects.get(holder.getAdapterPosition());
 
             ivh.PostTitle.setText(currentPost.getTitle());
             ivh.PostDescription.setText(currentPost.getDescription());
