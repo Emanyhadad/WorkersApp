@@ -12,7 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -107,7 +107,6 @@ public class PostActivity_forWorker extends AppCompatActivity {
                 documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         binding.PB2.setVisibility(View.GONE);
-                        Toast.makeText(getApplicationContext(), "You have already applied for a job", Toast.LENGTH_SHORT).show();
                         binding.tvWriteOffer.setText("العرض الخاص بك");
 
                         //Get Worker Data

@@ -229,14 +229,13 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                                     if (task.isSuccessful()) {
                                         String uriString = task.getResult().toString();
                                         if (!uriString.isEmpty()) {
-                                            Toast.makeText(getBaseContext(), "im not null", Toast.LENGTH_SHORT).show();
                                             uriFromStorage.add(uriString);
                                             if (finalI == uriList.size() - 1) {
                                                 createModel(description, uid, time, date);
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Todo Add LLField
                                     }
                                 }
                             });
@@ -270,7 +269,7 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
                     public void onComplete(@NonNull Task<Void> task) {
                         String documentId = documentName;
                         if (!task.isSuccessful()) {
-                            Toast.makeText(getBaseContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         } else {
                             binding.progressBar.setVisibility(View.VISIBLE);
                             setResult(RESULT_OK);

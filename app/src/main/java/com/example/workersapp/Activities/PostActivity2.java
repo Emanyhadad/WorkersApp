@@ -131,7 +131,6 @@ public class PostActivity2 extends AppCompatActivity {
         documentReference = firestore.collection("posts").document(Objects.requireNonNull(user.getPhoneNumber())).
                 collection("userPost").document(postId);
 
-//        Toast.makeText(this, Objects.requireNonNull(postId), Toast.LENGTH_SHORT).show();
 
         getData();
 
@@ -386,10 +385,13 @@ public class PostActivity2 extends AppCompatActivity {
 
 
                     } else {
-                        Toast.makeText(this, "Prop", Toast.LENGTH_SHORT).show();
+                        //Todo Add LLField
+
                     }
                 })
-                .addOnFailureListener(e -> Log.e("GettingPost", e.getMessage()));
+                .addOnFailureListener(e -> {
+                    //Todo Add LLField
+                });
 
     }
 
@@ -505,7 +507,6 @@ public class PostActivity2 extends AppCompatActivity {
         try {
             jsonNotification.put("comment", comment);
             String d = jsonNotification.getString("comment");
-            Toast.makeText(this, "jsonNotification "+d, Toast.LENGTH_SHORT).show();
             Log.d("jsonNotification",d);
         } catch (JSONException e) {
             e.printStackTrace();

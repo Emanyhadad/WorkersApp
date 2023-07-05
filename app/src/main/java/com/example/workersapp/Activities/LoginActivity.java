@@ -242,7 +242,9 @@ public class LoginActivity extends AppCompatActivity {
                     } else {
                         Toast.makeText( LoginActivity.this , "Verification Code Invalid" , Toast.LENGTH_SHORT ).show( );
                     }
-                } ).addOnFailureListener( e -> Toast.makeText( LoginActivity.this , e.getMessage( ) , Toast.LENGTH_SHORT ).show( ) );
+                } ).addOnFailureListener( e ->          {}
+                        //Todo Add LLField
+                );
             }
         } );
         dialogPhoneNum.show( );

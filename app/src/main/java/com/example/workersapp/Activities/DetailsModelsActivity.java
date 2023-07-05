@@ -1,9 +1,12 @@
 package com.example.workersapp.Activities;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.widget.Toast;
+import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -63,29 +66,36 @@ public class DetailsModelsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         doc = intent.getStringExtra("documentId");
 
-        firebaseFirestore.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+        firebaseFirestore.collection("users")
+                .document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            String fullName = documentSnapshot.getString("fullName");
-                            String image = documentSnapshot.getString("image");
-                            binding.businessUserName.setText(fullName);
-                            Glide.with(getBaseContext())
-                                    .load(image)
-                                    .circleCrop()
-                                    .error(R.drawable.worker)
-                                    .into(binding.businessImgUser);
-                        }
+                .addOnSuccessListener( documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String fullName = documentSnapshot.getString("fullName");
+                        String image = documentSnapshot.getString("image");
+                        binding.businessUserName.setText(fullName);
+                        Glide.with(getBaseContext())
+                                .load(image)
+                                .circleCrop()
+                                .error(R.drawable.worker)
+                                .into(binding.businessImgUser);
+                        binding.LLNoWifi.setVisibility( View.GONE );
+                        binding.PB.setVisibility( View.GONE );
+                        binding.LLData.setVisibility( View.VISIBLE );
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(DetailsModelsActivity.this, "Error retrieving data", Toast.LENGTH_SHORT).show();
+                } )
+                .addOnFailureListener( e -> {
+                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
+                    boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+
+                    if (!isConnected) {
+                        binding.LLNoWifi.setVisibility(View.VISIBLE);
+                        binding.PB.setVisibility(View.GONE);
+                        binding.LLData.setVisibility(View.GONE);
                     }
-                });
+
+                } );
 
         ActivityResultLauncher<Intent> arl1 = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -99,6 +109,7 @@ public class DetailsModelsActivity extends AppCompatActivity {
             intent1.putExtra("document",doc);
             arl1.launch(intent1);
         } );
+        binding.inculd.editIcon.setVisibility( View.VISIBLE );
        binding.inculd.tvPageTitle.setText( "نماذج الأعمال" );
         
 
@@ -116,42 +127,40 @@ public class DetailsModelsActivity extends AppCompatActivity {
                 .collection("userForm")
                 .document(doc)
                 .get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        ArrayList<SlideModel> slideModels = new ArrayList<>();
-                        List<String> images = (List<String>) documentSnapshot.get("images");
-                        for (String imageUrl : images) {
-                            imagesList.add(imageUrl);
-                            slideModels.add(new SlideModel(imageUrl, null));
-                        }
-                        binding.imageSlider.setImageList(slideModels, ScaleTypes.CENTER_CROP);
-                        binding.businessNumImg.setText((1) + "/" + (imagesList.size()));
-
-                        binding.imageSlider.setItemChangeListener(new ItemChangeListener() {
-                            @Override
-                            public void onItemChanged(int i) {
-                                binding.businessNumImg.setText((i + 1) + "/" + (imagesList.size()));
-                            }
-                        });
-
-                        List<String> categories = (List<String>) documentSnapshot.get("categoriesList");
-
-                        for (String categoryList:categories){
-                            categoryArrayList.add(categoryList);
-                            categoryAdapter = new ShowCategoryAdapter(categoryArrayList);
-                            binding.businessRv.setAdapter(categoryAdapter);
-                            binding.businessRv.setLayoutManager(new LinearLayoutManager(getBaseContext(),
-                                    RecyclerView.HORIZONTAL, false));
-                        }
-
-                        String description = (String) documentSnapshot.get("description");
-                        binding.businessDetails.setText(description);
-
-                        String date = (String) documentSnapshot.get("date");
-                        binding.businessDate.setText(date);
+                .addOnSuccessListener( documentSnapshot -> {
+                    ArrayList<SlideModel> slideModels = new ArrayList<>();
+                    List<String> images = (List<String>) documentSnapshot.get("images");
+                    for (String imageUrl : images) {
+                        imagesList.add(imageUrl);
+                        slideModels.add(new SlideModel(imageUrl, null));
                     }
-                });
+                    binding.imageSlider.setImageList(slideModels, ScaleTypes.CENTER_CROP);
+                    binding.businessNumImg.setText((1) + "/" + (imagesList.size()));
+
+                    binding.imageSlider.setItemChangeListener( i -> binding.businessNumImg.setText((i + 1) + "/" + (imagesList.size())) );
+
+                    List<String> categories = (List<String>) documentSnapshot.get("categoriesList");
+
+                    for (String categoryList:categories){
+                        categoryArrayList.add(categoryList);
+                        categoryAdapter = new ShowCategoryAdapter(categoryArrayList);
+                        binding.businessRv.setAdapter(categoryAdapter);
+                        binding.businessRv.setLayoutManager(new LinearLayoutManager(getBaseContext(),
+                                RecyclerView.HORIZONTAL, false));
+                    }
+
+                    String description = (String) documentSnapshot.get("description");
+                    binding.businessDetails.setText(description);
+
+                    String date = (String) documentSnapshot.get("date");
+                    binding.businessDate.setText(date);
+
+                    binding.LLNoWifi.setVisibility( View.GONE );
+                    binding.PB.setVisibility( View.GONE );
+                    binding.LLData.setVisibility( View.VISIBLE );
+                } ).addOnFailureListener( runnable -> {binding.LLNoWifi.setVisibility( View.VISIBLE );
+                    binding.PB.setVisibility( View.GONE );
+                    binding.LLData.setVisibility( View.GONE );} );
 
     }
 }

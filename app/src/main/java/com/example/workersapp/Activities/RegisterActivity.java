@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.widget.DatePicker;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -109,7 +108,8 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
 
                  db.collection( "users" ).document( Objects.requireNonNull
                          ( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener(
-                                 unused -> Toast.makeText( RegisterActivity.this , "success phone" , Toast.LENGTH_SHORT ).show( ) );
+                                 unused -> {}
+                 );
                  Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
                  intent.putExtra( "accountType" , accountType );
                  intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
