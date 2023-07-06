@@ -54,7 +54,6 @@ public class WorkerSubmittedJobFragment extends Fragment {
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          binding = FragmentBlank3Binding.inflate(inflater, container, false);
-         getData();
         return binding.getRoot();
     }
 void getData(){
@@ -87,6 +86,8 @@ void getData(){
                             });
 
                         }
+                        binding.LLEmptyWorker.setVisibility( View.GONE );
+
                         for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
                             firebaseFirestore.collection("offers").document(postDocumentSnapshot.getId())
                                     .collection("workerOffers")

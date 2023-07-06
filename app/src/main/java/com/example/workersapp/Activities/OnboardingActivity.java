@@ -1,15 +1,14 @@
 package com.example.workersapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.workersapp.Adapters.OnboardingPageAdapter;
 import com.example.workersapp.R;
@@ -31,7 +30,7 @@ public class OnboardingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
-        sp = getSharedPreferences("shared", MODE_PRIVATE);
+        sp = getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
         editor=sp.edit();
 
         viewPager = findViewById(R.id.viewPager);

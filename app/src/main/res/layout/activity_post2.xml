@@ -7,9 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/back_activity"
     android:layoutDirection="rtl"
-    tools:context=".Activities.PostActivity2"
-    >
-
+    tools:context=".Activities.PostActivity2">
 
     <ProgressBar
         android:id="@+id/progressBar"

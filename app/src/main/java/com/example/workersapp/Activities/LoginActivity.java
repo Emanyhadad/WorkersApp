@@ -70,7 +70,7 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate( getLayoutInflater( ) );
         setContentView( binding.getRoot( ) );
 
-        sp = getSharedPreferences( "Login" , MODE_PRIVATE );
+        sp = getSharedPreferences( "MyPreferences" , MODE_PRIVATE );
         editor = sp.edit( );
 
         auth = FirebaseAuth.getInstance( );
@@ -267,8 +267,8 @@ public class LoginActivity extends AppCompatActivity {
         }
 
 
-         View workerLayout = dialogAccountType.findViewById(R.id.workerLayout);
-         View workOwnerLayout = dialogAccountType.findViewById(R.id.workOwnerLayout);
+        View workerLayout = dialogAccountType.findViewById(R.id.workerLayout);
+        View workOwnerLayout = dialogAccountType.findViewById(R.id.workOwnerLayout);
 
 
         Window window = dialogAccountType.getWindow( );

@@ -25,13 +25,6 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <ImageView
-                    android:id="@+id/imageView4"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/back_icon" />
-
                 <TextView
                     android:id="@+id/textView"
                     android:layout_width="wrap_content"
@@ -42,6 +35,13 @@
                     android:text="إضافة وظيفة جديدة"
                     android:textColor="@color/blue_1"
                     android:textSize="@dimen/sdp_textSize_16" />
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/back_icon" />
             </LinearLayout>
 
             <LinearLayout

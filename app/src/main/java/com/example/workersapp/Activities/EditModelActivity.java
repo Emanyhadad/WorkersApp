@@ -178,7 +178,7 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                                         uriFromStorage.add(uriString);
                                         if (finalI == uriList.size() - 1) {
                                             updateModel();
-
+                                            startActivity(new Intent(getBaseContext(),EditModelActivity.class));
                                         }
                                     }
                                 });

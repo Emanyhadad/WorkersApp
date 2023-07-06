@@ -7,6 +7,7 @@ import android.widget.ArrayAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityCvBinding;
 
 import com.google.android.gms.tasks.Task;
@@ -38,10 +39,11 @@ public class CvActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
         list = new ArrayList<>();
 
-        insertData();
+        binding.inculd.tvPageTitle.setText(getString( R.string.ProfileToolBar ));
+
+        fetchData();
         binding.CvNext.setOnClickListener( view -> {
             String work = binding.CvWork.getText().toString();
             String cv = binding.Cv.getText().toString();
@@ -50,10 +52,11 @@ public class CvActivity extends AppCompatActivity {
                 Map<String, Object> data = new HashMap<>();
                 data.put("work", work);
                 data.put("cv", cv);
-//f
+
                 Task < Void > voidTask = db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
                         .update( data )
-                        .addOnSuccessListener( unused ->{});
+                        .addOnSuccessListener(unused -> {
+                        });
                 Intent intent = new Intent(getBaseContext(),WorkerActivities.class);
                 startActivity(intent);
                 finish();
@@ -61,11 +64,10 @@ public class CvActivity extends AppCompatActivity {
                 binding.CvWork.setError("يرجى تعبئة هذا الحقل");
             }
 
-
         } );
     }
 
-    public void insertData() {
+    public void fetchData() {
         db.collection("category").document("category")
                 .get()
                 .addOnCompleteListener( task -> {

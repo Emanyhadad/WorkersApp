@@ -78,7 +78,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fetchData();
 
-        // Initialize FusedLocationProviderClient
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -152,7 +151,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             finish();
                         } else if (accountType.equals("work owner")) {
                             startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
-//                            finish();
+                            finish();
                         }
                     } else if (title.isEmpty()) {
                         sheet.setError("يرجى تعبئة هذا الحقل");
@@ -172,74 +171,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         dialog.show();
     }
-
-
-//    private void showDialog() {
-//        final Dialog dialog = new Dialog(this);
-//        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        dialog.setContentView(R.layout.bottom_sheet_city);
-//        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
-//
-//        EditText sheet = dialog.findViewById(R.id.sheetTitle);
-//        Button next = dialog.findViewById(R.id.sheetBtnNext);
-//        mySpinner = dialog.findViewById(R.id.sheetCity);
-//
-//        dialog.show();
-//        dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-//        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-//        dialog.getWindow().setGravity(Gravity.BOTTOM);
-//
-//        next.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                String title = sheet.getText().toString();
-//                String city = mySpinner.getText().toString();
-//                String accountType = getIntent().getStringExtra("accountType");
-//                Intent intent = getIntent();
-//                String intentSource = intent.getStringExtra("source");
-//
-//                if (intentSource.equals("RegisterActivity")) {
-//                    if (!title.isEmpty() && !city.isEmpty()) {
-//
-//                        Map<String, Object> data = new HashMap<>();
-//                        data.put("city", city);
-//                        data.put("title", title);
-//                        data.put("accountType", accountType);
-//                        Toast.makeText(MapsActivity.this, "accountType: "+accountType, Toast.LENGTH_SHORT).show();
-//
-//                        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-//                                .update(data)
-//                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                                    @Override
-//                                    public void onSuccess(Void unused) {
-//                                        Toast.makeText(MapsActivity.this, "success city and title", Toast.LENGTH_SHORT).show();
-//                                    }
-//                                });
-//                        if (accountType.equals("worker")) {
-//                            startActivity(new Intent(getBaseContext(), CvActivity.class));
-//                            finish();
-//                        } else if (accountType.equals("work owner")) {
-//                            startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
-////                            finish();
-//                        }
-//                    } else if (title.isEmpty()) {
-//                        sheet.setError("يرجى تعبئة هذا الحقل");
-//                    }
-//                } else if (intentSource.equals("NewJobFragment")) {
-//                    if (!title.isEmpty() && !city.isEmpty()) {
-//                        Intent intent1 = new Intent();
-//                        intent1.putExtra("city", city);
-//                        setResult(RESULT_OK, intent1);
-//                        Toast.makeText(MapsActivity.this, "im here ", Toast.LENGTH_SHORT).show();
-//                        finish();
-//                    }
-//                }
-//
-//
-//            }
-//        });
-//    }
 
     @SuppressLint("MissingPermission")
     @Override

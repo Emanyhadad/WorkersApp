@@ -1,16 +1,17 @@
 package com.example.workersapp.Fragments;
 
 import static android.app.Activity.RESULT_OK;
+import static android.content.Context.MODE_PRIVATE;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.PopupMenu;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -19,12 +20,12 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Activities.EditWorkerProfileActivity;
+import com.example.workersapp.Activities.LoginActivity;
 import com.example.workersapp.Activities.NewModelActivity;
 import com.example.workersapp.Adapters.ImageModelFragAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.FragmentWorkerProfileBinding;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -45,9 +46,14 @@ import java.util.Objects;
 public class WorkerProfileFragment extends Fragment {
 
     FragmentWorkerProfileBinding binding;
+    private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    public static SharedPreferences sharedPreferences;
+    public static SharedPreferences sp;
+    public static SharedPreferences.Editor editor;
 
+    public static SharedPreferences sp1;
+    public static SharedPreferences.Editor editor1;
 
     FirebaseFirestore db;
     FirebaseStorage storage;
@@ -55,12 +61,11 @@ public class WorkerProfileFragment extends Fragment {
     FirebaseUser firebaseUser;
     List<String> imagesList;
     ImageModelFragAdapter adapter;
-    List< String > DoneList;
-    List< String > inWorkList;
+    List<String> DoneList;
+    List<String> inWorkList;
     private boolean jobCount;
     private boolean userData;
     String workerToken;
-
     private static final String TOPIC_NAME = "weather";
 
 
@@ -89,10 +94,15 @@ public class WorkerProfileFragment extends Fragment {
         imagesList = new ArrayList<>();
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
-        sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        DoneList = new ArrayList <>(  );
-        inWorkList = new ArrayList <>(  );
+
+        sp = getContext().getSharedPreferences( "MyPreferences" , MODE_PRIVATE );
+        editor = sp.edit( );
+
+        sp1 = getContext().getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
+        editor1 = sp1.edit();
+
+        DoneList = new ArrayList<>();
+        inWorkList = new ArrayList<>();
 
         getData();
         subscribeToTopic();
@@ -113,8 +123,8 @@ public class WorkerProfileFragment extends Fragment {
                     }
                 });
 
-        tabs.add("آراء العملاء");
-        tabs.add("نماذج الأعمال");
+        tabs.add(getString(R.string.TvReviews));
+        tabs.add(getString(R.string.businessToolBar));
 
         fragments.add(WorkerReviewsFragment.newInstance());
         fragments.add(new BusinessModelsFragment());
@@ -122,11 +132,11 @@ public class WorkerProfileFragment extends Fragment {
         adapter = new ImageModelFragAdapter(getActivity(), fragments);
         binding.FragPager.setAdapter(adapter);
 
-        new TabLayoutMediator(binding.FragTab, binding.FragPager, ( tab , position ) -> {
+        new TabLayoutMediator(binding.FragTab, binding.FragPager, (tab, position) -> {
             if (position < tabs.size()) {
                 tab.setText(tabs.get(position));
             }
-        } ).attach();
+        }).attach();
 
         ActivityResultLauncher<Intent> arl = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
             if (result.getResultCode() == RESULT_OK) {
@@ -134,26 +144,66 @@ public class WorkerProfileFragment extends Fragment {
             }
         });
 
-        binding.fab.setOnClickListener( view -> {
+        binding.fab.setOnClickListener(view -> {
             Intent intent = new Intent(getContext(), NewModelActivity.class);
             arl.launch(intent);
-        } );
+        });
 
-        binding.pWorkerImgEdit.setOnClickListener( view -> {
-            Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
-            startActivity(intent);
-        } );
-
-        if ( jobCount && userData ){
-            binding.ProgressBar.setVisibility( View.GONE );
-            binding.ScrollView.setVisibility( View.VISIBLE );
-            binding.fab.setVisibility( View.VISIBLE );
+        if (jobCount && userData) {
+            binding.ProgressBar.setVisibility(View.GONE);
+            binding.ScrollView.setVisibility(View.VISIBLE);
+            binding.fab.setVisibility(View.VISIBLE);
         }
+
+        binding.pWorkerImgMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view);
+            }
+        });
+
+
         return binding.getRoot();
     }
 
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.inflate(R.menu.edit_logout);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu_edit) {
+                    Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    editor.clear();
+                    editor.apply();
+
+                    editor1.clear();
+                    editor1.apply();
+
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                    getActivity().finish();
+                    return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+//
+//
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+//        setHasOptionsMenu(true);
+//        super.onCreate(savedInstanceState);
+//    }
+
     private void getData() {
-        List decoumtId = new ArrayList(  );
+        List decoumtId = new ArrayList();
 
         binding.ProgressBar.setVisibility(View.VISIBLE);
         binding.ScrollView.setVisibility(View.GONE);
@@ -162,22 +212,21 @@ public class WorkerProfileFragment extends Fragment {
                 .get().addOnSuccessListener( documentSnapshot -> {
                     if (documentSnapshot.exists()) {
 
-                        binding.ProgressBar.setVisibility( View.GONE );
-                        binding.ScrollView.setVisibility(View.VISIBLE);
+                    binding.ProgressBar.setVisibility(View.GONE);
+                    binding.ScrollView.setVisibility(View.VISIBLE);
 
-
-                        String fullName = documentSnapshot.getString("fullName");
-                        String nickName = documentSnapshot.getString("nickName");
-                        String work = documentSnapshot.getString("work");
-                        String cv = documentSnapshot.getString("cv");
-                        String city = documentSnapshot.getString("city");
-                        String image = documentSnapshot.getString("image");
-                        binding.pWorkerUserName.setText(fullName);
-                        binding.pWorkerNickName.setText("( " + nickName + " )");
-                        binding.pWorkerJobName.setText(work);
-                        binding.pWorkerCv.setText(cv);
-                        binding.pWorkerLocation.setText(city);
-                        binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+                    String fullName = documentSnapshot.getString("fullName");
+                    String nickName = documentSnapshot.getString("nickName");
+                    String work = documentSnapshot.getString("work");
+                    String cv = documentSnapshot.getString("cv");
+                    String city = documentSnapshot.getString("city");
+                    String image = documentSnapshot.getString("image");
+                    binding.pWorkerUserName.setText(fullName);
+                    binding.pWorkerNickName.setText("( " + nickName + " )");
+                    binding.pWorkerJobName.setText(work);
+                    binding.pWorkerCv.setText(cv);
+                    binding.pWorkerLocation.setText(city);
+                    binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
 
                         if (getContext() != null) {
                             Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
@@ -191,8 +240,7 @@ public class WorkerProfileFragment extends Fragment {
                         binding.pWorkerJoinDate.setText(formattedDate);
                         userData = true;
                     }
-                } ).addOnFailureListener( e ->
-        {
+                } ).addOnFailureListener(e -> {
             //Todo Add LLField
 
         });
@@ -202,7 +250,7 @@ public class WorkerProfileFragment extends Fragment {
                 db.collection("posts").document(documentSnapshot1.getId())
                         .collection("userPost").get()
                         .addOnCompleteListener(task -> {
-                            jobCount=true;
+                            jobCount = true;
                             for (DocumentSnapshot document : task.getResult()) {
                                 String jobState = document.getString("jobState");
                                 String workerId = document.getString("workerId");
@@ -211,7 +259,7 @@ public class WorkerProfileFragment extends Fragment {
                                     Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
                                     String postId = document.getString("postId");
                                     if (postId != null) {
-                                        DoneList.add( postId );
+                                        DoneList.add(postId);
                                     }
                                 }
                                 if (jobState != null && jobState.equals("inWork") && workerId != null && workerId.equals(firebaseUser.getPhoneNumber())) {
@@ -219,18 +267,22 @@ public class WorkerProfileFragment extends Fragment {
                                     Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
                                     String postId = document.getString("postId");
                                     if (postId != null) {
-                                        inWorkList.add( postId );
+                                        inWorkList.add(postId);
                                     }
                                 }
-                                int jobCount=inWorkList.size()+DoneList.size();
-                                binding.pWorkerJobNum.setText( jobCount+"" );
-                                binding.pWorkerEndNum.setText( DoneList.size()+"" );
-                                binding.pWorkerCurrentNum.setText( inWorkList.size()+"" );
+                                int jobCount = inWorkList.size() + DoneList.size();
+                                binding.pWorkerJobNum.setText(jobCount + "");
+                                binding.pWorkerEndNum.setText(DoneList.size() + "");
+                                binding.pWorkerCurrentNum.setText(inWorkList.size() + "");
 
                             }
                         })
-                        .addOnFailureListener(runnable -> { }); } });
+                        .addOnFailureListener(runnable -> {
+                        });
+            }
+        });
     }
+
     private void subscribeToTopic() {
         FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NAME).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
@@ -245,7 +297,6 @@ public class WorkerProfileFragment extends Fragment {
             }
         });
     }
-
 
     @Override
     public void onResume() {

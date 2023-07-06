@@ -10,8 +10,8 @@
     <!-- عشان ما أقدر اكتب >-->
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_46sdp"
-        android:hint="المدينة"
+        android:layout_height="@dimen/_50sdp"
+        android:hint="@string/userCity"
         android:layout_marginTop="@dimen/_34sdp"
         android:layout_marginLeft="@dimen/_23sdp"
         android:layout_marginRight="@dimen/_23sdp"
@@ -19,7 +19,7 @@
         <AutoCompleteTextView
             android:id="@+id/sheetCity"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_39sdp"
+            android:layout_height="@dimen/_40sdp"
             android:textColorHint="@color/gray"
             android:fontFamily="@font/cairo_regular"
             android:textSize="@dimen/_11ssp"
@@ -28,7 +28,7 @@
 
     <com.google.android.material.textfield.TextInputLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/_46sdp"
+        android:layout_height="@dimen/_50sdp"
         android:layout_marginTop="@dimen/_23sdp"
         android:layout_marginLeft="@dimen/_23sdp"
         android:layout_marginRight="@dimen/_23sdp"
@@ -36,8 +36,8 @@
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/sheetTitle"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_39sdp"
-            android:hint="العنوان"
+            android:layout_height="@dimen/_40sdp"
+            android:hint="@string/userTitle"
             android:inputType="textPersonName"
             android:textColorHint="@color/gray"
             android:fontFamily="@font/cairo_regular"
@@ -48,7 +48,7 @@
         android:id="@+id/sheetBtnNext"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_46sdp"
-        android:text="التالي"
+        android:text="@string/userNext"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:background="@drawable/border_button"

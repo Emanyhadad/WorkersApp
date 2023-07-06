@@ -8,6 +8,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -35,9 +36,9 @@ import java.util.Locale;
 import java.util.Map;
 
 public class OffersActivity extends AppCompatActivity {
-ActivityOffersBinding binding;
+    ActivityOffersBinding binding;
     FirebaseFirestore firestore;
-    List< Offer > offerList;
+    List<Offer> offerList;
     private AlertDialog HireDialog;
     AlertDialog.Builder HireDialog_builder;
     View hireDialogView;
@@ -47,35 +48,29 @@ ActivityOffersBinding binding;
     FirebaseUser user;
 
     @Override
-    protected void onCreate( Bundle savedInstanceState ) {
-        super.onCreate( savedInstanceState );
-        binding = ActivityOffersBinding.inflate( getLayoutInflater() );
-        setContentView( binding.getRoot() );
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        binding = ActivityOffersBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
+        binding.inculd.tvPageTitle.setText("العروض:");
+        binding.inculd.editIcon.setVisibility(View.GONE);
+        binding.ProgressBar.setVisibility(View.VISIBLE);
+        offerList = new ArrayList<>();
 
-        binding.inculd.tvPageTitle.setText( "العروض:" );
-        binding.inculd.editIcon.setVisibility( View.GONE );
-        binding.ProgressBar.setVisibility( View.VISIBLE );
-        offerList=new ArrayList <>();
-        //Hire Dialog
-        HireDialog_builder = new AlertDialog.Builder(this);
-        hireDialogView = getLayoutInflater().inflate(R.layout.deluge_hireing, null);
-        HireDialog_builder.setView(hireDialogView);
-        HireDialog = HireDialog_builder.create();
+        binding.inculd.tvPageTitle.setText("العروض");
+        binding.inculd.editIcon.setVisibility(View.GONE);
 
-        binding.inculd.tvPageTitle.setText( "العروض" );
-        binding.inculd.editIcon.setVisibility( View.GONE );
-
-         firestore = FirebaseFirestore.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
 
         //TODO INTENT
         String clientId = user.getPhoneNumber();
-        String postId = getIntent().getStringExtra( "postID" );
+        String postId = getIntent().getStringExtra("postID");
 
-        Log.e( "task1postId",postId );
+        Log.e("task1postId", postId);
 
         CollectionReference workerOffersRef = firestore.collection("offers").document(postId).collection("workerOffers");
 
@@ -93,21 +88,20 @@ ActivityOffersBinding binding;
                     String offerDuration = String.valueOf(documentSnapshot.get("offerDuration"));
                     String offerDescription = String.valueOf(documentSnapshot.get("offerDescription"));
                     String offerState = String.valueOf(documentSnapshot.get("OfferState"));
-                    offer = new Offer(offerBudget, offerDuration, offerDescription, workerID,clientId,postId);
+                    offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clientId, postId);
                     if (!offerState.equals("hide") || offerState.equals(null)) {
                         offerList.add(offer);
-                    }
-                    else {
-                        binding.ProgressBar.setVisibility( View.GONE );
-                        binding.LLEmpty.setVisibility( View.VISIBLE );
+                    } else {
+                        binding.ProgressBar.setVisibility(View.GONE);
+                        binding.LLEmpty.setVisibility(View.VISIBLE);
                     }
                 }
-                if ( task.getResult().getDocuments().isEmpty() ){
-                    binding.ProgressBar.setVisibility( View.GONE );
-                    binding.LLEmpty.setVisibility( View.VISIBLE );
-                } else if ( !offerList.isEmpty() ) {
-                    binding.ProgressBar.setVisibility( View.GONE );
-                    binding.RV.setVisibility( View.VISIBLE );
+                if (task.getResult().getDocuments().isEmpty()) {
+                    binding.ProgressBar.setVisibility(View.GONE);
+                    binding.LLEmpty.setVisibility(View.VISIBLE);
+                } else if (!offerList.isEmpty()) {
+                    binding.ProgressBar.setVisibility(View.GONE);
+                    binding.RV.setVisibility(View.VISIBLE);
                 }
 
             } else {
@@ -153,66 +147,128 @@ ActivityOffersBinding binding;
         binding.RV.setAdapter(offersAdapter);
         binding.RV.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
 
-
-
-
-
-
-
-
-
-
     }
-    void Hiring(int pos){
-        CollectionReference reference=   firestore.collection( "posts" ).document( user.getPhoneNumber() )
-                .collection( "userPost" );
-        new AlertDialog.Builder(OffersActivity.this)
-                .setMessage("هل أنت متأكد أنك تريد قبول العرض؟")
-                .setNegativeButton("لا, الغاء", (dialogInterface, i) -> {
-                })
-                .setPositiveButton("نعم ، قبول", (dialogInterface, i) -> {
-                    Map<String, Object> updates = new HashMap<>();
-                    updates.put("workerId", offerList.get( pos ).getWorkerID());
-                    updates.put( "jobState","inWork" );
+    void Hiring(int pos) {
+        //Hire Dialog
+        HireDialog_builder = new AlertDialog.Builder(OffersActivity.this);
+        hireDialogView = getLayoutInflater().inflate(R.layout.deluge_offer, null);
+
+
+        CollectionReference reference = firestore.collection("posts").document(user.getPhoneNumber())
+                .collection("userPost");
+
+        Button agreeButton = hireDialogView.findViewById(R.id.agreeButtonOffer);
+        Button cancelButton = hireDialogView.findViewById(R.id.cancelButtonOffer);
+
+        cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                HireDialog.dismiss();
+            }
+        });
+        agreeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Map<String, Object> updates = new HashMap<>();
+                updates.put("workerId", offerList.get(pos).getWorkerID());
+                updates.put("jobState", "inWork");
 
 // For devices with Android Nougat (API level 24) or higher
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
-                        String currentDate = dateFormat.format(new Date());
-                        updates.put("jobStartDate", currentDate);
-                    } else {
-                        // For older devices
-                        Calendar calendar = Calendar.getInstance();
-                        int year = calendar.get(Calendar.YEAR);
-                        int month = calendar.get(Calendar.MONTH) + 1;
-                        int day = calendar.get(Calendar.DAY_OF_MONTH);
-                        DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
-                        String[] arabicMonthNames = arabicDFS.getMonths();
-                        String monthInArabic = arabicMonthNames[month - 1];
-                        String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
-                        updates.put("jobStartDate", date);
-                    }
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
+                    String currentDate = dateFormat.format(new Date());
+                    updates.put("jobStartDate", currentDate);
+                } else {
+                    // For older devices
+                    Calendar calendar = Calendar.getInstance();
+                    int year = calendar.get(Calendar.YEAR);
+                    int month = calendar.get(Calendar.MONTH) + 1;
+                    int day = calendar.get(Calendar.DAY_OF_MONTH);
+                    DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
+                    String[] arabicMonthNames = arabicDFS.getMonths();
+                    String monthInArabic = arabicMonthNames[month - 1];
+                    String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
+                    updates.put("jobStartDate", date);
+                }
 
 
-                    reference.document(offerList.get( pos ).getPostID())
-                            .update(updates)
-                            .addOnSuccessListener(aVoid -> {
-                                // Handle the case when the update is successful
-                                offerList.remove(pos);
-                                offersAdapter.notifyItemRemoved(pos);
-                                offersAdapter.notifyItemRangeChanged(pos, offerList.size());
-                                if (offerList.isEmpty()) {
-                                    binding.ProgressBar.setVisibility(View.GONE);
-                                    binding.RV.setVisibility(View.GONE);
-                                    binding.LLEmpty.setVisibility(View.VISIBLE);
-                                }
-                            })
-                            .addOnFailureListener(e -> {
-                                // Handle the case when the update fails
-                            });
-                }).create().show();
+                reference.document(offerList.get(pos).getPostID())
+                        .update(updates)
+                        .addOnSuccessListener(aVoid -> {
+                            // Handle the case when the update is successful
+                            offerList.remove(pos);
+                            offersAdapter.notifyItemRemoved(pos);
+                            offersAdapter.notifyItemRangeChanged(pos, offerList.size());
+                            if (offerList.isEmpty()) {
+                                binding.ProgressBar.setVisibility(View.GONE);
+                                binding.RV.setVisibility(View.GONE);
+                                binding.LLEmpty.setVisibility(View.VISIBLE);
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            // Handle the case when the update fails
+                        });
+                HireDialog.dismiss();
+            }
+        });
 
-        }
+        HireDialog_builder.setView(hireDialogView);
+        HireDialog = HireDialog_builder.create();
+        HireDialog.show();
+    }
+
+//    void Hiring(int pos) {
+//        CollectionReference reference = firestore.collection("posts").document(user.getPhoneNumber())
+//                .collection("userPost");
+//        new AlertDialog.Builder(OffersActivity.this)
+//                .setMessage("هل أنت متأكد أنك تريد قبول العرض؟")
+//                .setNegativeButton("لا, الغاء", (dialogInterface, i) -> {
+//                })
+//                .setPositiveButton("نعم ، قبول", (dialogInterface, i) -> {
+//                    Map<String, Object> updates = new HashMap<>();
+//                    updates.put("workerId", offerList.get(pos).getWorkerID());
+//                    updates.put("jobState", "inWork");
+//
+//// For devices with Android Nougat (API level 24) or higher
+//
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
+//                        String currentDate = dateFormat.format(new Date());
+//                        updates.put("jobStartDate", currentDate);
+//                    } else {
+//                        // For older devices
+//                        Calendar calendar = Calendar.getInstance();
+//                        int year = calendar.get(Calendar.YEAR);
+//                        int month = calendar.get(Calendar.MONTH) + 1;
+//                        int day = calendar.get(Calendar.DAY_OF_MONTH);
+//                        DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
+//                        String[] arabicMonthNames = arabicDFS.getMonths();
+//                        String monthInArabic = arabicMonthNames[month - 1];
+//                        String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
+//                        updates.put("jobStartDate", date);
+//                    }
+//
+//
+//                    reference.document(offerList.get(pos).getPostID())
+//                            .update(updates)
+//                            .addOnSuccessListener(aVoid -> {
+//                                // Handle the case when the update is successful
+//                                offerList.remove(pos);
+//                                offersAdapter.notifyItemRemoved(pos);
+//                                offersAdapter.notifyItemRangeChanged(pos, offerList.size());
+//                                if (offerList.isEmpty()) {
+//                                    binding.ProgressBar.setVisibility(View.GONE);
+//                                    binding.RV.setVisibility(View.GONE);
+//                                    binding.LLEmpty.setVisibility(View.VISIBLE);
+//                                }
+//                            })
+//                            .addOnFailureListener(e -> {
+//                                // Handle the case when the update fails
+//                            });
+//                }).create().show();
+//
+//    }
 
 
 }
