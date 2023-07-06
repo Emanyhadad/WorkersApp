@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -29,7 +32,6 @@ import com.google.firebase.firestore.Query;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,10 +47,8 @@ public class OwnerPostsFragment extends Fragment {
     List<String> categoryList;
     List<Post> postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
-    long addedTime;
-
-    //    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
-FragmentPostsBinding binding;
+    long addedTime;//    FilterBottomSheetFragment filterButtonSheet = new FilterBottomSheetFragment();
+    FragmentPostsBinding binding;
 
     public OwnerPostsFragment( ) {
     }
@@ -71,7 +71,7 @@ FragmentPostsBinding binding;
     @Override
     public View onCreateView( @NonNull LayoutInflater inflater , ViewGroup container ,
                               Bundle savedInstanceState ) {
-         binding= FragmentPostsBinding.inflate( inflater,container,false );
+        binding= FragmentPostsBinding.inflate( inflater,container,false );
         sharedPreferences =getContext().getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
         binding.inculd.tvPageTitle.setText( getString( R.string.jobs ));
         firebaseFirestore=FirebaseFirestore.getInstance();
@@ -83,6 +83,7 @@ FragmentPostsBinding binding;
 
         binding.inculd.editIcon.setVisibility( View.GONE );
         binding.inculd.fillterIcon.setVisibility( View.VISIBLE );
+
         binding.inculd.fillterIcon.setOnClickListener( view -> {
             FilterBottomSheetDialog bottomSheetDialog = new FilterBottomSheetDialog();
             bottomSheetDialog.show(getChildFragmentManager(), "MyBottomSheetDialogFragment");

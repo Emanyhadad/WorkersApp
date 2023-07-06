@@ -9,13 +9,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
-
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.workersapp.Activities.PostActivity_forWorker;
-
 import com.example.workersapp.Adapters.WorkInProgressAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
@@ -28,7 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 
 public class WorkerInProgressFragment extends Fragment {
@@ -88,6 +85,8 @@ public class WorkerInProgressFragment extends Fragment {
                                 });
 
                             }
+                            binding.LLEmptyWorker.setVisibility( View.GONE );
+
                             for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
                                 if (  postDocumentSnapshot.get( "workerId" ).equals( firebaseUser.getPhoneNumber() ) ){
                                     jobState = postDocumentSnapshot.getString("jobState");
@@ -99,7 +98,14 @@ public class WorkerInProgressFragment extends Fragment {
                                     expectedWorkDuration= postDocumentSnapshot.getString( "expectedWorkDuration" );
                                     projectedBudget= postDocumentSnapshot.getString( "projectedBudget" );
                                     jobLocation= postDocumentSnapshot.getString( "jobLocation" );
-                                    addedTime = documentSnapshot.getLong("addedTime");
+
+                                    if (documentSnapshot.contains("addedTime")) {
+                                        addedTime = documentSnapshot.getLong("addedTime");
+                                        // القيام بأي عملية إضافية على الـ addedTime هنا
+                                    } else {
+                                        // تنفيذ رمز الخطأ المناسب أو تعيين قيمة افتراضية لـ addedTime
+                                    }
+
 
                                     Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState,addedTime );
                                     post.setPostId( postDocumentSnapshot.getId() );

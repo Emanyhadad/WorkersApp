@@ -59,7 +59,7 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
         binding = ActivityEditWorkerProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sp = getSharedPreferences("shared", MODE_PRIVATE);
+        sp = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         editor = sp.edit();
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();

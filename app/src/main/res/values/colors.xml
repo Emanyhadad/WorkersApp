@@ -26,6 +26,7 @@
     <color name="back_tv">#F1F1F1</color>
     <color name="transparent">#00000000</color>
     <color name="red">#ED1C24</color>
+    <color name="gray_divider">#C6C6C6</color>
 
     <color name="tab_text_color">#808080</color>
     <color name="tab_icon_color">#808080</color>

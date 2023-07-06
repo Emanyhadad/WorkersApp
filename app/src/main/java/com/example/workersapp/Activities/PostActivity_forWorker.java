@@ -51,7 +51,6 @@ public class PostActivity_forWorker extends AppCompatActivity {
     float rating;
     String comment;
     DocumentReference documentReference;
-
     ActivityPostForWorkerBinding binding;
 
     @Override

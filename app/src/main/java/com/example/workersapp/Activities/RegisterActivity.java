@@ -34,7 +34,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     ActivityRegisterBinding binding;
     FirebaseFirestore db;
     FirebaseStorage storage;
-
     FirebaseAuth firebaseAuth;
     FirebaseUser firebaseUser;
     private static final int REQUEST_CODE = 1;
@@ -42,7 +41,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
     int genderId;
 
     public static String image;
-
 
     @SuppressLint( "MissingPermission" )
 
@@ -57,9 +55,12 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         db = FirebaseFirestore.getInstance( );
         storage = FirebaseStorage.getInstance( );
 
+        binding.inculd.tvPageTitle.setText(getString( R.string.ProfileToolBar ));
+
         if ( ContextCompat.checkSelfPermission( this , Manifest.permission.READ_EXTERNAL_STORAGE ) != PackageManager.PERMISSION_GRANTED ) {
             ActivityCompat.requestPermissions( this , new String[]{ Manifest.permission.READ_EXTERNAL_STORAGE } , REQUEST_CODE );
         }
+
         ActivityResultLauncher < String > al1 = registerForActivityResult( new ActivityResultContracts.GetContent( ) , result -> {
             if ( result != null ) {
                 Glide.with( getBaseContext( ) ).load( result ).circleCrop( ).error( R.drawable.user ).into( binding.personImgUser );
@@ -72,8 +73,8 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
                         image = task.getResult( ).toString( );
                     }
                 } ) );
-
             }
+
         } );
 
         binding.personBirth.setOnClickListener( view -> showDatePickerDialog( ) );
@@ -81,52 +82,55 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
         binding.personAddImgUser.setOnClickListener( v -> al1.launch( "image/*" ) );
 
         binding.personBtnNext.setOnClickListener( view -> {
-            fullName = Objects.requireNonNull( binding.personFullName.getText( ) ).toString( );
-            nickName = Objects.requireNonNull( binding.personNickName.getText( ) ).toString( );
-            birth = Objects.requireNonNull( binding.personBirth.getText( ) ).toString( );
-            genderId = binding.personRadioGroup.getCheckedRadioButtonId( );
-            gender = findViewById( genderId ).toString( );
-            accountType = LoginActivity.sp.getString( "accountType" , "" );
+            addDataUser();
+        });
+    }
 
-            if ( binding.personMale.isChecked( ) ) {
-                gender = getString( R.string.male );
-            } else {
-                gender = getString( R.string.female );
+    private void addDataUser(){
+        fullName = Objects.requireNonNull( binding.personFullName.getText( ) ).toString( );
+        nickName = Objects.requireNonNull( binding.personNickName.getText( ) ).toString( );
+        birth = Objects.requireNonNull( binding.personBirth.getText( ) ).toString( );
+        genderId = binding.personRadioGroup.getCheckedRadioButtonId( );
+        gender = findViewById( genderId ).toString( );
+        accountType = LoginActivity.sp.getString( "accountType" , "" );
+
+        if ( binding.personMale.isChecked( ) ) {
+            gender = getString( R.string.male );
+        } else {
+            gender = getString( R.string.female );
+        }
+
+        if ( !fullName.isEmpty( ) && !nickName.isEmpty( ) && !birth.isEmpty( ) ) {
+
+            Map< String, Object > data = new HashMap<>( );
+            data.put( "fullName" , fullName );
+            data.put( "nickName" , nickName );
+            data.put( "birth" , birth );
+            data.put( "gender" , gender );
+            data.put( "image" , image );
+
+
+            db.collection( "users" ).document( Objects.requireNonNull
+                    ( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener(unused -> {
+
+            });
+            Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
+            intent.putExtra( "accountType" , accountType );
+            intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
+            startActivity( intent );
+            finish();
+
+        } else {
+            if ( fullName.isEmpty( ) ) {
+                binding.personFullName.setError( getString( R.string.tvFill ) );
+            } else if ( nickName.isEmpty( ) ) {
+                binding.personNickName.setError( getString( R.string.tvFill ) );
+            } else if ( birth.isEmpty( ) ) {
+                binding.personBirth.setError( getString( R.string.tvFill ) );
+
             }
-
-
-
-             if ( !fullName.isEmpty( ) && !nickName.isEmpty( ) && !birth.isEmpty( ) ) {
-
-                 Map < String, Object > data = new HashMap <>( );
-                 data.put( "fullName" , fullName );
-                 data.put( "nickName" , nickName );
-                 data.put( "birth" , birth );
-                 data.put( "gender" , gender );
-                 data.put( "image" , image );
-
-
-                 db.collection( "users" ).document( Objects.requireNonNull
-                         ( firebaseUser.getPhoneNumber( ) ) ).set( data ).addOnSuccessListener(
-                                 unused -> {}
-                 );
-                 Intent intent = new Intent( getBaseContext( ) , MapsActivity.class );
-                 intent.putExtra( "accountType" , accountType );
-                 intent.putExtra( "source" , RegisterActivity.class.getSimpleName( ) );
-                 startActivity( intent );
-
-             } else {
-                 if ( fullName.isEmpty( ) ) {
-                     binding.personFullName.setError( getString( R.string.tvFill ) );
-                 } else if ( nickName.isEmpty( ) ) {
-                     binding.personNickName.setError( getString( R.string.tvFill ) );
-                 } else if ( birth.isEmpty( ) ) {
-                     binding.personBirth.setError( getString( R.string.tvFill ) );
-
-
-
-            }
-        } });}
+        }
+    }
 
 
     private void showDatePickerDialog( ) {
@@ -140,7 +144,6 @@ public class RegisterActivity extends AppCompatActivity implements DatePickerDia
             DatePickerDialog datePickerDialog = new DatePickerDialog( this , this , year , month , dayOfMonth );
             datePickerDialog.show( );
         }
-
     }
 
     @Override

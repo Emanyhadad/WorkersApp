@@ -10,6 +10,7 @@
     tools:context=".Activities.RegisterActivity"
     android:background="@color/back_activity">
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,6 +21,15 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+
+        <include
+            android:id="@+id/inculd"
+            layout="@layout/toolbar_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="@dimen/_15sdp"
+            android:layout_marginRight="@dimen/_15sdp"/>
 
 
         <RelativeLayout
@@ -52,16 +62,16 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_46sdp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_marginTop="@dimen/_35sdp"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personFullName"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_39sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:fontFamily="@font/cairo_regular"
-                android:hint="الاسم الكامل"
+                android:hint="@string/userFullName"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/gray"
                 android:textSize="@dimen/_11ssp"  />
@@ -70,15 +80,15 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_46sdp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_marginTop="@dimen/_31sdp"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personNickName"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_39sdp"
-                android:hint="اللقب"
+                android:layout_height="@dimen/_40sdp"
+                android:hint="@string/userNickName"
                 android:inputType="textPersonName"
                 android:textColorHint="@color/gray"
                 android:fontFamily="@font/cairo_regular"
@@ -88,16 +98,16 @@
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_46sdp"
+            android:layout_height="@dimen/_50sdp"
             android:layout_marginTop="@dimen/_31sdp"
             android:layout_marginLeft="@dimen/_15sdp"
             android:layout_marginRight="@dimen/_15sdp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/personBirth"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/_39sdp"
+                android:layout_height="@dimen/_40sdp"
                 android:drawableEnd="@drawable/ic_calendar"
-                android:hint="تاريخ الميلاد"
+                android:hint="@string/userBirth"
                 android:textColorHint="@color/gray"
                 android:fontFamily="@font/cairo_regular"
                 android:textSize="@dimen/_11ssp"
@@ -121,7 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginRight="@dimen/_4sdp"
-                android:text="الجنس"
+                android:text="@string/userGender"
                 android:fontFamily="@font/cairo_regular"
                 android:textColor="@color/black2"
                 android:textSize="@dimen/_11ssp" />
@@ -138,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="@dimen/_42sdp"
                     android:layout_weight="1"
-                    android:text="ذكر"
+                    android:text="@string/userMale"
                     android:checked="true"
                     android:fontFamily="@font/cairo_regular"
                     android:textColor="@color/black2"
@@ -150,7 +160,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:fontFamily="@font/cairo_regular"
-                    android:text="أنثى"
+                    android:text="@string/userFemale"
                     android:textColor="@color/black2"
                     android:textSize="@dimen/_11ssp" />
             </RadioGroup>
@@ -165,7 +175,7 @@
             android:layout_marginRight="@dimen/_23sdp"
             android:layout_marginBottom="@dimen/sdp_40"
             android:background="@drawable/border_button"
-            android:text="التالي"
+            android:text="@string/userNext"
             android:fontFamily="@font/cairo_regular"
             android:textColor="@color/white"
             android:textSize="@dimen/_13ssp"

@@ -56,9 +56,13 @@ public class WorkerReviewsFragment extends Fragment {
         categoryList=new ArrayList <>(  );
         reviewsList = new ArrayList <>(  );
         List documentId = new ArrayList(  );
+
+
+
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 documentId.add(documentSnapshot1);
+
                 firebaseFirestore.collection("posts").document(documentSnapshot1.getId())
                         .collection("userPost").get()
                         .addOnCompleteListener(task -> {
@@ -66,6 +70,8 @@ public class WorkerReviewsFragment extends Fragment {
                                 binding.progressBar3.setVisibility(View.GONE);
                                 binding.LLEmptyWorker.setVisibility( View.VISIBLE );
                             }
+                            binding.LLEmptyWorker.setVisibility( View.GONE );
+
                             for (DocumentSnapshot document : task.getResult()) {
                                 String jobState = document.getString("jobState");
                                 String workerId = document.getString("workerId");
@@ -105,7 +111,6 @@ public class WorkerReviewsFragment extends Fragment {
         });
 
         binding.RV.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
-
         return binding.getRoot();
     }
 }

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/_280sdp"
+    android:gravity="center_vertical|center_horizontal"
+    android:layout_height="wrap_content"
+    android:layoutDirection="rtl"
+    android:layout_gravity="center_vertical|center_horizontal"
+    android:background="@drawable/et_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_agree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:textSize="@dimen/_13ssp"
+        android:textColor="@color/black"
+        android:layout_marginStart="@dimen/_8sdp"
+        android:fontFamily="@font/cairo_semi_bold"
+        android:textAlignment="textStart"
+        android:text="اتفاقية التوظيف"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray_divider"/>
+
+    <TextView
+        android:id="@+id/tv2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_13sdp"
+        android:textSize="@dimen/_10ssp"
+        android:textColor="@color/green"
+        android:layout_marginStart="@dimen/_13sdp"
+        android:fontFamily="@font/cairo_regular"
+        android:textAlignment="textStart"
+        android:text="بسم الله الرحمن الرحيم"/>
+
+    <TextView
+        android:id="@+id/tv3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/_11ssp"
+        android:textColor="@color/blue"
+        android:layout_marginEnd="@dimen/_19sdp"
+        android:layout_marginStart="@dimen/_13sdp"
+        android:fontFamily="@font/cairo_regular"
+        android:textAlignment="textStart"
+        android:text="وَأَوْفُواْ بِعَهْدِ اللهِ إِذَا عَاهَدتُّمْ وَلاَ تَنقُضُواْ الأَيْمَانَ بَعْدَ تَوْكِيدِهَا وَقَدْ جَعَلْتُمُ اللهَ عَلَيْكُمْ كَفِيلا"/>
+
+    <TextView
+        android:id="@+id/tv_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_24sdp"
+        android:textSize="@dimen/_11ssp"
+        android:textColor="@color/blue"
+        android:layout_marginStart="@dimen/_13sdp"
+        android:layout_marginEnd="@dimen/_12sdp"
+        android:fontFamily="@font/cairo_regular"
+        android:textAlignment="textStart"
+        android:text="أتعهد أنا المعلن لهذه الوظيفة والمُوظف لهذا العامل بأن أدفع المبلغ المتفق عليه للعامل ."/>
+
+
+        <LinearLayout
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:layout_marginTop="@dimen/_24sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_19sdp">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/agreeButtonOffer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/deleteMessage"
+            android:background="@drawable/btn_cancel"
+            android:backgroundTint="@color/green"
+            android:layout_gravity="end"
+            android:textColor="@color/white"
+            android:layout_weight="1"
+            android:textSize="@dimen/_15ssp"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="توظيف"/>
+
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/cancelButtonOffer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/deleteMessage"
+            android:background="@drawable/btn_cancel"
+            android:layout_gravity="end"
+            android:layout_weight="1"
+            android:layout_marginStart="@dimen/_79sdp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/_15ssp"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:text="إلغاء"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>

@@ -3,7 +3,6 @@ package com.example.workersapp.Fragments;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +82,7 @@ public class PostFragment_inWorker extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FragmentPostInWorkerBinding binding = FragmentPostInWorkerBinding.inflate(inflater, container, false);
+        binding = FragmentPostInWorkerBinding.inflate(inflater, container, false);
 
         //---> initializing Google Ad SDK
         MobileAds.initialize(getContext(), initializationStatus -> {
@@ -92,7 +91,7 @@ public class PostFragment_inWorker extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
+        binding.inculd.tvPageTitle.setText(getString(R.string.jobs));
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
         List decoumtId = new ArrayList();
@@ -124,6 +123,8 @@ binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
 
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots ->
         {
+            binding.ProgressBar.setVisibility(View.GONE);
+            binding.RV.setVisibility(View.VISIBLE);
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 decoumtId.add(documentSnapshot1);
                 firebaseFirestore.collection("posts").document(documentSnapshot1.getId()).
@@ -146,7 +147,7 @@ binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
                                                     jobLocation = documentSnapshot.getString("jobLocation");
                                                     addedTime = documentSnapshot.getLong("addedTime");
 
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
+                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState, addedTime);
                                                     post.setPostId(document.getId());
                                                     post.setOwnerId(documentSnapshot1.getId());
 
@@ -176,7 +177,6 @@ binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
                                             LinearLayoutManager.VERTICAL, false));
 
 
-
                                 }
                             }
                         }).addOnFailureListener(runnable -> {
@@ -184,7 +184,7 @@ binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
             }
         });
 
-        binding.etSearch.setOnClickListener( view -> startActivity(new Intent(getContext(), SearchActivity.class)) );
+        binding.etSearch.setOnClickListener(view -> startActivity(new Intent(getContext(), SearchActivity.class)));
 
         binding.favoriteBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -291,8 +291,8 @@ binding.inculd.tvPageTitle.setText( getString( R.string.jobs ) );
 //                        objects.add(postList.get(6));
 
                         for (int i = 0; i < objects.size(); i++) {
-                            if (i%5==0 && ! (objects.get(i) instanceof NativeAd))
-                              objects.add(i,nativeAd);
+                            if (i % 5 == 0 && !(objects.get(i) instanceof NativeAd))
+                                objects.add(i, nativeAd);
                         }
                     }
 

@@ -34,7 +34,7 @@ public class BusinessModelsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     FragmentBusinessModelsBinding binding;
-    private static final String ARG_PARAM1_IMAGE = "image";
+    private static final String ARG_PARAM1_IMAGE = "image" ;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -74,7 +74,7 @@ public class BusinessModelsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentBusinessModelsBinding.inflate(inflater, container, false);
-        sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+        sp = getActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
         editor = sp.edit();
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -82,35 +82,9 @@ public class BusinessModelsFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         imagesList = new ArrayList<>();
         models = new ArrayList<>();
-        firebaseFirestore.collection("forms").document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
-                .collection("userForm")
-                .get()
-                .addOnSuccessListener( queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.isEmpty()){
-                        binding.progressBar.setVisibility(View.GONE);
-                    }
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        List<String> images = (List<String>) document.get("images");
-                        String doc = (String) document.get("documentId");
-                        if (!images.isEmpty()) {
-                            models.add(new Model(images, doc));
-                            adapter = new ImageModelAdapter(models,
-                                    getContext(),
-                                    documentId -> {
-                                        Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
-                                        intent.putExtra("documentId", documentId);
-                                        startActivity(intent);
-                                    } );
-                            RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
-                            fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                            fragRv.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                } );
+
+
         return binding.getRoot();
     }
 
@@ -124,6 +98,7 @@ public class BusinessModelsFragment extends Fragment {
                 .addOnSuccessListener( queryDocumentSnapshots -> {
                     if (queryDocumentSnapshots.isEmpty()){
                         binding.progressBar.setVisibility(View.GONE);
+                        binding.LLEmptyWorker.setVisibility(View.VISIBLE);
                     }
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         List<String> images = (List<String>) document.get("images");
@@ -137,6 +112,8 @@ public class BusinessModelsFragment extends Fragment {
                                         intent.putExtra("documentId", documentId);
                                         startActivity(intent);
                                     } );
+                            binding.LLEmptyWorker.setVisibility(View.GONE);
+                            binding.FragRV.setVisibility(View.VISIBLE);
                             RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
                             fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             fragRv.setAdapter(adapter);

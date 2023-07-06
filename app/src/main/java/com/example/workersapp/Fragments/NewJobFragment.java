@@ -174,14 +174,14 @@ public class NewJobFragment extends Fragment {
                 al1.launch("image/*");
             }
         });
+
+
         binding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 al1.launch("image/*");
             }
         });
-
-
 
         firebaseFirestore.collection("workCategoryAuto").document("category")
                 .get()
@@ -350,8 +350,6 @@ public class NewJobFragment extends Fragment {
                         }
                     }
                 });
-
     }
-
 
 }

@@ -1,13 +1,17 @@
 package com.example.workersapp.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 
-import com.example.workersapp.R;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.workersapp.Utilities.MyJobService;
 import com.example.workersapp.databinding.ActivitySplashBinding;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,6 +21,7 @@ public class SplashActivity extends AppCompatActivity {
     public static SharedPreferences sp;
     FirebaseUser currentUser;
     ActivitySplashBinding binding;
+    public static JobScheduler jobScheduler;
     FirebaseAuth auth;
 
     @Override
@@ -24,7 +29,9 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate( savedInstanceState );
         binding = ActivitySplashBinding.inflate( getLayoutInflater( ) );
         setContentView( binding.getRoot( ) );
-        sp = getSharedPreferences( "shared" , MODE_PRIVATE );
+        jobService();
+
+        sp = getSharedPreferences( "MyPreferencesBoarding" , MODE_PRIVATE );
 
         auth = FirebaseAuth.getInstance( );
         currentUser = auth.getCurrentUser( );
@@ -47,5 +54,17 @@ public class SplashActivity extends AppCompatActivity {
 
             finish( );
         } , SPLASH_TIMEOUT );
+    }
+    public void jobService() {
+        jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        ComponentName componentName = new ComponentName(getBaseContext(), MyJobService.class);
+        JobInfo jobInfo = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            jobInfo = new JobInfo.Builder(1, componentName)
+                    .setPeriodic(24 * 60 * 60 * 1000, JobInfo.getMinFlexMillis())
+                    .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                    .build();
+        }
+        jobScheduler.schedule(jobInfo);
     }
 }
