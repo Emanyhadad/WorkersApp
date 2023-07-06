@@ -10,10 +10,13 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.example.workersapp.Activities.PostActivity_forWorker;
 import com.example.workersapp.Adapters.SubmittedJobAdapter;
+import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
 import com.example.workersapp.databinding.FragmentBlank3Binding;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,6 +74,19 @@ void getData(){
             firebaseFirestore.collection("posts").document(documentSnapshot.getId())
                     .collection("userPost")
                     .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                        if ( queryDocumentSnapshots1.isEmpty() ){
+                            binding.LLEmptyWorker.setVisibility( View.VISIBLE );
+                            binding.btnAddpost.setOnClickListener(v -> {
+                                // Replace the current fragment with the new fragment here
+                                FragmentManager fragmentManager = getParentFragmentManager();
+                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                PostFragment_inWorker jobFragment = new PostFragment_inWorker();
+                                fragmentTransaction.replace( R.id.frame, jobFragment);
+                                fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                                fragmentTransaction.commit();
+                            });
+
+                        }
                         for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
                             firebaseFirestore.collection("offers").document(postDocumentSnapshot.getId())
                                     .collection("workerOffers")

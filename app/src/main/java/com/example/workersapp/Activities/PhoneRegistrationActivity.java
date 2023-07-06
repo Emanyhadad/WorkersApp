@@ -58,7 +58,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         //todo Show loader
         String phone = binding.etPhoneReg.getText().toString().trim();
         if (TextUtils.isEmpty(phone)) {
-            Toast.makeText(this, "Enter your phone", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "أدخل رقم الهاتف", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -175,7 +175,7 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         btn.setOnClickListener(View -> {
 
             if (pinView.getText().toString().trim().isEmpty()) {
-                Toast.makeText(this, "code empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "أدخل الكود", Toast.LENGTH_SHORT).show();
                 return;
             }
 

@@ -1,21 +1,16 @@
 package com.example.workersapp.Activities;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-import com.example.workersapp.Fragments.BlankFragment4;
 import com.example.workersapp.Fragments.PostFragment_inWorker;
 import com.example.workersapp.Fragments.WorkerInProgressFragment;
 import com.example.workersapp.Fragments.WorkerProfileFragment;
-import com.example.workersapp.Fragments.WorkerReviewsFragment;
 import com.example.workersapp.Fragments.WorkerSubmittedJobFragment;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityWorkerActivitiesBinding;
-import com.google.android.material.navigation.NavigationBarView;
 
 public class WorkerActivities extends AppCompatActivity {
 

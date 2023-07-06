@@ -106,7 +106,7 @@ public class BusinessModelsFragment extends Fragment {
                             fragRv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -142,7 +142,7 @@ public class BusinessModelsFragment extends Fragment {
                             fragRv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
                         }
                     }
 

@@ -10,7 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -45,12 +45,6 @@ import java.util.Objects;
 public class WorkerProfileFragment extends Fragment {
 
     FragmentWorkerProfileBinding binding;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public static SharedPreferences sharedPreferences;
 
@@ -74,22 +68,15 @@ public class WorkerProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    public static WorkerProfileFragment newInstance(String param1, String param2) {
+    public static WorkerProfileFragment newInstance() {
         WorkerProfileFragment fragment = new WorkerProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
@@ -119,7 +106,6 @@ public class WorkerProfileFragment extends Fragment {
                         editor.putString("worker_token", workerToken);
                         editor.apply();
 
-                        Toast.makeText(getContext(), "workerToken: "+workerToken, Toast.LENGTH_SHORT).show();
                         Log.d("WorkerToken", workerToken);
                     } else {
                         // حدث خطأ في استرداد التوكن
@@ -171,46 +157,45 @@ public class WorkerProfileFragment extends Fragment {
 
         binding.ProgressBar.setVisibility(View.VISIBLE);
         binding.ScrollView.setVisibility(View.GONE);
-        db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber())).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    if (!isAdded()){
-                        return;
+        db.collection("users").document
+                (Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                .get().addOnSuccessListener( documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+
+                        binding.ProgressBar.setVisibility( View.GONE );
+                        binding.ScrollView.setVisibility(View.VISIBLE);
+
+
+                        String fullName = documentSnapshot.getString("fullName");
+                        String nickName = documentSnapshot.getString("nickName");
+                        String work = documentSnapshot.getString("work");
+                        String cv = documentSnapshot.getString("cv");
+                        String city = documentSnapshot.getString("city");
+                        String image = documentSnapshot.getString("image");
+                        binding.pWorkerUserName.setText(fullName);
+                        binding.pWorkerNickName.setText("( " + nickName + " )");
+                        binding.pWorkerJobName.setText(work);
+                        binding.pWorkerCv.setText(cv);
+                        binding.pWorkerLocation.setText(city);
+                        binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+
+                        if (getContext() != null) {
+                            Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
+                        }
+
+                        long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
+                        // حولنا long -> date
+                        Date date = new Date(timestamp);
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+                        String formattedDate = dateFormat.format(date);
+                        binding.pWorkerJoinDate.setText(formattedDate);
+                        userData = true;
                     }
+                } ).addOnFailureListener( e ->
+        {
+            //Todo Add LLField
 
-
-                    binding.ProgressBar.setVisibility( View.GONE );
-                    binding.ScrollView.setVisibility(View.VISIBLE);
-
-
-                    String fullName = documentSnapshot.getString("fullName");
-                    String nickName = documentSnapshot.getString("nickName");
-                    String work = documentSnapshot.getString("work");
-                    String cv = documentSnapshot.getString("cv");
-                    String city = documentSnapshot.getString("city");
-                    String image = documentSnapshot.getString("image");
-                    binding.pWorkerUserName.setText(fullName);
-                    binding.pWorkerNickName.setText("( " + nickName + " )");
-                    binding.pWorkerJobName.setText(work);
-                    binding.pWorkerCv.setText(cv);
-                    binding.pWorkerLocation.setText(city);
-                    binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
-
-                    if (getContext() != null) {
-                        Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
-                    }
-
-                    long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
-                    // حولنا long -> date
-                    Date date = new Date(timestamp);
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-                    String formattedDate = dateFormat.format(date);
-                    binding.pWorkerJoinDate.setText(formattedDate);
-                    userData = true;
-                }
-            }
-        }).addOnFailureListener( e -> Toast.makeText(getContext(), "Error retrieving data", Toast.LENGTH_SHORT).show() );
+        });
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 decoumtId.add(documentSnapshot1);

@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+
 
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.PostAdapter;
@@ -154,7 +154,6 @@ FragmentPostsBinding binding;
                                             } );
                                     binding.RV.setLayoutManager( new LinearLayoutManager(getContext(),
                                             LinearLayoutManager.VERTICAL, false));
-                                    Toast.makeText( getContext() , ""+postList.size() , Toast.LENGTH_SHORT ).show( );
 
 
                                 }}

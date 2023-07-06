@@ -1,6 +1,5 @@
 package com.example.workersapp.Fragments;
 
-import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,19 +7,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
+
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
-import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Activities.PostActivity_forWorker;
-import com.example.workersapp.Adapters.PostAdapter;
-import com.example.workersapp.Adapters.Post_forWorkerAdapter;
-import com.example.workersapp.Adapters.ShowCategoryAdapter;
-import com.example.workersapp.Adapters.SubmittedJobAdapter;
+
 import com.example.workersapp.Adapters.WorkInProgressAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
@@ -30,7 +25,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -77,12 +71,23 @@ public class WorkerInProgressFragment extends Fragment {
         List<DocumentSnapshot> documentList = new ArrayList<>();
 
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                documentList.add(documentSnapshot1); }
-            for (DocumentSnapshot documentSnapshot : documentList) {
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                 firebaseFirestore.collection("posts").document(documentSnapshot.getId())
                         .collection("userPost").whereEqualTo( "jobState","inWork" )
                         .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            if ( queryDocumentSnapshots1.isEmpty() ){
+                                binding.LLEmptyWorker.setVisibility( View.VISIBLE );
+                                binding.btnAddpost.setOnClickListener(v -> {
+                                    // Replace the current fragment with the new fragment here
+                                    FragmentManager fragmentManager = getParentFragmentManager();
+                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                    PostFragment_inWorker jobFragment = new PostFragment_inWorker();
+                                    fragmentTransaction.replace( R.id.frame, jobFragment);
+                                    fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                                    fragmentTransaction.commit();
+                                });
+
+                            }
                             for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
                                 if (  postDocumentSnapshot.get( "workerId" ).equals( firebaseUser.getPhoneNumber() ) ){
                                     jobState = postDocumentSnapshot.getString("jobState");

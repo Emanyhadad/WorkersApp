@@ -127,7 +127,9 @@
 
         <activity
             android:name=".Activities.LoginActivity"
-            android:exported="false"/>
+            android:exported="true">
+
+        </activity>
 
         <activity
             android:name=".Activities.RegisterActivity"

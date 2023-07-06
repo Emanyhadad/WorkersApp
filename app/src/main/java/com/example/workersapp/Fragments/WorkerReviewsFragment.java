@@ -57,14 +57,15 @@ public class WorkerReviewsFragment extends Fragment {
         reviewsList = new ArrayList <>(  );
         List documentId = new ArrayList(  );
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            if (queryDocumentSnapshots.isEmpty()){
-                binding.progressBar3.setVisibility(View.GONE);
-            }
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 documentId.add(documentSnapshot1);
                 firebaseFirestore.collection("posts").document(documentSnapshot1.getId())
                         .collection("userPost").get()
                         .addOnCompleteListener(task -> {
+                            if (task.getResult().isEmpty()){
+                                binding.progressBar3.setVisibility(View.GONE);
+                                binding.LLEmptyWorker.setVisibility( View.VISIBLE );
+                            }
                             for (DocumentSnapshot document : task.getResult()) {
                                 String jobState = document.getString("jobState");
                                 String workerId = document.getString("workerId");

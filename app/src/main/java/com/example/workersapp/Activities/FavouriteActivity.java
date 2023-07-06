@@ -3,7 +3,7 @@ package com.example.workersapp.Activities;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -86,7 +86,7 @@ public class FavouriteActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(FavouriteActivity.this, "Failed to retrieve favourite posts", Toast.LENGTH_SHORT).show();
+                        //Todo Add LLField
                     }
                 });
     }

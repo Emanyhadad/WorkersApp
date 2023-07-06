@@ -181,19 +181,7 @@ public class NewJobFragment extends Fragment {
             }
         });
 
-//        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-//                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            categoriesListF = (List<String>) task.getResult().get("categories");
-//                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
-//                            binding.etoJobType.setAdapter(adapter);
-//                        } else {
-//                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
+
 
         firebaseFirestore.collection("workCategoryAuto").document("category")
                 .get()
@@ -310,14 +298,13 @@ public class NewJobFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         String uriString = task.getResult().toString();
                                         if (!uriString.isEmpty()) {
-                                            Toast.makeText(getContext(), "im not null", Toast.LENGTH_SHORT).show();
                                             uriFromStorage.add(uriString);
                                             if (finalI == uriList.size() - 1) {
                                                 createPost(workTitle, description, uid, time, jobLocation);
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Todo Add LLField
                                     }
                                 }
                             });
@@ -349,7 +336,7 @@ public class NewJobFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         } else {
                             Intent intent = new Intent( getActivity(), PostActivity2.class );
                             intent.putExtra( "PostId",post.getPostId() );

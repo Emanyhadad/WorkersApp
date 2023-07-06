@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -138,14 +138,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         data.put("city", city);
                         data.put("title", title);
                         data.put("accountType", accountType);
-                        Toast.makeText(MapsActivity.this, "accountType: " + accountType, Toast.LENGTH_SHORT).show();
 
                         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                                 .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(MapsActivity.this, "success city and title", Toast.LENGTH_SHORT).show();
                                     }
                                 });
 
@@ -164,7 +162,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Intent intent1 = new Intent();
                         intent1.putExtra("city", city);
                         setResult(RESULT_OK, intent1);
-                        Toast.makeText(MapsActivity.this, "im here ", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
@@ -296,7 +293,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, citiesListF);
                             mySpinner.setAdapter(adapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         }
                     }
                 });
