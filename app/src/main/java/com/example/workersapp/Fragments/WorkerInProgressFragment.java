@@ -82,7 +82,7 @@ public class WorkerInProgressFragment extends Fragment {
                                     FragmentManager fragmentManager = getParentFragmentManager();
                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                     PostFragment_inWorker jobFragment = new PostFragment_inWorker();
-                                    fragmentTransaction.replace( R.id.container, jobFragment);
+                                    fragmentTransaction.replace( R.id.frame, jobFragment);
                                     fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
                                     fragmentTransaction.commit();
                                 });
