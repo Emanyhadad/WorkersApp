@@ -46,29 +46,30 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     ItemClickListener listener;
     Post currentPost;
     private FavoriteItemClickListener favoriteItemClickListener;
-//
+    //
     private static final int IS_AD = 0;
     private static final int NOT_Ad = 1;
 
     private final ArrayList<Object> objects = new ArrayList<>();
 
-    public void setList(List<Post> list){
+    public void setList(List<Post> list) {
         this.objects.addAll(list);
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setAd(List<NativeAd> nativeAd){
+    public void setAd(List<NativeAd> nativeAd) {
         this.objects.addAll(nativeAd);
         notifyDataSetChanged();
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public void setObject (ArrayList<Object> object){
+    public void setObject(ArrayList<Object> object) {
         this.objects.clear();
         this.objects.addAll(object);
         notifyDataSetChanged();
     }
-//
+
+    //
     public Post_forWorkerAdapter(List<Post> postList, Context context, ItemClickListener listener) {
         this.postList = postList;
         this.context = context;
@@ -92,36 +93,37 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        if(viewType == IS_AD){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ad,parent,false);
-            return new AdViewHolder(view);
-        }else{
-            ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-            return new myViewHolder(binding);
-        }
-
+//        if(viewType == IS_AD){
+//            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_ad,parent,false);
+//            return new AdViewHolder(view);
+//        }else{
+//            ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+//            return new myViewHolder(binding);
+//        }
+        ItemPostBinding binding = ItemPostBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        return new myViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
 
-        if(getItemViewType(position)==IS_AD){
-            AdViewHolder adv =  (AdViewHolder) holder;
-            adv.setNativeAd((NativeAd) objects.get(position));
-        }else{
-            myViewHolder ivh = (myViewHolder) holder;
 
-            firestore = FirebaseFirestore.getInstance();
-            sp = context.getSharedPreferences("shared", MODE_PRIVATE);
-            editor = sp.edit();
-            currentPost = (Post) objects.get(holder.getAdapterPosition());
+        myViewHolder ivh = (myViewHolder) holder;
 
-            ivh.PostTitle.setText(currentPost.getTitle());
-            ivh.PostDescription.setText(currentPost.getDescription());
-            ivh.PostBudget.setText(currentPost.getProjectedBudget());
-            ivh.PostLoc.setText(currentPost.getJobLocation());
-            ivh.favoriteButton.setVisibility(View.VISIBLE);
+        firestore = FirebaseFirestore.getInstance();
+        sp = context.getSharedPreferences("shared", MODE_PRIVATE);
+        editor = sp.edit();
+        currentPost = (Post) postList.get(holder.getAdapterPosition());
 
+        ivh.PostTitle.setText(currentPost.getTitle());
+        ivh.PostDescription.setText(currentPost.getDescription());
+        ivh.PostBudget.setText(currentPost.getProjectedBudget());
+        ivh.PostLoc.setText(currentPost.getJobLocation());
+        ivh.favoriteButton.setVisibility(View.VISIBLE);
+
+        //Todo: Put Post Time her
+        ivh.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
+        ivh.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
             long currentTimeMillis = System.currentTimeMillis();
             long storageTimeMillis = currentPost.getAddedTime();
             long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
@@ -146,65 +148,144 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             ivh.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
             ivh.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
-            ivh.favoriteButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int adapterPosition = holder.getAdapterPosition();
-                    Post clickedPost = postList.get(adapterPosition);
+        ivh.favoriteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                int adapterPosition = holder.getAdapterPosition();
+                Post clickedPost = postList.get(adapterPosition);
 
-                    if (clickedPost.isFavorite()) {
-                        removeImageFromFavorites(clickedPost);
-                        editor.putBoolean(clickedPost.getPostId(), false).apply();
-                        if (favoriteItemClickListener != null) {
-                            favoriteItemClickListener.onFavoriteItemRemoved(adapterPosition);
-                        }
-                    } else {
-                        addImageToFavorites(clickedPost);
-                        editor.putBoolean(clickedPost.getPostId(), true).apply();
+                if (clickedPost.isFavorite()) {
+                    removeImageFromFavorites(clickedPost);
+                    editor.putBoolean(clickedPost.getPostId(), false).apply();
+                    if (favoriteItemClickListener != null) {
+                        favoriteItemClickListener.onFavoriteItemRemoved(adapterPosition);
                     }
-
-                    notifyDataSetChanged();
+                } else {
+                    addImageToFavorites(clickedPost);
+                    editor.putBoolean(clickedPost.getPostId(), true).apply();
                 }
-            });
 
-
-            boolean isFavorite = sp.getBoolean(currentPost.getPostId(), false);
-            if (isFavorite) {
-                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite);
-            } else {
-                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+                notifyDataSetChanged();
             }
-
-            currentPost.getPostId();
-            ivh.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
-            firestore.collection("users").document(currentPost.getOwnerId())
-                    .get()
-                    .addOnSuccessListener(documentSnapshot1 -> {
-                        if (documentSnapshot1.exists()) {
-                            String fullName = documentSnapshot1.getString("fullName");
-                            ivh.ClintName.setText(fullName);
-                            String image = documentSnapshot1.getString("image");
-                            Glide.with(context)
-                                    .load(image)
-                                    .circleCrop()
-                                    .error(R.drawable.worker)
-                                    .into(ivh.clintImage);
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                    });
+        });
 
 
-            firestore.collection("offers").document(currentPost.getPostId()).
-                    collection("workerOffers")
-                    .get()
-                    .addOnCompleteListener(task -> {
-                        if (task.isSuccessful()) {
-                            int count = task.getResult().size();
-                            ivh.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
-                        }
-                    });
+        boolean isFavorite = sp.getBoolean(currentPost.getPostId(), false);
+        if (isFavorite) {
+            ivh.favoriteButton.setImageResource(R.drawable.ic_favorite);
+        } else {
+            ivh.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
         }
+
+        currentPost.getPostId();
+        ivh.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
+        firestore.collection("users").document(currentPost.getOwnerId())
+                .get()
+                .addOnSuccessListener(documentSnapshot1 -> {
+                    if (documentSnapshot1.exists()) {
+                        String fullName = documentSnapshot1.getString("fullName");
+                        ivh.ClintName.setText(fullName);
+                        String image = documentSnapshot1.getString("image");
+                        Glide.with(context)
+                                .load(image)
+                                .circleCrop()
+                                .error(R.drawable.worker)
+                                .into(ivh.clintImage);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                });
+
+
+        firestore.collection("offers").document(currentPost.getPostId()).
+                collection("workerOffers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int count = task.getResult().size();
+                        ivh.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
+                    }
+                });
+//        if(getItemViewType(position)==IS_AD){
+//            AdViewHolder adv =  (AdViewHolder) holder;
+//            adv.setNativeAd((NativeAd) objects.get(position));
+//        }else{
+//            myViewHolder ivh = (myViewHolder) holder;
+//
+//            firestore = FirebaseFirestore.getInstance();
+//            sp = context.getSharedPreferences("shared", MODE_PRIVATE);
+//            editor = sp.edit();
+//            currentPost = (Post) objects.get(holder.getAdapterPosition());
+//
+//            ivh.PostTitle.setText(currentPost.getTitle());
+//            ivh.PostDescription.setText(currentPost.getDescription());
+//            ivh.PostBudget.setText(currentPost.getProjectedBudget());
+//            ivh.PostLoc.setText(currentPost.getJobLocation());
+//            ivh.favoriteButton.setVisibility(View.VISIBLE);
+//
+//            //Todo: Put Post Time her
+//            ivh.CategoryRecycle.setAdapter(new ShowCategoryAdapter((ArrayList<String>) currentPost.getCategoriesList()));
+//            ivh.CategoryRecycle.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+//
+//            ivh.favoriteButton.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    int adapterPosition = holder.getAdapterPosition();
+//                    Post clickedPost = postList.get(adapterPosition);
+//
+//                    if (clickedPost.isFavorite()) {
+//                        removeImageFromFavorites(clickedPost);
+//                        editor.putBoolean(clickedPost.getPostId(), false).apply();
+//                        if (favoriteItemClickListener != null) {
+//                            favoriteItemClickListener.onFavoriteItemRemoved(adapterPosition);
+//                        }
+//                    } else {
+//                        addImageToFavorites(clickedPost);
+//                        editor.putBoolean(clickedPost.getPostId(), true).apply();
+//                    }
+//
+//                    notifyDataSetChanged();
+//                }
+//            });
+//
+//
+//            boolean isFavorite = sp.getBoolean(currentPost.getPostId(), false);
+//            if (isFavorite) {
+//                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite);
+//            } else {
+//                ivh.favoriteButton.setImageResource(R.drawable.ic_favorite_border);
+//            }
+//
+//            currentPost.getPostId();
+//            ivh.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
+//            firestore.collection("users").document(currentPost.getOwnerId())
+//                    .get()
+//                    .addOnSuccessListener(documentSnapshot1 -> {
+//                        if (documentSnapshot1.exists()) {
+//                            String fullName = documentSnapshot1.getString("fullName");
+//                            ivh.ClintName.setText(fullName);
+//                            String image = documentSnapshot1.getString("image");
+//                            Glide.with(context)
+//                                    .load(image)
+//                                    .circleCrop()
+//                                    .error(R.drawable.worker)
+//                                    .into(ivh.clintImage);
+//                        }
+//                    })
+//                    .addOnFailureListener(e -> {
+//                    });
+//
+//
+//            firestore.collection("offers").document(currentPost.getPostId()).
+//                    collection("workerOffers")
+//                    .get()
+//                    .addOnCompleteListener(task -> {
+//                        if (task.isSuccessful()) {
+//                            int count = task.getResult().size();
+//                            ivh.OffersCount.setText(count == 0 ? "0" : String.valueOf(count));
+//                        }
+//                    });
+//        }
 
     }
 
@@ -213,14 +294,14 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         return postList.size();
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if(objects.get(position) instanceof NativeAd){
-            return IS_AD;
-        }else{
-            return NOT_Ad;
-        }
-    }
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (objects.get(position) instanceof NativeAd) {
+//            return IS_AD;
+//        } else {
+//            return NOT_Ad;
+//        }
+//    }
 
     static class myViewHolder extends RecyclerView.ViewHolder {
         LinearLayout LL_item;
@@ -247,25 +328,26 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
             favoriteButton = binding.favoriteButton;
         }
     }
-    public class AdViewHolder extends RecyclerView.ViewHolder {
-        public TemplateView template;
 
-        public AdViewHolder(@NonNull View itemView) {
-            super(itemView);
-
-            template = itemView.findViewById(R.id.id_ad_template_view);
-
-            NativeTemplateStyle styles = new
-                    NativeTemplateStyle.Builder().build();
-
-            template.setStyles(styles);
-        }
-
-        public void setNativeAd(NativeAd nativeAd){
-
-            template.setNativeAd(nativeAd);
-        }
-    }
+//    public class AdViewHolder extends RecyclerView.ViewHolder {
+//        public TemplateView template;
+//
+//        public AdViewHolder(@NonNull View itemView) {
+//            super(itemView);
+//
+//            template = itemView.findViewById(R.id.id_ad_template_view);
+//
+//            NativeTemplateStyle styles = new
+//                    NativeTemplateStyle.Builder().build();
+//
+//            template.setStyles(styles);
+//        }
+//
+//        public void setNativeAd(NativeAd nativeAd) {
+//
+//            template.setNativeAd(nativeAd);
+//        }
+//    }
 
     public void addImageToFavorites(Post post) {
         post.setFavorite(true);

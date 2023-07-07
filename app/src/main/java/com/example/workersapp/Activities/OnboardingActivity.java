@@ -12,6 +12,9 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.example.workersapp.Adapters.OnboardingPageAdapter;
 import com.example.workersapp.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class OnboardingActivity extends AppCompatActivity {
     private ViewPager viewPager;
@@ -20,18 +23,25 @@ public class OnboardingActivity extends AppCompatActivity {
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
 
-    private int[] imageResources = { R.drawable.bording1, R.drawable.bording2, R.drawable.bording3};
+    private int[] imageResources = {R.drawable.bording1, R.drawable.bording2, R.drawable.bording3};
     private String[] texts = {"شغيل، المنصةالفلسطينية الأولى لدمج السوق المهني في قطاعات التكنولوجيا ",
             "مرحبًا بك في تطبيق شغيل! نحن هنا لمساعدتك على توسيع دائرة عملك وتحقيق المزيد من العمل. ",
             "استعد لتجربة رائعة وفرص مثيرة. دعنا نبدأ!"};
     private OnboardingPageAdapter pageAdapter;
 
+    FirebaseAuth auth;
+    FirebaseUser currentUser;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboarding);
+
+        auth = FirebaseAuth.getInstance();
+        currentUser = auth.getCurrentUser();
+
         sp = getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
-        editor=sp.edit();
+        editor = sp.edit();
 
         viewPager = findViewById(R.id.viewPager);
         btnSkip = findViewById(R.id.btnSkip);
@@ -44,7 +54,8 @@ public class OnboardingActivity extends AppCompatActivity {
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             @Override
             public void onPageSelected(int position) {
@@ -57,20 +68,33 @@ public class OnboardingActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrollStateChanged(int state) {
+            }
         });
 
-        btnSkip.setOnClickListener( v -> {
+        btnSkip.setOnClickListener(v -> {
             int currentItem = viewPager.getCurrentItem();
             if (currentItem == imageResources.length - 1) {
-                startActivity( new Intent( OnboardingActivity.this,GuestActivity.class ) );
-                finish();
+                if (currentUser != null) {
+                    String accountType = sp.getString("accountType", "worker");
+                    if (accountType.equals("worker")) {
+                        startActivity(new Intent(getBaseContext(), WorkerActivities.class));
+                        finish();
+                    } else if (accountType.equals("work owner")) {
+                        startActivity(new Intent(getBaseContext(), WorkOwnerProfileActivity.class));
+                        finish();
+                    }
+
+                } else {
+                    startActivity(new Intent(OnboardingActivity.this, GuestActivity.class));
+                    finish();
+                }
                 editor.putBoolean("appUp-lode", true);
                 editor.apply();
             } else {
                 viewPager.setCurrentItem(currentItem + 1);
             }
-        } );
+        });
     }
 
     private void addDotsIndicator(int position) {
