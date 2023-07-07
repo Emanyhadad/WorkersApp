@@ -24,6 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Activities.MapsActivity;
+import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.ImageAdapter;
 import com.example.workersapp.Adapters.JobCategoryAdapter;
 import com.example.workersapp.Listeneres.DeleteListener;
@@ -36,7 +37,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -65,7 +65,7 @@ public class NewJobFragment extends Fragment {
     List<String> categoriesListF;
 
     List<String> uriFromStorage;
-
+    FragmentNewJobBinding binding;
     private String mParam1;
     private String mParam2;
 
@@ -95,7 +95,7 @@ public class NewJobFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        FragmentNewJobBinding binding = FragmentNewJobBinding.inflate(inflater, container, false);
+         binding = FragmentNewJobBinding.inflate(inflater, container, false);
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
@@ -174,26 +174,14 @@ public class NewJobFragment extends Fragment {
                 al1.launch("image/*");
             }
         });
+
+
         binding.imgAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 al1.launch("image/*");
             }
         });
-
-//        firebaseFirestore.collection("workCategoryAuto").document("category").get().
-//                addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            categoriesListF = (List<String>) task.getResult().get("categories");
-//                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
-//                            binding.etoJobType.setAdapter(adapter);
-//                        } else {
-//                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
 
         firebaseFirestore.collection("workCategoryAuto").document("category")
                 .get()
@@ -310,14 +298,13 @@ public class NewJobFragment extends Fragment {
                                     if (task.isSuccessful()) {
                                         String uriString = task.getResult().toString();
                                         if (!uriString.isEmpty()) {
-                                            Toast.makeText(getContext(), "im not null", Toast.LENGTH_SHORT).show();
                                             uriFromStorage.add(uriString);
                                             if (finalI == uriList.size() - 1) {
                                                 createPost(workTitle, description, uid, time, jobLocation);
                                             }
                                         }
                                     } else {
-                                        Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Todo Add LLField
                                     }
                                 }
                             });
@@ -336,7 +323,7 @@ public class NewJobFragment extends Fragment {
 
     private void createPost(String workTitle, String description, String uid, long time, String jobLocation) {
         Post post = new Post(workTitle, description, uriFromStorage, jobCategory, duration,
-                budget, jobLocation, "open");
+                budget, jobLocation, "open",time);
         uploadPost(post, uid + time);
     }
 
@@ -349,14 +336,20 @@ public class NewJobFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
                         if (!task.isSuccessful()) {
-                            Toast.makeText(getContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         } else {
-                            getActivity().finish();
+                            Intent intent = new Intent( getActivity(), PostActivity2.class );
+                            intent.putExtra( "PostId",post.getPostId() );
+                            startActivity( intent );
+                            binding.etDescription.setText( "" );
+                            binding.etoJobType.setText( "" );
+                            binding.etWorkTitle.setText( "" );
+                            binding.spExpectedWorkDuration.clearListSelection();
+                            binding.spProjectedBudget.clearListSelection();
+                            categoriesListF.clear();
                         }
                     }
                 });
-
     }
-
 
 }

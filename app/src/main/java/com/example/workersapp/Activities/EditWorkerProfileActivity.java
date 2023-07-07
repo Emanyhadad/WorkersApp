@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
-import android.widget.Toast;
+
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -59,7 +59,7 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
         binding = ActivityEditWorkerProfileBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        sp = getSharedPreferences("shared", MODE_PRIVATE);
+        sp = getSharedPreferences("MyPreferences", MODE_PRIVATE);
         editor = sp.edit();
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -139,7 +139,6 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                   data.put("cv",cv);
                   data.put("work",work);
               } else if (account.equals("work owner")) {
-//                  Toast.makeText(EditWorkerProfileActivity.this, "null", Toast.LENGTH_SHORT).show();
               }
               data.put("fullName",fullName);
               data.put("nickName",nickName);
@@ -194,7 +193,6 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                             } else if (accountType.equals("work owner")) {
                                 binding.editCvGone.setVisibility(View.GONE);
                                 binding.editCvWorkGone.setVisibility(View.GONE);
-                                Toast.makeText(EditWorkerProfileActivity.this, "gone", Toast.LENGTH_SHORT).show();
                             }
                         }
                         binding.editFullName.setText(fullName);
@@ -262,7 +260,7 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, citiesListF);
                             binding.editSheetCity.setAdapter(adapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         }
                     }
                 });
@@ -278,7 +276,7 @@ public class EditWorkerProfileActivity extends AppCompatActivity  implements Dat
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                             binding.editCvWork.setAdapter(adapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         }
                     }
                 });

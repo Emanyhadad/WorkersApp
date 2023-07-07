@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -179,7 +178,7 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                                         uriFromStorage.add(uriString);
                                         if (finalI == uriList.size() - 1) {
                                             updateModel();
-
+                                            startActivity(new Intent(getBaseContext(),EditModelActivity.class));
                                         }
                                     }
                                 });
@@ -398,7 +397,7 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                                 .addOnFailureListener(new OnFailureListener() {
                                     @Override
                                     public void onFailure(@NonNull Exception e) {
-                                        Toast.makeText(EditModelActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                                        //Todo Add LLField
                                     }
                                 });
                     }

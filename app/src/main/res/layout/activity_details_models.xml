@@ -14,186 +14,233 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true">
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_vertical|center_horizontal">
+    <ProgressBar
+        android:id="@+id/PB"
+        android:gravity="center_vertical|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
+
+    <LinearLayout
+        android:id="@+id/LL_noWifi"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:gravity="center_vertical|center_horizontal"
+        android:orientation="vertical"
+        android:padding="@dimen/_16sdp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <com.google.android.material.imageview.ShapeableImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_280sdp"
+            android:scaleType="centerInside"
+            android:src="@drawable/no_connection" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_noWifi"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/cairo_semi_bold"
+            android:gravity="center"
+            android:text="ليس لديك اتصال بالانترنت"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_12ssp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/LL_Data"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/_15sdp"
+        android:layout_marginEnd="@dimen/_15sdp"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <include
+            android:id="@+id/inculd"
+            layout="@layout/toolbar_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginStart="@dimen/_15sdp"
-            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:layout_marginTop="@dimen/_14sdp">
 
-            <include
-                android:id="@+id/inculd"
-                layout="@layout/toolbar_layout"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:layout_marginTop="@dimen/_14sdp">
-
-                <com.denzcoskun.imageslider.ImageSlider
-                    android:id="@+id/imageSlider"
-                    android:layout_width="@dimen/_266sdp"
-                    android:layout_gravity="center"
-                    android:layout_height="@dimen/_209sdp"
-                    app:iss_period="4000"
-                    app:iss_corner_radius="10"
-                    app:iss_auto_cycle="false"
-                    android:layoutDirection="ltr"/>
-
-                <TextView
-                    android:id="@+id/businessNumImg"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/businessNumImages"
-                    android:textColor="@color/gray9"
-                    android:layout_gravity="end"
-                    android:textSize="@dimen/_10ssp" />
-            </LinearLayout>
+            <com.denzcoskun.imageslider.ImageSlider
+                android:id="@+id/imageSlider"
+                android:layout_width="@dimen/_266sdp"
+                android:layout_gravity="center"
+                android:layout_height="@dimen/_209sdp"
+                app:iss_period="4000"
+                app:iss_corner_radius="10"
+                app:iss_auto_cycle="false"
+                android:layoutDirection="ltr"/>
 
             <TextView
-                android:id="@+id/businessDetails"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_78sdp"
-                android:layout_marginTop="@dimen/_15sdp"
+                android:id="@+id/businessNumImg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:fontFamily="@font/cairo_regular"
-                android:text="@string/businessDescription"
+                android:text="@string/businessNumImages"
+                android:textColor="@color/gray9"
+                android:layout_gravity="end"
+                android:textSize="@dimen/_10ssp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/businessDetails"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_78sdp"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:fontFamily="@font/cairo_regular"
+            android:text="@string/businessDescription"
+            android:textColor="@color/blue"
+            android:textSize="@dimen/_10ssp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/businessDateAch"
+                android:textColor="@color/gray9"
+                android:textSize="@dimen/_10ssp" />
+
+            <TextView
+                android:id="@+id/businessDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/businessDate"
                 android:textColor="@color/blue"
                 android:textSize="@dimen/_10ssp" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:orientation="horizontal">
+        </LinearLayout>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/businessDateAch"
-                    android:textColor="@color/gray9"
-                    android:textSize="@dimen/_10ssp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_15sdp"
+            android:orientation="vertical">
 
-                <TextView
-                    android:id="@+id/businessDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_4sdp"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/businessDate"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_10ssp" />
 
-            </LinearLayout>
-
-            <LinearLayout
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/businessRv"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/_15sdp"
-                android:layout_marginBottom="@dimen/_15sdp"
-                android:orientation="vertical">
-
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/businessRv"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_23sdp"
-                android:layout_gravity="start"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/businessImgUser"
-                    android:layout_width="@dimen/_23sdp"
-                    android:layout_height="@dimen/_23sdp"
-                    app:srcCompat="@drawable/worker" />
-
-
-                <TextView
-                    android:id="@+id/businessUserName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/_8sdp"
-                    android:layout_marginRight="@dimen/_4sdp"
-                    android:fontFamily="@font/cairo_bold"
-                    android:text="@string/businessUserNameS"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_9ssp" />
-
-                <TextView
-                    android:id="@+id/businessRate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/cairo_regular"
-                    android:text="@string/businessRateS"
-                    android:textColor="@color/black2"
-                    android:textSize="@dimen/_8ssp" />
-
-                <ImageView
-                    android:id="@+id/businessStar"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_15sdp"
-                    app:srcCompat="@drawable/baseline_star_24" />
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="@dimen/_20sdp"
-                android:layout_gravity="end"
-                android:layout_marginTop="@dimen/_45sdp"
-                android:gravity="center"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/businessEyeNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_8sdp"
-                    android:text="@string/businessEyeNumS"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_11ssp" />
-
-                <ImageView
-                    android:id="@+id/businessEye"
-                    android:layout_width="@dimen/_15sdp"
-                    android:layout_height="@dimen/_12sdp"
-                    app:srcCompat="@drawable/ic_password_open_eye" />
-
-                <TextView
-                    android:id="@+id/businessHurtNum"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/_8sdp"
-                    android:text="@string/businessHurtNumS"
-                    android:textColor="@color/blue"
-                    android:textSize="@dimen/_11ssp" />
-
-                <ImageView
-                    android:id="@+id/businessHurt"
-                    android:layout_width="@dimen/_14sdp"
-                    android:layout_height="@dimen/_12sdp"
-                    app:srcCompat="@drawable/hurt" />
-
-            </LinearLayout>
+                android:orientation="horizontal" />
 
         </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_23sdp"
+            android:layout_gravity="start"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/businessImgUser"
+                android:layout_width="@dimen/_23sdp"
+                android:layout_height="@dimen/_23sdp"
+                app:srcCompat="@drawable/worker" />
+
+
+            <TextView
+                android:id="@+id/businessUserName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/_8sdp"
+                android:layout_marginRight="@dimen/_4sdp"
+                android:fontFamily="@font/cairo_bold"
+                android:text="@string/businessUserNameS"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_9ssp" />
+
+            <TextView
+                android:id="@+id/businessRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/cairo_regular"
+                android:text="@string/businessRateS"
+                android:textColor="@color/black2"
+                android:textSize="@dimen/_8ssp" />
+
+            <ImageView
+                android:id="@+id/businessStar"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_15sdp"
+                app:srcCompat="@drawable/baseline_star_24" />
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_gravity="end"
+            android:layout_marginTop="@dimen/_45sdp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/businessEyeNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:text="@string/businessEyeNumS"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_11ssp" />
+
+            <ImageView
+                android:id="@+id/businessEye"
+                android:layout_width="@dimen/_15sdp"
+                android:layout_height="@dimen/_12sdp"
+                app:srcCompat="@drawable/ic_password_open_eye" />
+
+            <TextView
+                android:id="@+id/businessHurtNum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/_8sdp"
+                android:text="@string/businessHurtNumS"
+                android:textColor="@color/blue"
+                android:textSize="@dimen/_11ssp" />
+
+            <ImageView
+                android:id="@+id/businessHurt"
+                android:layout_width="@dimen/_14sdp"
+                android:layout_height="@dimen/_12sdp"
+                app:srcCompat="@drawable/hurt" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>
+
 
     </ScrollView>
 

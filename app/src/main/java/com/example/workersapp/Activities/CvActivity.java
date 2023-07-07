@@ -2,20 +2,17 @@ package com.example.workersapp.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import android.widget.ArrayAdapter;
+
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityCvBinding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
+
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -42,10 +39,11 @@ public class CvActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-
         list = new ArrayList<>();
 
-        insertData();
+        binding.inculd.tvPageTitle.setText(getString( R.string.ProfileToolBar ));
+
+        fetchData();
         binding.CvNext.setOnClickListener( view -> {
             String work = binding.CvWork.getText().toString();
             String cv = binding.Cv.getText().toString();
@@ -57,7 +55,8 @@ public class CvActivity extends AppCompatActivity {
 
                 Task < Void > voidTask = db.collection( "users" ).document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
                         .update( data )
-                        .addOnSuccessListener( unused -> Toast.makeText( CvActivity.this , "success cv and work" , Toast.LENGTH_SHORT ).show( ) );
+                        .addOnSuccessListener(unused -> {
+                        });
                 Intent intent = new Intent(getBaseContext(),WorkerActivities.class);
                 startActivity(intent);
                 finish();
@@ -68,7 +67,7 @@ public class CvActivity extends AppCompatActivity {
         } );
     }
 
-    public void insertData() {
+    public void fetchData() {
         db.collection("category").document("category")
                 .get()
                 .addOnCompleteListener( task -> {
@@ -77,7 +76,7 @@ public class CvActivity extends AppCompatActivity {
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                         binding.CvWork.setAdapter(adapter);
                     } else {
-                        Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        //Todo Add LLField
                     }
                 } );
     }

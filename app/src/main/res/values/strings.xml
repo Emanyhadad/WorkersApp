@@ -5,8 +5,15 @@
     <string name="btnSendVerificationCode">أرسل كود التحقق</string>
     <string name="tvPalestinePhone">+970</string>
     <string name="btnLogin">دخول</string>
-    <string name="tvRegisterNow">سجل الان</string>
+    <string name="tvRegisterNow">سجل الأن</string>
+    <string name="tvInAnotherTime">في وقت لاحق</string>
+    <string name="DoNotHave">ليس لديك حساب، قم بالتسجيل الأن!</string>
     <string name="tvDoNotHaveAnAccount">ليس لديك حساب؟</string>
+    <string name="tvFill">يرجى تعبئة هذا الحقل</string>
+    <string name="female">أنثى</string>
+    <string name="male">ذكر</string>
+    <string name="jobs">الوظائف</string>
+
     <string name="tvLoginPhone">سجّل الدخول باستخدام رقم الجوال</string>
     <string name="etPhoneHint">592 777 888</string>
     <string name="tvAccountType">نوع الحساب</string>
@@ -17,7 +24,9 @@
     <string name="tvBottomSheetMessage">أدخل رمز التحقق الذي أرسلناه من خلال رقم هاتفك.</string>
 
 
-    <string name="businessToolBar">نماذج الاعمال</string>
+    <string name="TvReviews">آراء العملاء </string>
+
+    <string name="businessToolBar">نماذج الأعمال</string>
     <string name="businessNumImages">1/3</string>
     <string name="businessDescription">الصوفا الخشبية من سبع قطع :3كبير, 2 صغير،كرسي طاولة القهوة، طاولة جانبية، طاولة وسط ,وحدة تخزين. مصنوعة من الخشب الصلب الطبيعي, طاولة وسط ,وحدة تخزين. مصنوعة من الخشب الصلب الطبيعي.</string>
     <string name="businessDateAch">تاريخ الإنجاز</string>
@@ -33,6 +42,7 @@
 
 
     <string name="ProfileToolBar">البيانات الشخصية</string>
+    <string name="ProfileToolBarPage">الصفحة الشخصية </string>
     <string name="ProfileUserName">عبد الله يوسف</string>
     <string name="ProfileNickName">(أبو عمر)</string>
     <string name="ProfileJobName">نجار</string>
@@ -50,21 +60,12 @@
     <string name="ProfileDate">21/3/2023ا</string>
     <string name="ProfileJoinDate">تاريخ الانضمام:</string>
 
+
     <string name="ArithmeticNav">حسابي</string>
     <string name="myJobsNav">وظائفي</string>
     <string name="PresenterNav">مقدم عليها</string>
     <string name="CareersNav">وظائف</string>
 
-    <!--    <string name="register_full_name">الاسم </string>-->
-    <!--    <String name="register_nick_name">اللقب</String>-->
-    <!--    <String name="register_birth">تاريخ الميلاد</String>-->
-    <!--    <String name="register_gender"> الجنس</String>-->
-    <!--    <String name="register_female">أنثى</String>-->
-    <!--    <String name="register_male">ذكر</String>-->
-    <!--    <String name="register_next">التالي</String>-->
-
-    <!--    <String name="cv_work_category">فئة العمل</String>-->
-    <!--    <String name="cv_talk">تحدث عن نفسك</String>-->
 
     <string name="tvJobDescription">وصف العمل</string>
     <string name="etDescriptionHint">أضف وصفا دقيقا يوضح ميزات العمل.</string>
@@ -97,6 +98,7 @@
         <item>بليط</item>
         <item>قصارة</item>
     </string-array>
+
     <string name="title_activity_maps2">MapsActivity2</string>
     <string name="post_paragraph">بدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقيبدي خزانة نوع خشب أند بدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقينبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقيبدي خزانة نوع خشب أند إي أف، ست ضرفات طابقين</string>
     <string name="closeProject">إغلاق المشروع</string>
@@ -114,7 +116,7 @@
     <string name="tv_projectstate">حالة المشروع</string>
     <string name="tv_now">الآن</string>
     <string name="tv_duration">مايو/2023 -</string>
-    <string name="_4_5i">4.5i</string>
+    <string name="_4_5i">4</string>
     <string name="tv_workerName">عبدالله يوسف</string>
     <string name="_37i">37i</string>
     <string name="tv_finishproject">إنهاء المشروع</string>
@@ -132,6 +134,21 @@
     <string name="itOpenJobs">وظائف مفتوحة</string>
     <string name="itInProgress">قيد العمل</string>
     <string name="itNewJob">عمل جديد</string>
+    <string name="sherch">بحث</string>
+
+
+
+    <string name="userFullName">الاسم الكامل</string>
+    <string name="userNickName">اللقب</string>
+    <string name="userBirth">تاريخ الميلاد</string>
+    <string name="userGender">الجنس</string>
+    <string name="userMale">ذكر</string>
+    <string name="userFemale">أنثى</string>
+    <string name="userNext">التالي</string>
+    <string name="userCity">المدينة</string>
+    <string name="userTitle">العنوان</string>
+    <string name="userWorkCategory">فئة العمل</string>
+    <string name="userCv">تحدث عن نفسك</string>
 
 
 </resources>

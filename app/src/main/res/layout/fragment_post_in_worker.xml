@@ -15,45 +15,56 @@
         android:layout_marginTop="@dimen/_12sdp"
         android:layout_marginStart="@dimen/_15sdp"
         android:layout_marginEnd="@dimen/_15sdp"
-        android:orientation="horizontal">
+        android:orientation="vertical">
+        <include
+            android:id="@+id/inculd"
+            layout="@layout/toolbar_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
-            android:id="@+id/etSearch"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/_23sdp"
-            android:orientation="horizontal"
-            android:background="@drawable/et_search"
-            android:layout_weight="1">
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_35sdp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical|center_horizontal"
+                android:background="@drawable/et_search"
+                android:layout_weight="1">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/_13ssp"
-                android:layout_weight="1"
-                android:fontFamily="@font/cairo_regular"
-                android:textColor="@color/gray"
-                android:paddingStart="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_2sdp"
-                android:text="بحث"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/_13ssp"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/cairo_regular"
+                    android:textColor="@color/gray"
+                    android:paddingStart="@dimen/_8sdp"
+                    android:text="@string/sherch"/>
 
-            <ImageView
-                android:id="@+id/imageView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/ic_serch"
-                android:paddingEnd="@dimen/_8sdp"
-                android:paddingBottom="@dimen/_7sdp"
-                android:paddingTop="@dimen/_5sdp"/>
+                <ImageView
+                    android:id="@+id/imageView8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_serch"
+                    android:paddingEnd="@dimen/_8sdp"
+                    android:paddingBottom="@dimen/_7sdp"
+                    android:paddingTop="@dimen/_5sdp"/>
 
+            </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/favoriteBtn"
+                android:layout_width="30dp"
+                android:layout_height="@dimen/_35sdp"
+                android:layout_marginStart="@dimen/_4sdp"
+                android:background="@drawable/back_fav"
+                android:src="@drawable/ic_favorite"/>
         </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/favoriteBtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_marginStart="@dimen/_4sdp"
-            android:background="@drawable/back_fav"
-            android:src="@drawable/ic_favorite"/>
 
 
     </LinearLayout>
@@ -71,7 +82,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="gone"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="135dp"
         tools:listitem="@layout/item_post"
         />
 

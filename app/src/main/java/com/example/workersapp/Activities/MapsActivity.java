@@ -17,7 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
+
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
@@ -78,7 +78,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         fetchData();
 
-        // Initialize FusedLocationProviderClient
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -112,13 +111,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         final Dialog dialog = new Dialog(this);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setContentView(R.layout.bottom_sheet_city);
-        dialog.setCancelable(false);//ما يطفي الديلوج لما نضغط عالباك جراوند
+        dialog.setCancelable(false);
 
         EditText sheet = dialog.findViewById(R.id.sheetTitle);
         Button next = dialog.findViewById(R.id.sheetBtnNext);
         mySpinner = dialog.findViewById(R.id.sheetCity);
 
-        dialog.show();
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
@@ -135,21 +133,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 if (intentSource.equals("RegisterActivity")) {
                     if (!title.isEmpty() && !city.isEmpty()) {
-
                         Map<String, Object> data = new HashMap<>();
                         data.put("city", city);
                         data.put("title", title);
                         data.put("accountType", accountType);
-                        Toast.makeText(MapsActivity.this, "accountType: "+accountType, Toast.LENGTH_SHORT).show();
 
                         db.collection("users").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                                 .update(data)
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void unused) {
-                                        Toast.makeText(MapsActivity.this, "success city and title", Toast.LENGTH_SHORT).show();
                                     }
                                 });
+
                         if (accountType.equals("worker")) {
                             startActivity(new Intent(getBaseContext(), CvActivity.class));
                             finish();
@@ -165,14 +161,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         Intent intent1 = new Intent();
                         intent1.putExtra("city", city);
                         setResult(RESULT_OK, intent1);
-                        Toast.makeText(MapsActivity.this, "im here ", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 }
 
-
+                dialog.dismiss();
             }
         });
+
+        dialog.show();
     }
 
     @SuppressLint("MissingPermission")
@@ -227,11 +224,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, citiesListF);
                             mySpinner.setAdapter(adapter);
                         } else {
-                            Toast.makeText(getApplicationContext(), task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                            //Todo Add LLField
                         }
                     }
                 });
     }
-
 
 }

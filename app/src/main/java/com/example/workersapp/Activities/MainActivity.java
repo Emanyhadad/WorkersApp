@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         String userPhoneNumber = user.getPhoneNumber();
-        Toast.makeText(this, userPhoneNumber, Toast.LENGTH_SHORT).show();
 
         binding.btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override

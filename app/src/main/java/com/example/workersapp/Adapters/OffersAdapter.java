@@ -12,7 +12,6 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.workersapp.Listeneres.DeleteListener;
 import com.example.workersapp.Listeneres.OfferListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
@@ -22,7 +21,6 @@ import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
-import java.util.Objects;
 
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> {
     List< Offer > offerList;
@@ -81,9 +79,7 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
 
         holder.deleteButton.setOnClickListener( view -> {listener.onDelete( pos );} );
         holder.hireButton.setOnClickListener( view -> {listener.onHire( pos );} );
-
-
-
+        
     }
 
 

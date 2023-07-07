@@ -5,6 +5,7 @@ import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.icu.text.SimpleDateFormat;
@@ -15,9 +16,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -26,9 +25,6 @@ import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityPost2Binding;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -69,15 +65,15 @@ public class PostActivity2 extends AppCompatActivity {
     DocumentReference documentReference;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    String postId, path;
+    String postId, path, accountType;
     float rating;
     String comment;
     String workerId;
-    private static final String TOPIC_NAME = "weather";
+    private static final String CHANNEL_ID = "your_channel_id";
 
-    public static SharedPreferences sp;
-    public static SharedPreferences.Editor editor;
+    private String titleFCM, body;
 
+    public static SharedPreferences sharedPreferences;
 
 
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation, projectState;
@@ -89,29 +85,8 @@ public class PostActivity2 extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityPost2Binding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
-        sp = getSharedPreferences("Login", MODE_PRIVATE);
-        editor = sp.edit();
-
-
-        subscribeToTopic();
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        // تم استرداد التوكن بنجاح
-                        String token = task.getResult();
-                        // قم بتخزين التوكن في مكان مناسب (مثل قاعدة البيانات أو ملف التفضيلات)
-                        // يتم استخدامه لإرسال الإشعارات للعمال
-                        editor.putString("token",token);
-                        editor.apply();
-
-                        Log.d("tokenOwner", token);
-                    } else {
-                        // حدث خطأ في استرداد التوكن
-                        Log.d("Token", "Failed to retrieve token: " + task.getException().getMessage());
-                    }
-                });
-
-
+        sharedPreferences = getSharedPreferences("MyPreferences", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
 
         binding.progressBar.setVisibility(View.VISIBLE);
 
@@ -133,18 +108,30 @@ public class PostActivity2 extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
-//        userId = "+970594461722";//TODO GET UserCurrent
-        postId = getIntent().getStringExtra("PostId").trim(); //TODO GET FROM INTENT
+        postId = getIntent().getStringExtra("PostId").trim();
 
         path = "posts/" + user + "/userPost/" + Objects.requireNonNull(postId);
         documentReference = firestore.collection("posts").document(Objects.requireNonNull(user.getPhoneNumber())).
                 collection("userPost").document(postId);
 
-//        Toast.makeText(this, Objects.requireNonNull(postId), Toast.LENGTH_SHORT).show();
+        firestore.collection("forms").document(Objects.requireNonNull(postId)).collection("userForm").get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    int numDocs = queryDocumentSnapshots.size();
+                    binding.APtvOffers.setText(String.valueOf(numDocs));
+                })
+                .addOnFailureListener(e -> {
 
+                });
+
+        getData();
+
+    }
+
+    void getData() {
         firestore.collection("posts").document(user.getPhoneNumber()).
                 collection("userPost").document(Objects.requireNonNull(postId)).get()
                 .addOnSuccessListener(documentSnapshot -> {
+
                     if (documentSnapshot.exists()) {
                         jobState = documentSnapshot.getString("jobState");
                         projectState = jobState;
@@ -192,7 +179,7 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.ApBtnFinishJob.setVisibility(View.VISIBLE);
                                 binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
                                 binding.linearLayoutRateWorker.setVisibility(View.GONE);
-                                binding.linearLayoutRateClint.setVisibility(View.GONE);
+//                                binding.linearLayoutRateClint.setVisibility(View.GONE);
 
                                 CollectionReference workerOffersRef = firestore.collection("offers").document(postId).collection("workerOffers");
                                 workerOffersRef.document(Objects.requireNonNull(documentSnapshot.getString("workerId"))).get().addOnCompleteListener(task -> {
@@ -219,6 +206,7 @@ public class PostActivity2 extends AppCompatActivity {
                                         .document(Objects.requireNonNull(documentSnapshot.getString("workerId"))).get()
                                         .addOnSuccessListener(documentSnapshot1 -> {
                                             if (documentSnapshot1.exists()) {
+                                                accountType = documentSnapshot1.getString("accountType");
                                                 String fullName = documentSnapshot1.getString("fullName");
                                                 binding.tvIWJWorkerName.setText(fullName);
                                                 String image = documentSnapshot1.getString("image");
@@ -251,7 +239,7 @@ public class PostActivity2 extends AppCompatActivity {
                                             binding.APTvJobData.setVisibility(View.VISIBLE);
                                             binding.APCLInWork.setVisibility(View.VISIBLE);
                                             binding.ApBtnFinishJob.setVisibility(View.GONE);
-                                            binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
+//                                            binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
                                             binding.linearLayoutRateWorker.setVisibility(View.VISIBLE);
                                             //Todo: How get in same time
 //                                                    binding.tvWorkerComment.setText( documentSnapshot.getString( "Comment-worker" ) );
@@ -271,7 +259,7 @@ public class PostActivity2 extends AppCompatActivity {
                                 binding.APTvJobData.setVisibility(View.VISIBLE);
                                 binding.APCLInWork.setVisibility(View.VISIBLE);
                                 binding.ApBtnFinishJob.setVisibility(View.GONE);
-                                binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
+//                                binding.linearLayoutRateClint.setVisibility(View.VISIBLE);
                                 binding.linearLayoutRateWorker.setVisibility(View.VISIBLE);
                                 binding.tvWorkerComment.setText(documentSnapshot.getString("Comment-worker"));
                                 double ratingWorker = documentSnapshot.getDouble("Rating-worker");
@@ -325,6 +313,16 @@ public class PostActivity2 extends AppCompatActivity {
                         description = documentSnapshot.getString("description");
                         binding.APTvJobDec.setText(description);
 
+                        firestore.collection("offers").document(Objects.requireNonNull(postId))
+                                .collection("workerOffers")
+                                .get()
+                                .addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        int count = task.getResult().size();
+                                        binding.APbtnComments.setText(count == 0 ? "0" : String.valueOf(count));
+                                    }
+                                });
+
                         List<String> images = (List<String>) documentSnapshot.get("images");
                         if (images == null || images.isEmpty()) {
                             binding.APImageRV.setVisibility(View.GONE);
@@ -350,32 +348,43 @@ public class PostActivity2 extends AppCompatActivity {
 
                         jobLocation = documentSnapshot.getString("jobLocation");
                         binding.APTvJobLoc.setText(jobLocation);
-//TODO GET Timestamp
+
+                        long currentTimeMillis = System.currentTimeMillis();
+                        long storageTimeMillis = documentSnapshot.getLong("addedTime");
+                        long timeDifferenceMillis = currentTimeMillis - storageTimeMillis;
+
+                        long seconds = timeDifferenceMillis / 1000;
+                        long minutes = seconds / 60;
+                        long hours = minutes / 60;
+
+                        String timeDifference;
+                        if (hours > 0) {
+                            timeDifference = "قبل " + hours + "  ساعة";
+                        } else if (minutes > 0) {
+                            timeDifference = "قبل " + minutes + "  دقيقة";
+                        } else {
+                            timeDifference = "قبل " + seconds + " ثانية";
+                        }
+
+                        binding.APtvJobShareTime.setText(timeDifference);
+
+                        //TODO GET Timestamp
                         binding.progressBar.setVisibility(View.GONE);
                         binding.SV.setVisibility(View.VISIBLE);
 
+
                     } else {
-                        Toast.makeText(this, "Prop", Toast.LENGTH_SHORT).show();
+                        //Todo Add LLField
+
                     }
                 })
-                .addOnFailureListener(e -> Log.e("GettingPost", e.getMessage()));
-
+                .addOnFailureListener(e -> {
+                    //Todo Add LLField
+                });
 
     }
 
     void Rating() {
-        firestore.collection("posts").document(user.getPhoneNumber())
-                .collection("userPost").document(Objects.requireNonNull(postId)).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            workerId = documentSnapshot.getString("workerId");
-                            Log.d("userActivity",user.getPhoneNumber());
-                            Log.d("workerActivity",workerId);
-                        }
-                    }
-                });
         RatingBar ratingBar = evaluationDialog.findViewById(R.id.ratingBar);
         EditText commentEditText = evaluationDialog.findViewById(R.id.et_comment);
         Button sendButton = evaluationDialog.findViewById(R.id.sendButton);
@@ -383,7 +392,6 @@ public class PostActivity2 extends AppCompatActivity {
         sendButton.setOnClickListener(v -> {
             rating = ratingBar.getRating();
             comment = commentEditText.getText().toString();
-
 
             Map<String, Object> updates1 = new HashMap<>();
             updates1.put("Comment-worker", comment);
@@ -407,8 +415,6 @@ public class PostActivity2 extends AppCompatActivity {
             updates1.put("jobState", "done");
 
             documentReference.update(updates1).addOnSuccessListener(aVoid -> {
-                // Handle the case when the update is successful
-                sendNotification(workerId,comment);
             }).addOnFailureListener(e -> {
                 // Handle the case when the update fails
             });
@@ -417,6 +423,27 @@ public class PostActivity2 extends AppCompatActivity {
         });
 
     }
+
+//    private void sendNoti() {
+//        ApiUtils.getClients().sendNotification(new PushNotification(new NotificationData(titleFCM,body), TO))
+//                .enqueue(new Callback<PushNotification>() {
+//                    @Override
+//                    public void onResponse(Call<PushNotification> call, Response<PushNotification> response) {
+//                        if (response.isSuccessful()){
+//                            Toast.makeText(PostActivity2.this, "Notification Sent", Toast.LENGTH_SHORT).show();
+//                            Log.d("NotificationActivity","Notification Sent");
+//                        }else {
+//                            Toast.makeText(PostActivity2.this, "Failed", Toast.LENGTH_SHORT).show();
+//                            Log.d("NotificationActivityF","Failed");
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onFailure(Call<PushNotification> call, Throwable t) {
+//                        Toast.makeText(PostActivity2.this, t.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
+//                });
+//    }
 
     void DeleteJob() {
 
@@ -464,7 +491,6 @@ public class PostActivity2 extends AppCompatActivity {
             // Handle the case when the update fails
         });
     }
-
     private void sendNotification(String workerId, String comment) {
         // استعداد بناء الطلب لإرسال الإشعار عبر FCM
         OkHttpClient client = new OkHttpClient().newBuilder().build();
@@ -476,8 +502,7 @@ public class PostActivity2 extends AppCompatActivity {
         try {
             jsonNotification.put("comment", comment);
             String d = jsonNotification.getString("comment");
-            Toast.makeText(this, "jsonNotification "+d, Toast.LENGTH_SHORT).show();
-            Log.d("jsonNotification",d);
+            Log.d("jsonNotification", d);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -485,11 +510,10 @@ public class PostActivity2 extends AppCompatActivity {
         // بناء هيكل البيانات للطلب
         JSONObject jsonRequest = new JSONObject();
         try {
-//            jsonRequest.put("to", "/topics/" + workerId);
             jsonRequest.put("to", workerId);
             Log.d("Topic", workerId);
             jsonRequest.put("data", jsonNotification);
-            Log.d("jsonRequest",jsonRequest.toString());
+            Log.d("jsonRequest", jsonRequest.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -511,44 +535,36 @@ public class PostActivity2 extends AppCompatActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(PostActivity2.this, "فشل إرسال الإشعار", Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(PostActivity2.this, "فشل إرسال الإشعار", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
 
             @Override
             public void onResponse(okhttp3.Call call, okhttp3.Response response) throws IOException {
-
-                    // استجابة ناجحة من خادم FCM
-                    String responseData = response.body().string();
-                    Log.d("responseActivity", responseData);
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(PostActivity2.this, "تم إرسال الإشعار بنجاح", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                // استجابة ناجحة من خادم FCM
+                String responseData = response.body().string();
+                Log.d("responseActivity", responseData);
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+//                        Toast.makeText(PostActivity2.this, "تم إرسال الإشعار بنجاح", Toast.LENGTH_SHORT).show();
+                    }
+                });
 
             }
         });
     }
 
-
-    private void subscribeToTopic() {
-        FirebaseMessaging.getInstance().subscribeToTopic(TOPIC_NAME).addOnCompleteListener(new OnCompleteListener<Void>() {
-            @Override
-            public void onComplete(@NonNull Task<Void> task) {
-                if (task.isSuccessful()) {
-                    // تم الاشتراك بنجاح
-                    Log.d("Subscribe", "Subscribed to topic: " + TOPIC_NAME);
-                } else {
-                    // حدث خطأ أثناء الاشتراك
-                    Log.d("Subscribe", "Failed to subscribe to topic: " + TOPIC_NAME);
-                }
-            }
-        });
+    private void msg() {
+        if (user != null) {
+            FirebaseMessaging.getInstance().subscribeToTopic("All");
+        }
     }
 
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }
 }

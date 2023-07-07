@@ -1,7 +1,7 @@
 package com.example.workersapp.Activities;
 
 import android.os.Bundle;
-import android.widget.Toast;
+
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -17,7 +17,6 @@ public class EmptyActivity extends AppCompatActivity {
         binding = ActivityEmptyBinding.inflate(getLayoutInflater());
         setContentView(R.layout.activity_empty);
 
-        Toast.makeText(this, "hello", Toast.LENGTH_SHORT).show();
 
     }
 }

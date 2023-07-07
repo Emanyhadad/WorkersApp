@@ -17,7 +17,7 @@
 
     <ProgressBar
         android:id="@+id/ProgressBar"
-        android:visibility="visible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="center_vertical|center_horizontal"

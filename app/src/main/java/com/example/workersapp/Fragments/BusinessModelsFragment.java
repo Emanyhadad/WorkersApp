@@ -16,16 +16,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Activities.DetailsModelsActivity;
 import com.example.workersapp.Adapters.ImageModelAdapter;
-import com.example.workersapp.Listeneres.clickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Model;
 import com.example.workersapp.databinding.FragmentBusinessModelsBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
@@ -36,7 +33,8 @@ public class BusinessModelsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1_IMAGE = "image";
+    FragmentBusinessModelsBinding binding;
+    private static final String ARG_PARAM1_IMAGE = "image" ;
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -75,8 +73,8 @@ public class BusinessModelsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        FragmentBusinessModelsBinding binding = FragmentBusinessModelsBinding.inflate(inflater, container, false);
-        sp = getActivity().getSharedPreferences("Login", MODE_PRIVATE);
+        binding = FragmentBusinessModelsBinding.inflate(inflater, container, false);
+        sp = getActivity().getSharedPreferences("MyPreferences", MODE_PRIVATE);
         editor = sp.edit();
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
@@ -84,6 +82,8 @@ public class BusinessModelsFragment extends Fragment {
         firebaseStorage = FirebaseStorage.getInstance();
         imagesList = new ArrayList<>();
         models = new ArrayList<>();
+
+
 
         return binding.getRoot();
     }
@@ -96,6 +96,10 @@ public class BusinessModelsFragment extends Fragment {
                 .collection("userForm")
                 .get()
                 .addOnSuccessListener( queryDocumentSnapshots -> {
+                    if (queryDocumentSnapshots.isEmpty()){
+                        binding.progressBar.setVisibility(View.GONE);
+                        binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                    }
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                         List<String> images = (List<String>) document.get("images");
                         String doc = (String) document.get("documentId");
@@ -108,12 +112,14 @@ public class BusinessModelsFragment extends Fragment {
                                         intent.putExtra("documentId", documentId);
                                         startActivity(intent);
                                     } );
+                            binding.LLEmptyWorker.setVisibility(View.GONE);
+                            binding.FragRV.setVisibility(View.VISIBLE);
                             RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
                             fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
                             fragRv.setAdapter(adapter);
                             adapter.notifyDataSetChanged();
                         } else {
-                            Toast.makeText(getContext(), "wait", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
                         }
                     }
 

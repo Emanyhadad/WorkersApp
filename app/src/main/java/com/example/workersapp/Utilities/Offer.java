@@ -1,7 +1,5 @@
 package com.example.workersapp.Utilities;
 
-import com.google.firebase.firestore.PropertyName;
-
 public class Offer {
     public String offerBudget;
     public String offerDuration;
