@@ -83,9 +83,9 @@ public class PostFragment_inWorker extends Fragment {
 
         FragmentPostInWorkerBinding binding = FragmentPostInWorkerBinding.inflate(inflater, container, false);
 
-        //---> initializing Google Ad SDK
-        MobileAds.initialize(getContext(), initializationStatus -> {
-        });
+//        //---> initializing Google Ad SDK
+//        MobileAds.initialize(getContext(), initializationStatus -> {
+//        });
 
         firebaseFirestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
@@ -162,9 +162,9 @@ public class PostFragment_inWorker extends Fragment {
                                                     });
                                                 }
                                                 binding.RV.setAdapter(postAdapter);
-                                                postAdapter.setList(postList);
-                                                nativeAdList = new ArrayList<>();
-                                                createNativeAd();
+//                                                postAdapter.setList(postList);
+//                                                nativeAdList = new ArrayList<>();
+//                                                createNativeAd();
                                                 binding.ProgressBar.setVisibility(View.GONE);
                                                 binding.RV.setVisibility(View.VISIBLE);
                                             })
@@ -282,86 +282,86 @@ public class PostFragment_inWorker extends Fragment {
 
     }
 
-    private static final String TAG = "--->Native Ad";
-    private List<NativeAd> nativeAdList;
-    private ArrayList<Object> objects;
-
-    private void createNativeAd() {
-
-        objects = new ArrayList<>();
-        objects.addAll(postList);
-
-        AdClass adClass = new AdClass();
-
-        Log.d(TAG, "Google SDK Initialized");
-
-        AdLoader adLoader = new AdLoader.Builder(getContext(), "ca-app-pub-4163051235104500/1257264129")
-                .forNativeAd(nativeAd -> {
-                    Log.d(TAG, "Native Ad Loaded");
-
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
-                        if (getActivity().isDestroyed()) {
-                            nativeAd.destroy();
-                            Log.d(TAG, "Native Ad Destroyed");
-                            return;
-                        }
-                    }
-
-                    nativeAdList.add(nativeAd);
-
-                    if (!adClass.getAdLoader().isLoading()) {
-//                        objects.add(postList.get(0));
-//                        objects.add(postList.get(1));
-//                        objects.add(postList.get(2));
-//                        objects.add(nativeAdList.get(0));
-//                        objects.add(postList.get(3));
-//                        objects.add(postList.get(4));
-//                        objects.add(postList.get(5));
-//                        objects.add(nativeAdList.get(1));
-//                        objects.add(postList.get(6));
-
-                        for (int i = 0; i < objects.size(); i++) {
-                            if (i%5==0 && ! (objects.get(i) instanceof NativeAd))
-                              objects.add(i,nativeAd);
-                        }
-                    }
-
-                })
-
-                .withAdListener(new AdListener() {
-                    @Override
-                    public void onAdFailedToLoad(@NonNull LoadAdError adError) {
-                        // Handle the failure by logging, altering the UI, and so on.
-                        Log.d(TAG, "Native Ad Failed To Load");
-                        Log.d(TAG, adError.getMessage());
-                        Log.d(TAG, adError.toString());
-
-//                        new CountDownTimer(10000, 1000) {
+//    private static final String TAG = "--->Native Ad";
+//    private List<NativeAd> nativeAdList;
+//    private ArrayList<Object> objects;
 //
-//                            @Override
-//                            public void onTick(long millisUntilFinished) {
-//                                Log.d(TAG, "Timer : " + millisUntilFinished / 1000);
-//                            }
+//    private void createNativeAd() {
 //
-//                            @Override
-//                            public void onFinish() {
-//                                Log.d(TAG, "Reloading NativeAd");
+//        objects = new ArrayList<>();
+//        objects.addAll(postList);
 //
-//                                createNativeAd();
-//                            }
-//                        }.start();
-
-                    }
-                })
-                .withNativeAdOptions(new NativeAdOptions.Builder()
-                        .build())
-                .build();
-
-        adLoader.loadAds(new AdRequest.Builder().build(), 2);
-        adClass.setAdLoader(adLoader);
-        postAdapter.setObject(objects);
-
-    }
+//        AdClass adClass = new AdClass();
+//
+//        Log.d(TAG, "Google SDK Initialized");
+//
+//        AdLoader adLoader = new AdLoader.Builder(getContext(), "ca-app-pub-4163051235104500/1257264129")
+//                .forNativeAd(nativeAd -> {
+//                    Log.d(TAG, "Native Ad Loaded");
+//
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+//                        if (getActivity().isDestroyed()) {
+//                            nativeAd.destroy();
+//                            Log.d(TAG, "Native Ad Destroyed");
+//                            return;
+//                        }
+//                    }
+//
+//                    nativeAdList.add(nativeAd);
+//
+//                    if (!adClass.getAdLoader().isLoading()) {
+////                        objects.add(postList.get(0));
+////                        objects.add(postList.get(1));
+////                        objects.add(postList.get(2));
+////                        objects.add(nativeAdList.get(0));
+////                        objects.add(postList.get(3));
+////                        objects.add(postList.get(4));
+////                        objects.add(postList.get(5));
+////                        objects.add(nativeAdList.get(1));
+////                        objects.add(postList.get(6));
+//
+//                        for (int i = 0; i < objects.size(); i++) {
+//                            if (i%5==0 && ! (objects.get(i) instanceof NativeAd))
+//                              objects.add(i,nativeAd);
+//                        }
+//                    }
+//
+//                })
+//
+//                .withAdListener(new AdListener() {
+//                    @Override
+//                    public void onAdFailedToLoad(@NonNull LoadAdError adError) {
+//                        // Handle the failure by logging, altering the UI, and so on.
+//                        Log.d(TAG, "Native Ad Failed To Load");
+//                        Log.d(TAG, adError.getMessage());
+//                        Log.d(TAG, adError.toString());
+//
+////                        new CountDownTimer(10000, 1000) {
+////
+////                            @Override
+////                            public void onTick(long millisUntilFinished) {
+////                                Log.d(TAG, "Timer : " + millisUntilFinished / 1000);
+////                            }
+////
+////                            @Override
+////                            public void onFinish() {
+////                                Log.d(TAG, "Reloading NativeAd");
+////
+////                                createNativeAd();
+////                            }
+////                        }.start();
+//
+//                    }
+//                })
+//                .withNativeAdOptions(new NativeAdOptions.Builder()
+//                        .build())
+//                .build();
+//
+//        adLoader.loadAds(new AdRequest.Builder().build(), 2);
+//        adClass.setAdLoader(adLoader);
+//        postAdapter.setObject(objects);
+//
+//    }
 
 
 }
