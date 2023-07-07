@@ -30,7 +30,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:ignore="ScrollViewCount">
 
         <LinearLayout
@@ -438,6 +438,7 @@
         android:tint="@color/white"
         android:enabled="true"
         app:borderWidth="0dp"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/_9sdp"
         android:layout_marginLeft="@dimen/_8sdp"
         android:backgroundTint="@color/green"/>

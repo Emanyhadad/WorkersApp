@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
 
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/AppBar"
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:background="#FAFAFA"
         android:elevation="0dp"
-        android:visibility="visible"
+        android:visibility="gone"
         app:elevation="0dp">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -37,6 +37,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
+
                 <include
                     android:id="@+id/inculd"
                     layout="@layout/toolbar_layout"

@@ -140,75 +140,7 @@ public class GuestActivity extends AppCompatActivity {
                         });
             }
         });
-//        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots ->
-//        {
-//            for ( DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-//                decoumtId.add(documentSnapshot1);
-//                Log.e( "users" ,documentSnapshot1.getId());
-//                firebaseFirestore.collection("posts").document(documentSnapshot1.getId()).
-//                        collection("userPost")
-//                        .whereEqualTo( "jobState","open" )
-//                        .orderBy( "addedTime", Query.Direction.DESCENDING )
-//                        .get()
-//                        .addOnCompleteListener(task -> {
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                Log.e( "posts" ,document.getId());
-//                                Log.e( "AddedTime",document.getLong("addedTime")+"");
-//                                //Todo Category
-//                                Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
-//                                jobState = document.getString("jobState");
-//                                title = document.getString("title");
-//                                description = document.getString("description");
-//                                List<String> images = (List<String>) document.get("images");
-//                                List<String> categoriesList = (List<String>) document.get("categoriesList");
-//
-//                                expectedWorkDuration = document.getString("expectedWorkDuration");
-//                                projectedBudget = document.getString("projectedBudget");
-//                                jobLocation = document.getString("jobLocation");
-//                                addedTime = document.getLong("addedTime");
-//                                Post post = new Post(title, description, images, categoriesList,
-//                                        expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
-//                                post.setPostId(document.getId());
-//                                post.setOwnerId(documentSnapshot1.getId());
-//
-//                                postList.add(post);
-//                                postAdapter = new Post_forWorkerAdapter(postList, getBaseContext(), pos -> RegisterDialog() );
-//                                if (postList.isEmpty()) {
-//                                    binding.RV.setVisibility( View.GONE );
-//                                    binding.ProgressBar.setVisibility( View.GONE );
-//                                    binding.LLEmpty.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    binding.LLEmpty.setVisibility(View.GONE);
-//                                    binding.RV.setAdapter(postAdapter);
-//
-//                                    postAdapter.setList(postList);
-//                                    binding.ProgressBar.setVisibility( View.GONE);
-//                                    binding.RV.setVisibility(View.VISIBLE);
-//                                } }
-//
-//                            binding.RV.setLayoutManager(new LinearLayoutManager(getBaseContext(),
-//                                    LinearLayoutManager.VERTICAL, false));
-//                        }).addOnFailureListener(runnable -> {
-//                            Log.e( "Error",runnable.getMessage() );
-//                            binding.RV.setVisibility( View.GONE );
-//                            binding.ProgressBar.setVisibility( View.GONE );
-//                            binding.LLEmpty.setVisibility(View.VISIBLE);
-//
-//                        });
-//            }
-//        }).addOnFailureListener( runnable -> {
-//            Log.e( "Error1",runnable.getMessage() );
-//            binding.ProgressBar.setVisibility(View.GONE);
-//
-//            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( Context.CONNECTIVITY_SERVICE);
-//            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-//            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-//
-//            if (!isConnected) {
-//                binding.LLNoWifi.setVisibility(View.VISIBLE);
-//                binding.ProgressBar.setVisibility(View.GONE);
-//                binding.RV.setVisibility(View.GONE);
-//            }} );
+
 
         binding.etSearch.setOnClickListener( view -> RegisterDialog()  );
 
