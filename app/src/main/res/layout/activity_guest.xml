@@ -11,7 +11,7 @@
     tools:context=".Activities.GuestActivity">
     <LinearLayout
         android:id="@+id/ToolbarLL"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/_8sdp"
@@ -29,7 +29,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/etSearch"

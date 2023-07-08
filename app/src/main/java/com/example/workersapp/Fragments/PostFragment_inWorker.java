@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -88,101 +90,7 @@ public class PostFragment_inWorker extends Fragment {
 //        MobileAds.initialize(getContext(), initializationStatus -> {
 //        });
 
-        firebaseFirestore = FirebaseFirestore.getInstance();
-        firebaseAuth = FirebaseAuth.getInstance();
-        user = firebaseAuth.getCurrentUser();
-        binding.inculd.tvPageTitle.setText(getString(R.string.jobs));
-        categoryList = new ArrayList<>();
-        postList = new ArrayList<>();
-        List decoumtId = new ArrayList();
-        List<String> Category = new ArrayList<>();
-        firebaseFirestore.collection("workCategoryAuto").document("category")
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
-                        if (categoryMap != null) {
-                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
-                                String fieldName = entry.getKey();
-                                List<String> fieldData = entry.getValue();
-                                if (fieldName.equals(GetUserData())) {
-                                    Log.d("Field Name", fieldName);
-                                    Log.d("Field Data", fieldData.toString());
-                                    for (String s : fieldData) {
-                                        Category.add(s);
-                                    }
-                                    Log.e("Category", Category.toString());
-                                }
-                            }
-                        }
-                    } else {
-                        Log.d("Error", "No such document");
-                    }
-                })
-                .addOnFailureListener(e -> Log.d("Error", "Error getting document: " + e.getMessage()));
 
-        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots ->
-        {
-            binding.ProgressBar.setVisibility(View.GONE);
-            binding.RV.setVisibility(View.VISIBLE);
-            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                decoumtId.add(documentSnapshot1);
-                firebaseFirestore.collection("posts").document(documentSnapshot1.getId()).
-                        collection("userPost").get()
-                        .addOnCompleteListener(task -> {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                if (document.getString("jobState").equals("open")) {
-                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
-                                    firebaseFirestore.document("posts/" + documentSnapshot1.getId() + "/userPost/" + document.getId()).get()
-                                            .addOnSuccessListener(documentSnapshot -> {
-                                                if (documentSnapshot.exists()) {
-                                                    jobState = documentSnapshot.getString("jobState");
-                                                    title = documentSnapshot.getString("title");
-                                                    description = documentSnapshot.getString("description");
-                                                    List<String> images = (List<String>) documentSnapshot.get("images");
-                                                    List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
-
-                                                    expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
-                                                    projectedBudget = documentSnapshot.getString("projectedBudget");
-                                                    jobLocation = documentSnapshot.getString("jobLocation");
-                                                    addedTime = documentSnapshot.getLong("addedTime");
-
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState, addedTime);
-                                                    post.setPostId(document.getId());
-                                                    post.setOwnerId(documentSnapshot1.getId());
-
-                                                    postList.add(post);
-                                                    postAdapter = new Post_forWorkerAdapter(postList, getContext(), new ItemClickListener() {
-                                                        @Override
-                                                        public void OnClick(int pos) {
-                                                            Log.e("ItemClik", postList.get(pos).getPostId());
-                                                            Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
-                                                            intent.putExtra("PostId", postList.get(pos).getPostId());
-                                                            intent.putExtra("OwnerId", postList.get(pos).getOwnerId()); // pass data to new activity
-
-                                                            // pass data to new activity
-                                                            startActivity(intent);
-                                                        }
-                                                    });
-                                                }
-                                                binding.RV.setAdapter(postAdapter);
-//                                                postAdapter.setList(postList);
-//                                                nativeAdList = new ArrayList<>();
-//                                                createNativeAd();
-                                                binding.ProgressBar.setVisibility(View.GONE);
-                                                binding.RV.setVisibility(View.VISIBLE);
-                                            })
-                                            .addOnFailureListener(e -> Log.e("Field", e.getMessage()));
-                                    binding.RV.setLayoutManager(new LinearLayoutManager(getContext(),
-                                            LinearLayoutManager.VERTICAL, false));
-
-
-                                }
-                            }
-                        }).addOnFailureListener(runnable -> {
-                        });
-            }
-        });
 
         binding.etSearch.setOnClickListener(view -> startActivity(new Intent(getContext(), SearchActivity.class)));
 
@@ -201,7 +109,7 @@ public class PostFragment_inWorker extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-
+        getData();
         firebaseFirestore.collection("offers")
                 .document("favorites")
                 .collection("favorites")
@@ -251,7 +159,93 @@ public class PostFragment_inWorker extends Fragment {
         return workType;
 
     }
+void getData(){
 
+    firebaseFirestore = FirebaseFirestore.getInstance();
+    firebaseAuth = FirebaseAuth.getInstance();
+    user = firebaseAuth.getCurrentUser();
+    binding.inculd.tvPageTitle.setText(getString(R.string.jobs));
+    categoryList = new ArrayList<>();
+    postList = new ArrayList<>();
+    final String[] fieldName1 = new String[ 1 ];
+    List<String> Category = new ArrayList<>();
+
+    firebaseFirestore.collection("workCategoryAuto").document("category")
+            .get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    Map<String, List<String>> categoryMap = (Map<String, List<String>>) documentSnapshot.get("category");
+                    if (categoryMap != null) {
+                        for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
+                            String fieldName = entry.getKey();
+                            List<String> fieldData = entry.getValue();
+                            Log.d("Field Name", fieldName);
+                            Log.d("Field Data", fieldData.toString());
+                            for (String cat : fieldData) {
+                                categoryList.add(cat);
+                            }
+                            Log.e("Category", categoryList.toString());
+                        }
+                    }
+                } else {
+                    Log.d("Error", "No such document");
+                }
+            })
+            .addOnFailureListener(e -> {
+                Log.d("Error", "Error getting document: " + e.getMessage());
+            });
+
+    firebaseFirestore.collection( "users" ).get().
+            addOnSuccessListener( queryDocumentSnapshots -> {
+                for ( DocumentSnapshot documentSnapshot:queryDocumentSnapshots ){
+                    firebaseFirestore.collection( "posts" ).
+                            document( documentSnapshot.getId() ).collection( "userPost" )
+                            .whereEqualTo( "jobState","open" )
+//                            .whereEqualTo( "work" ,fieldName1[0])
+                            .orderBy( "addedTime", Query.Direction.DESCENDING )
+                            .get().addOnSuccessListener( queryDocumentSnapshots1 -> {
+                                for ( DocumentSnapshot documentSnapshot1: queryDocumentSnapshots1.getDocuments()) {
+                                    jobState = documentSnapshot1.getString("jobState");
+                                    title = documentSnapshot1.getString("title");
+                                    description = documentSnapshot1.getString("description");
+                                    List<String> images = (List<String>) documentSnapshot1.get("images");
+                                    List<String> categoriesList = (List<String>) documentSnapshot1.get("categoriesList");
+
+                                    expectedWorkDuration = documentSnapshot1.getString("expectedWorkDuration");
+                                    projectedBudget = documentSnapshot1.getString("projectedBudget");
+                                    jobLocation = documentSnapshot1.getString("jobLocation");
+                                    addedTime = documentSnapshot1.getLong("addedTime");
+
+                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
+                                    post.setPostId(documentSnapshot1.getId());
+                                    post.setOwnerId(documentSnapshot1.getId());
+
+                                    postList.add(post);
+                                    postAdapter = new Post_forWorkerAdapter(postList, getContext(), pos -> {
+                                        Log.e("ItemClik", postList.get(pos).getPostId());
+                                        Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
+                                        intent.putExtra("PostId", postList.get(pos).getPostId());
+                                        intent.putExtra("OwnerId", postList.get(pos).getOwnerId()); // pass data to new activity
+
+                                        // pass data to new activity
+                                        startActivity(intent);
+                                    });
+
+                                }
+                                binding.RV.setAdapter(postAdapter);
+                                binding.ProgressBar.setVisibility(View.GONE);
+                                binding.RV.setVisibility(View.VISIBLE);
+                                binding.RV.setLayoutManager(new LinearLayoutManager(getContext(),
+                                        LinearLayoutManager.VERTICAL, false));
+
+                            });
+
+                }
+
+            } );
+
+
+}
 //    private static final String TAG = "--->Native Ad";
 //    private List<NativeAd> nativeAdList;
 //    private ArrayList<Object> objects;

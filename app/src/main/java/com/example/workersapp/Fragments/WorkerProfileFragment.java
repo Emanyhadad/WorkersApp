@@ -214,7 +214,7 @@ public class WorkerProfileFragment extends Fragment {
 
                     binding.ProgressBar.setVisibility(View.GONE);
                     binding.ScrollView.setVisibility(View.VISIBLE);
-
+                    binding.fab.setVisibility( View.VISIBLE );
                     String fullName = documentSnapshot.getString("fullName");
                     String nickName = documentSnapshot.getString("nickName");
                     String work = documentSnapshot.getString("work");
