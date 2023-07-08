@@ -1,7 +1,5 @@
 package com.example.workersapp.Utilities;
 
-import java.util.Map;
-
 public class User{
     private String fullName;
     private String nickName;
@@ -12,7 +10,6 @@ public class User{
     private String city;
     private String cv;
     private String work;
-
     private String accountType;
 
     public User(String fullName, String nickName, String birth, String gender) {

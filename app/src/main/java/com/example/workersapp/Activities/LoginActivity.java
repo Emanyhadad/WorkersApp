@@ -229,9 +229,13 @@ public class LoginActivity extends AppCompatActivity {
                                 User user = task1.getResult( ).toObject( User.class );
                                 if ( user != null ) {
                                     if ( user.getAccountType( ).equals( "worker" ) ) {
+                                        editor.putString( "accountType" , "worker" );
+                                        editor.apply();
                                         startActivity( new Intent( getBaseContext( ) , WorkerActivities.class ) );
                                         finish( );
                                     } else if ( user.getAccountType( ).equals( "work owner" ) ) {
+                                        editor.putString( "accountType" , "work owner" );
+                                        editor.apply();
                                         startActivity( new Intent( getBaseContext( ) , WorkOwnerProfileActivity.class ) );
                                         finish( );
                                     }
@@ -310,13 +314,16 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart( ) {
         super.onStart( );
         if ( currentUser != null ) {
-            String accountType = sp.getString( "accountType" , "worker" );
+            String accountType = sp.getString( "accountType" , "null" );
+            Toast.makeText(this, accountType, Toast.LENGTH_SHORT).show();
             if ( accountType.equals( "worker" ) ) {
                 startActivity( new Intent( getBaseContext( ) , WorkerActivities.class ) );
                 finish( );
             } else if ( accountType.equals( "work owner" ) ) {
                 startActivity( new Intent( getBaseContext( ) , WorkOwnerProfileActivity.class ) );
                 finish( );
+            }else {
+
             }
 
         }
