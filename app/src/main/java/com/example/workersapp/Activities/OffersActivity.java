@@ -3,6 +3,7 @@ package com.example.workersapp.Activities;
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.icu.text.SimpleDateFormat;
 import android.os.Build;
 import android.os.Bundle;
@@ -10,15 +11,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.workersapp.Adapters.OffersAdapter;
+import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.Listeneres.OfferListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
 import com.example.workersapp.databinding.ActivityOffersBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -42,11 +47,9 @@ public class OffersActivity extends AppCompatActivity {
     private AlertDialog HireDialog;
     AlertDialog.Builder HireDialog_builder;
     View hireDialogView;
-
     OffersAdapter offersAdapter;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,7 +67,6 @@ public class OffersActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
-
 
         //TODO INTENT
         String clientId = user.getPhoneNumber();
@@ -89,6 +91,7 @@ public class OffersActivity extends AppCompatActivity {
                     String offerDescription = String.valueOf(documentSnapshot.get("offerDescription"));
                     String offerState = String.valueOf(documentSnapshot.get("OfferState"));
                     offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clientId, postId);
+
                     if (!offerState.equals("hide") || offerState.equals(null)) {
                         offerList.add(offer);
                     } else {
@@ -143,7 +146,30 @@ public class OffersActivity extends AppCompatActivity {
             public void onHire(int pos) {
                 Hiring(pos);
             }
-        }, getApplicationContext());
+        }, getApplicationContext(), new ItemClickListener() {
+            @Override
+            public void OnClick(int pos) {
+                firestore.collection("offers").document(postId).collection("workerOffers").get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+
+                                if (task.isSuccessful()) {
+                                    QuerySnapshot querySnapshot = task.getResult();
+                                    QueryDocumentSnapshot selectedDocument = (QueryDocumentSnapshot) querySnapshot.getDocuments().get(pos);
+                                    String workerIDWorker = String.valueOf(selectedDocument.get("workerID"));
+
+                                    Intent intent = new Intent(getApplicationContext(), WorkerProfileForOwner.class);
+                                    intent.putExtra("posWorker", workerIDWorker);
+                                    startActivity(intent);
+                                } else {
+
+                                }
+                            }
+                        });
+            }
+
+        });
         binding.RV.setAdapter(offersAdapter);
         binding.RV.setLayoutManager(new LinearLayoutManager(getApplicationContext(), RecyclerView.VERTICAL, false));
 
@@ -217,58 +243,4 @@ public class OffersActivity extends AppCompatActivity {
         HireDialog = HireDialog_builder.create();
         HireDialog.show();
     }
-
-//    void Hiring(int pos) {
-//        CollectionReference reference = firestore.collection("posts").document(user.getPhoneNumber())
-//                .collection("userPost");
-//        new AlertDialog.Builder(OffersActivity.this)
-//                .setMessage("هل أنت متأكد أنك تريد قبول العرض؟")
-//                .setNegativeButton("لا, الغاء", (dialogInterface, i) -> {
-//                })
-//                .setPositiveButton("نعم ، قبول", (dialogInterface, i) -> {
-//                    Map<String, Object> updates = new HashMap<>();
-//                    updates.put("workerId", offerList.get(pos).getWorkerID());
-//                    updates.put("jobState", "inWork");
-//
-//// For devices with Android Nougat (API level 24) or higher
-//
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-//                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", new Locale("ar"));
-//                        String currentDate = dateFormat.format(new Date());
-//                        updates.put("jobStartDate", currentDate);
-//                    } else {
-//                        // For older devices
-//                        Calendar calendar = Calendar.getInstance();
-//                        int year = calendar.get(Calendar.YEAR);
-//                        int month = calendar.get(Calendar.MONTH) + 1;
-//                        int day = calendar.get(Calendar.DAY_OF_MONTH);
-//                        DateFormatSymbols arabicDFS = new DateFormatSymbols(new Locale("ar"));
-//                        String[] arabicMonthNames = arabicDFS.getMonths();
-//                        String monthInArabic = arabicMonthNames[month - 1];
-//                        String date = String.format(Locale.getDefault(), "%d %s %d", day, monthInArabic, year);
-//                        updates.put("jobStartDate", date);
-//                    }
-//
-//
-//                    reference.document(offerList.get(pos).getPostID())
-//                            .update(updates)
-//                            .addOnSuccessListener(aVoid -> {
-//                                // Handle the case when the update is successful
-//                                offerList.remove(pos);
-//                                offersAdapter.notifyItemRemoved(pos);
-//                                offersAdapter.notifyItemRangeChanged(pos, offerList.size());
-//                                if (offerList.isEmpty()) {
-//                                    binding.ProgressBar.setVisibility(View.GONE);
-//                                    binding.RV.setVisibility(View.GONE);
-//                                    binding.LLEmpty.setVisibility(View.VISIBLE);
-//                                }
-//                            })
-//                            .addOnFailureListener(e -> {
-//                                // Handle the case when the update fails
-//                            });
-//                }).create().show();
-//
-//    }
-
-
 }

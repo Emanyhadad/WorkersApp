@@ -33,7 +33,7 @@ public class HomeActivity_forWorker extends AppCompatActivity {
         ArrayList< Fragment > fragments=new ArrayList <>(  );
         fragments.add( PostFragment_inWorker.newInstance( ) );
         fragments.add( OwnerPostsFragment.newInstance(  ) );
-        fragments.add( WorkerReviewsFragment.newInstance() );
+        fragments.add( new WorkerReviewsFragment() );
 
 
         FragmentAdapter adapter=new FragmentAdapter(this,fragments );
