@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
     float rating;
     String comment;
     DocumentReference documentReference;
+
     ActivityPostForWorkerBinding binding;
 
     @Override
@@ -97,6 +99,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
 
         path = "posts/" + clintID + "/userPost/" + postId;
         String offerId = user.getPhoneNumber() + ">" + postId;
+        Log.e( "path1",path );
 
         //Get Post
         getPostData();
@@ -106,6 +109,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
                 documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         binding.PB2.setVisibility(View.GONE);
+                        Toast.makeText(getApplicationContext(), "You have already applied for a job", Toast.LENGTH_SHORT).show();
                         binding.tvWriteOffer.setText("العرض الخاص بك");
 
                         //Get Worker Data
@@ -188,10 +192,12 @@ public class PostActivity_forWorker extends AppCompatActivity {
     }
 
     void getPostData() {
+        Log.e( "path",path );
         //Get Post
         firestore.document(path).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+
                         binding.progressBar.setVisibility(View.GONE);
                         binding.ScrollView.setVisibility(View.VISIBLE);
                         jobState = documentSnapshot.getString("jobState");
@@ -230,6 +236,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                     LinearLayoutManager.HORIZONTAL, false));
                         }
                     }
+
                 })
                 .addOnFailureListener(e -> Log.e("getPot", "Error getting documents: ", e));
 
@@ -265,4 +272,5 @@ public class PostActivity_forWorker extends AppCompatActivity {
     }
 
 }
+
 
