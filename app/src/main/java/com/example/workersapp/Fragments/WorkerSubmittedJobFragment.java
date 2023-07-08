@@ -36,6 +36,7 @@ public class WorkerSubmittedJobFragment extends Fragment {
     List <String> categoryList;
     List< Offer > offerList;
     FragmentBlank3Binding binding;
+    boolean getData1;
 
     public WorkerSubmittedJobFragment() { }
 
@@ -62,37 +63,21 @@ void getData(){
     offerList = new ArrayList<>();
     firebaseAuth = FirebaseAuth.getInstance();
     firebaseUser = firebaseAuth.getCurrentUser();
-    List<DocumentSnapshot> documentList = new ArrayList<>();
-
+    getData1=false;
     firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
-        for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-            documentList.add(documentSnapshot1);
-        }
-
-        for (DocumentSnapshot documentSnapshot : documentList) {
-            firebaseFirestore.collection("posts").document(documentSnapshot.getId())
+        for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+            firebaseFirestore.collection("posts")
+                    .document(documentSnapshot.getId())
                     .collection("userPost")
-                    .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
-                        if ( queryDocumentSnapshots1.isEmpty() ){
-                            binding.LLEmptyWorker.setVisibility( View.VISIBLE );
-                            binding.btnAddpost.setOnClickListener(v -> {
-                                // Replace the current fragment with the new fragment here
-                                FragmentManager fragmentManager = getParentFragmentManager();
-                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                PostFragment_inWorker jobFragment = new PostFragment_inWorker();
-                                fragmentTransaction.replace( R.id.frame, jobFragment);
-                                fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
-                                fragmentTransaction.commit();
-                            });
-
-                        }
-                        binding.LLEmptyWorker.setVisibility( View.GONE );
-
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots1 -> {
                         for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
-                            firebaseFirestore.collection("offers").document(postDocumentSnapshot.getId())
+                            firebaseFirestore.collection("offers")
+                                    .document(postDocumentSnapshot.getId())
                                     .collection("workerOffers")
                                     .document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                                    .get().addOnSuccessListener(documentSnapshot2 -> {
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot2 -> {
                                         String clintID = documentSnapshot2.getString("clintID");
                                         String offerBudget = documentSnapshot2.getString("offerBudget");
                                         String offerDescription = documentSnapshot2.getString("offerDescription");
@@ -100,28 +85,64 @@ void getData(){
                                         String postID = documentSnapshot2.getString("postID");
                                         String workerID = documentSnapshot2.getString("workerID");
                                         Offer offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clintID, postID);
-                                        if ( offerBudget != null ){
+                                        if (offerBudget != null) {
                                             offerList.add(offer);
                                         }
                                         Log.e("offers", offer.toString());
+                                        Log.e("OffersList", offerList.size() + "");
 
-                                        // Place the code snippet here
                                         binding.RV.setAdapter(new SubmittedJobAdapter(offerList, getContext(), pos -> {
                                             Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
                                             intent.putExtra("PostId", offerList.get(pos).getPostID());
                                             intent.putExtra("OwnerId", offerList.get(pos).getClintID());
                                             startActivity(intent);
                                         }));
+                                        if (offerList.size() == 0) {
+                                            binding.progressBar4.setVisibility(View.GONE);
+                                            binding.RV.setVisibility(View.GONE);
+                                            binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                                        } else {
+                                            binding.RV.setVisibility(View.VISIBLE);
+                                            binding.LLEmptyWorker.setVisibility(View.GONE);
+                                            binding.progressBar4.setVisibility(View.GONE);
+                                        }
+                                        Log.e( "offerList.size()",offerList.size()+"" );
+                                    }
+                                    )
+                                    .addOnFailureListener(runnable -> {
+                                        binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                                        binding.progressBar4.setVisibility(View.GONE);
+
+                                        binding.btnAddpost.setOnClickListener(v -> {
+                                            // Replace the current fragment with the new fragment here
+                                            FragmentManager fragmentManager = getParentFragmentManager();
+                                            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                            PostFragment_inWorker jobFragment = new PostFragment_inWorker();
+                                            fragmentTransaction.replace(R.id.frame, jobFragment);
+                                            fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                                            fragmentTransaction.commit();
+                                        });
                                     });
-                            Log.e("OffersList", offerList.toString());
+
+                            Log.e( "offerList.size()1",offerList.size()+"" );
+
                         }
+                        getData1 = true;
+
+
+                        Log.e( "getData2",getData1+"" );
+                        Log.e( "getData",getData1+"" );
+
+
+                        binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
                     });
+
         }
 
-        binding.progressBar4.setVisibility(View.GONE);
-        binding.RV.setVisibility(View.VISIBLE);
-        binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+
     });
+
+
 }
     @Override
     public void onResume( ) {

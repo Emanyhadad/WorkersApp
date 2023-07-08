@@ -68,10 +68,6 @@ public class PostActivity2 extends AppCompatActivity {
     String postId, path, accountType;
     float rating;
     String comment;
-    String workerId;
-    private static final String CHANNEL_ID = "your_channel_id";
-
-    private String titleFCM, body;
 
     public static SharedPreferences sharedPreferences;
 
@@ -114,13 +110,14 @@ public class PostActivity2 extends AppCompatActivity {
         documentReference = firestore.collection("posts").document(Objects.requireNonNull(user.getPhoneNumber())).
                 collection("userPost").document(postId);
 
-        firestore.collection("forms").document(Objects.requireNonNull(postId)).collection("userForm").get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    int numDocs = queryDocumentSnapshots.size();
-                    binding.APtvOffers.setText(String.valueOf(numDocs));
-                })
-                .addOnFailureListener(e -> {
-
+        firestore.collection("offers").document(Objects.requireNonNull(postId))
+                .collection("workerOffers")
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        int count = task.getResult().size();
+                        binding.APtvOffers.setText(count == 0 ? "0" : String.valueOf(count) + "i");
+                    }
                 });
 
         getData();

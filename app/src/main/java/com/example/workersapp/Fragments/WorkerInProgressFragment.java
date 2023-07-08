@@ -37,7 +37,7 @@ public class WorkerInProgressFragment extends Fragment {
     FirebaseUser firebaseUser;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
     long addedTime;
-
+    boolean getData;
 
     public WorkerInProgressFragment() {
     }
@@ -62,73 +62,96 @@ public class WorkerInProgressFragment extends Fragment {
         categoryList=new ArrayList <>(  );
         postList = new ArrayList <>(  );
         offerList = new ArrayList<>();
-
+        List<String> count= new ArrayList <>(  );
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
-        List<DocumentSnapshot> documentList = new ArrayList<>();
 
-        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
-                firebaseFirestore.collection("posts").document(documentSnapshot.getId())
-                        .collection("userPost").whereEqualTo( "jobState","inWork" )
-                        .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
-                            if ( queryDocumentSnapshots1.isEmpty() ){
-                                binding.LLEmptyWorker.setVisibility( View.VISIBLE );
-                                binding.btnAddpost.setOnClickListener(v -> {
-                                    // Replace the current fragment with the new fragment here
-                                    FragmentManager fragmentManager = getParentFragmentManager();
-                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                    PostFragment_inWorker jobFragment = new PostFragment_inWorker();
-                                    fragmentTransaction.replace( R.id.frame, jobFragment);
-                                    fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
-                                    fragmentTransaction.commit();
+        firebaseFirestore.collection("users")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                        firebaseFirestore.collection("posts")
+                                .document(documentSnapshot.getId())
+                                .collection("userPost")
+                                .whereEqualTo("jobState", "inWork")
+                                .whereEqualTo("workerId", firebaseUser.getPhoneNumber())
+                                .get()
+                                .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                                    Log.e( "queryDocumentSnapshots1",queryDocumentSnapshots1.size()+"" );
+                                        for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
+                                            if (postDocumentSnapshot.exists()) {
+                                                jobState = postDocumentSnapshot.getString("jobState");
+                                                title = postDocumentSnapshot.getString("title");
+                                                description = postDocumentSnapshot.getString("description");
+                                                List<String> images = (List<String>) postDocumentSnapshot.get("images");
+                                                List<String> categoriesList = (List<String>) postDocumentSnapshot.get("categoriesList");
+
+                                                expectedWorkDuration = postDocumentSnapshot.getString("expectedWorkDuration");
+                                                projectedBudget = postDocumentSnapshot.getString("projectedBudget");
+                                                jobLocation = postDocumentSnapshot.getString("jobLocation");
+
+                                                if (postDocumentSnapshot.contains("addedTime")) {
+                                                    addedTime = postDocumentSnapshot.getLong("addedTime");
+                                                    // Perform any additional operations on addedTime here
+                                                } else {
+                                                    // Execute appropriate error handling code or set a default value for addedTime
+                                                }
+
+                                                Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState, addedTime);
+                                                post.setPostId(postDocumentSnapshot.getId());
+                                                post.setOwnerId(firebaseUser.getPhoneNumber());
+                                                post.setWorkerId(postDocumentSnapshot.getString("workerId"));
+                                                postList.add(post);
+                                            }
+                                            Log.e( "Post",postList.size()+"" );
+                                        }
+                                        Log.e( "Post1",postList.size()+"" );
+
+                                        if (postList.size()!=0) {
+                                            binding.LLEmptyWorker.setVisibility(View.GONE);
+                                            binding.progressBar5.setVisibility( View.GONE );
+                                            binding.RV.setVisibility( View.VISIBLE );
+                                            binding.RV.setAdapter(new WorkInProgressAdapter(postList, getContext(), pos -> {
+                                                Log.e("ItemClick", postList.get(pos).getPostId());
+                                                Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
+                                                intent.putExtra("PostId", postList.get(pos).getPostId());
+                                                intent.putExtra("OwnerId", postList.get(pos).getOwnerId());
+                                                startActivity(intent);
+                                            }));
+                                            binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
+                                        }else {
+                                            binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                                            binding.progressBar5.setVisibility(View.GONE);
+                                            binding.RV.setVisibility( View.GONE );
+                                            binding.btnAddpost.setOnClickListener(v -> {
+                                                // Replace the current fragment with the new fragment here
+                                                FragmentManager fragmentManager = getParentFragmentManager();
+                                                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                PostFragment_inWorker jobFragment = new PostFragment_inWorker();
+                                                fragmentTransaction.replace(R.id.frame, jobFragment);
+                                                fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                                                fragmentTransaction.commit();
+                                            });
+                                        }
+
+                                    getData=true;
+                                })
+                                .addOnFailureListener(runnable -> {
+                                    binding.RV.setVisibility( View.GONE );
+                                    binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                                    binding.progressBar5.setVisibility(View.GONE);
+                                    binding.btnAddpost.setOnClickListener(v -> {
+                                        // Replace the current fragment with the new fragment here
+                                        FragmentManager fragmentManager = getParentFragmentManager();
+                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                        PostFragment_inWorker jobFragment = new PostFragment_inWorker();
+                                        fragmentTransaction.replace(R.id.frame, jobFragment);
+                                        fragmentTransaction.addToBackStack(null); // Add to back stack to allow user to navigate back to this fragment
+                                        fragmentTransaction.commit();
+                                    });
                                 });
-
-                            }
-                            binding.LLEmptyWorker.setVisibility( View.GONE );
-
-                            for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
-                                if (  postDocumentSnapshot.get( "workerId" ).equals( firebaseUser.getPhoneNumber() ) ){
-                                    jobState = postDocumentSnapshot.getString("jobState");
-                                    title = postDocumentSnapshot.getString("title");
-                                    description= postDocumentSnapshot.getString( "description" );
-                                    List<String> images = (List<String>) postDocumentSnapshot.get("images");
-                                    List<String> categoriesList = (List<String>) postDocumentSnapshot.get("categoriesList");
-
-                                    expectedWorkDuration= postDocumentSnapshot.getString( "expectedWorkDuration" );
-                                    projectedBudget= postDocumentSnapshot.getString( "projectedBudget" );
-                                    jobLocation= postDocumentSnapshot.getString( "jobLocation" );
-
-                                    if (documentSnapshot.contains("addedTime")) {
-                                        addedTime = documentSnapshot.getLong("addedTime");
-                                        // القيام بأي عملية إضافية على الـ addedTime هنا
-                                    } else {
-                                        // تنفيذ رمز الخطأ المناسب أو تعيين قيمة افتراضية لـ addedTime
-                                    }
-
-
-                                    Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState,addedTime );
-                                    post.setPostId( postDocumentSnapshot.getId() );
-                                    post.setOwnerId( firebaseUser.getPhoneNumber() );
-                                    post.setWorkerId( postDocumentSnapshot.getString( "workerId" ) );
-                                    postList.add( post );
-                                    binding.RV.setAdapter( new WorkInProgressAdapter( postList , getContext( ), pos -> {
-                                        Log.e( "ItemClik",postList.get( pos ).getPostId());
-                                        Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
-                                        intent.putExtra("PostId", postList.get(pos).getPostId());
-                                        intent.putExtra("OwnerId", postList.get(pos).getOwnerId());
-                                        startActivity(intent);
-                                    } ));
-                                }
-
-                            }
-                        });
-            }
-
-            binding.progressBar5.setVisibility(View.GONE);
-            binding.RV.setVisibility(View.VISIBLE);
-            binding.RV.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        });
+                    }
+                });
 
 
 

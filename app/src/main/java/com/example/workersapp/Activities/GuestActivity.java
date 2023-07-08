@@ -54,161 +54,45 @@ public class GuestActivity extends AppCompatActivity {
 
         categoryList = new ArrayList <>();
         postList = new ArrayList<>();
-        List decoumtId = new ArrayList();
-        List<String> Category = new ArrayList<>();
-//        firebaseFirestore.collection("workCategoryAuto").
-//                document("category")
-//                .get()
-//                .addOnSuccessListener(documentSnapshot -> {
-//                    if (documentSnapshot.exists()) {
-//                        Map <String, List<String>> categoryMap =
-//                                (Map<String, List<String>>) documentSnapshot.get("category");
-//                        if (categoryMap != null) {
-//                            for (Map.Entry<String, List<String>> entry : categoryMap.entrySet()) {
-//                                List<String> fieldData = entry.getValue();
-//                                for (String s : fieldData) {
-//                                    Category.add(s);
-//                                }
-//                            }
-//                        }
-//                    } else {
-//                        Log.d("Error", "No such document");
-//                    }
-//                })
-//                .addOnFailureListener(e -> {
-//                    ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( Context.CONNECTIVITY_SERVICE);
-//                    NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-//                    boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-//
-//                    if (!isConnected) {
-//                        binding.LLNoWifi.setVisibility(View.VISIBLE);
-//                        binding.ProgressBar.setVisibility(View.GONE);
-//                        binding.RV.setVisibility(View.GONE);
-//                    }});
 
-        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots ->
-        {
-            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                decoumtId.add(documentSnapshot1);
-                firebaseFirestore.collection("posts").document(documentSnapshot1.getId()).
-                        collection("userPost").get()
-                        .addOnCompleteListener(task -> {
-                            for (DocumentSnapshot document : task.getResult()) {
-                                if (document.getString("jobState").equals("open")) {
-                                    Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
-                                    firebaseFirestore.document("posts/" + documentSnapshot1.getId() + "/userPost/" + document.getId()).get()
-                                            .addOnSuccessListener(documentSnapshot -> {
-                                                if (documentSnapshot.exists()) {
-                                                    jobState = documentSnapshot.getString("jobState");
-                                                    title = documentSnapshot.getString("title");
-                                                    description = documentSnapshot.getString("description");
-                                                    List<String> images = (List<String>) documentSnapshot.get("images");
-                                                    List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
 
-                                                    expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
-                                                    projectedBudget = documentSnapshot.getString("projectedBudget");
-                                                    jobLocation = documentSnapshot.getString("jobLocation");
-                                                    addedTime = documentSnapshot.getLong("addedTime");
+        firebaseFirestore.collection( "users" ).get().addOnSuccessListener( queryDocumentSnapshots -> {
+            for ( DocumentSnapshot documentSnapshot:queryDocumentSnapshots ){
+                firebaseFirestore.collection( "posts" ).document( documentSnapshot.getId() ).collection( "userPost" )
+                        .whereEqualTo( "jobState","open" ).orderBy( "addedTime", Query.Direction.DESCENDING )
+                        .get().addOnSuccessListener( queryDocumentSnapshots1 -> {
+                            for ( DocumentSnapshot documentSnapshot1: queryDocumentSnapshots1.getDocuments()) {
+                                    jobState = documentSnapshot1.getString("jobState");
+                                    title = documentSnapshot1.getString("title");
+                                    description = documentSnapshot1.getString("description");
+                                    List<String> images = (List<String>) documentSnapshot1.get("images");
+                                    List<String> categoriesList = (List<String>) documentSnapshot1.get("categoriesList");
 
-                                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
-                                                    post.setPostId(document.getId());
-                                                    post.setOwnerId(documentSnapshot1.getId());
+                                    expectedWorkDuration = documentSnapshot1.getString("expectedWorkDuration");
+                                    projectedBudget = documentSnapshot1.getString("projectedBudget");
+                                    jobLocation = documentSnapshot1.getString("jobLocation");
+                                    addedTime = documentSnapshot1.getLong("addedTime");
 
-                                                    postList.add(post);
-                                                    postAdapter = new Post_forWorkerAdapter(postList, getBaseContext(), new ItemClickListener() {
-                                                        @Override
-                                                        public void OnClick(int pos) {
-                                                            Log.e("ItemClik", postList.get(pos).getPostId());
-                                                        RegisterDialog();
-                                                        }
-                                                    });
-                                                }
-                                                binding.RV.setAdapter(postAdapter);
-                                                postAdapter.setList(postList);
-                                                binding.ProgressBar.setVisibility(View.GONE);
-                                                binding.RV.setVisibility(View.VISIBLE);
-                                            })
-                                            .addOnFailureListener(e -> Log.e("Field", e.getMessage()));
-                                    binding.RV.setLayoutManager(new LinearLayoutManager(getBaseContext(),
-                                            LinearLayoutManager.VERTICAL, false));
+                                    Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
+                                    post.setPostId(documentSnapshot1.getId());
+                                    post.setOwnerId(documentSnapshot1.getId());
 
+                                    postList.add(post);
+                                    postAdapter = new Post_forWorkerAdapter(postList, getBaseContext(), pos -> {
+                                        Log.e("ItemClik", postList.get(pos).getPostId());
+                                        RegisterDialog();
+                                    } );
 
 
                                 }
-                            }
-                        }).addOnFailureListener(runnable -> {
-                        });
+                            binding.RV.setAdapter(postAdapter);
+                            binding.ProgressBar.setVisibility(View.GONE);
+                            binding.RV.setVisibility(View.VISIBLE);
+                            binding.RV.setLayoutManager(new LinearLayoutManager(getBaseContext(),
+                                    LinearLayoutManager.VERTICAL, false));
+                        } );
             }
-        });
-//        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots ->
-//        {
-//            for ( DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-//                decoumtId.add(documentSnapshot1);
-//                Log.e( "users" ,documentSnapshot1.getId());
-//                firebaseFirestore.collection("posts").document(documentSnapshot1.getId()).
-//                        collection("userPost")
-//                        .whereEqualTo( "jobState","open" )
-//                        .orderBy( "addedTime", Query.Direction.DESCENDING )
-//                        .get()
-//                        .addOnCompleteListener(task -> {
-//                            for (DocumentSnapshot document : task.getResult()) {
-//                                Log.e( "posts" ,document.getId());
-//                                Log.e( "AddedTime",document.getLong("addedTime")+"");
-//                                //Todo Category
-//                                Log.e("DecumentsCount", String.valueOf(task.getResult().size()));
-//                                jobState = document.getString("jobState");
-//                                title = document.getString("title");
-//                                description = document.getString("description");
-//                                List<String> images = (List<String>) document.get("images");
-//                                List<String> categoriesList = (List<String>) document.get("categoriesList");
-//
-//                                expectedWorkDuration = document.getString("expectedWorkDuration");
-//                                projectedBudget = document.getString("projectedBudget");
-//                                jobLocation = document.getString("jobLocation");
-//                                addedTime = document.getLong("addedTime");
-//                                Post post = new Post(title, description, images, categoriesList,
-//                                        expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
-//                                post.setPostId(document.getId());
-//                                post.setOwnerId(documentSnapshot1.getId());
-//
-//                                postList.add(post);
-//                                postAdapter = new Post_forWorkerAdapter(postList, getBaseContext(), pos -> RegisterDialog() );
-//                                if (postList.isEmpty()) {
-//                                    binding.RV.setVisibility( View.GONE );
-//                                    binding.ProgressBar.setVisibility( View.GONE );
-//                                    binding.LLEmpty.setVisibility(View.VISIBLE);
-//                                } else {
-//                                    binding.LLEmpty.setVisibility(View.GONE);
-//                                    binding.RV.setAdapter(postAdapter);
-//
-//                                    postAdapter.setList(postList);
-//                                    binding.ProgressBar.setVisibility( View.GONE);
-//                                    binding.RV.setVisibility(View.VISIBLE);
-//                                } }
-//
-//                            binding.RV.setLayoutManager(new LinearLayoutManager(getBaseContext(),
-//                                    LinearLayoutManager.VERTICAL, false));
-//                        }).addOnFailureListener(runnable -> {
-//                            Log.e( "Error",runnable.getMessage() );
-//                            binding.RV.setVisibility( View.GONE );
-//                            binding.ProgressBar.setVisibility( View.GONE );
-//                            binding.LLEmpty.setVisibility(View.VISIBLE);
-//
-//                        });
-//            }
-//        }).addOnFailureListener( runnable -> {
-//            Log.e( "Error1",runnable.getMessage() );
-//            binding.ProgressBar.setVisibility(View.GONE);
-//
-//            ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService( Context.CONNECTIVITY_SERVICE);
-//            NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
-//            boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-//
-//            if (!isConnected) {
-//                binding.LLNoWifi.setVisibility(View.VISIBLE);
-//                binding.ProgressBar.setVisibility(View.GONE);
-//                binding.RV.setVisibility(View.GONE);
-//            }} );
+        } );
 
         binding.etSearch.setOnClickListener( view -> RegisterDialog()  );
 

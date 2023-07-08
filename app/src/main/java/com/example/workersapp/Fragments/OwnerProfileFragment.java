@@ -1,20 +1,25 @@
 package com.example.workersapp.Fragments;
 
+import static android.content.Context.MODE_PRIVATE;
 import static androidx.constraintlayout.widget.ConstraintLayoutStates.TAG;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import android.widget.PopupMenu;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.bumptech.glide.Glide;
+import com.example.workersapp.Activities.EditWorkerProfileActivity;
+import com.example.workersapp.Activities.LoginActivity;
 import com.example.workersapp.Activities.PostActivity2;
 import com.example.workersapp.Adapters.FinishedJobsAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
@@ -44,6 +49,15 @@ public class OwnerProfileFragment extends Fragment {
     FirebaseUser firebaseUser;
     FirebaseStorage firebaseStorage;
     ShowCategoryAdapter adapter;
+    public static SharedPreferences sp;
+    public static SharedPreferences.Editor editor;
+
+    public static SharedPreferences sp1;
+    public static SharedPreferences.Editor editor1;
+
+    List <String> categoryList;
+    List< Post > postList;
+    String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
     List<String> categoryList;
     List<Post> postList;
     String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
@@ -86,6 +100,11 @@ public class OwnerProfileFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
+        sp = getContext().getSharedPreferences( "MyPreferences" , MODE_PRIVATE );
+        editor = sp.edit( );
+
+        sp1 = getContext().getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
+        editor1 = sp1.edit();
 
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
@@ -237,6 +256,12 @@ public class OwnerProfileFragment extends Fragment {
                         }}
                 } ).addOnFailureListener( runnable -> {} );
 
+        binding.pWorkerImgMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showPopupMenu(view);
+            }
+        });
 ////التقيم
 //        firebaseFirestore.collection("posts")
 //                .document(firebaseUser.getPhoneNumber()).
@@ -265,10 +290,39 @@ public class OwnerProfileFragment extends Fragment {
         return binding.getRoot();
     }
 
-    private void setRate() {
-        Log.d("inWorkCount", inWorkCount + "");
-        Log.d("doneCount", doneCount + "");
-        Log.d("jobsCount", jobsCount + "");
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(getContext(), view);
+        popupMenu.inflate(R.menu.edit_logout);
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                int itemId = item.getItemId();
+                if (itemId == R.id.menu_edit) {
+                    Intent intent = new Intent(getContext(), EditWorkerProfileActivity.class);
+                    startActivity(intent);
+                    return true;
+                } else if (itemId == R.id.menu_logout) {
+                    FirebaseAuth.getInstance().signOut();
+                    editor.clear();
+                    editor.apply();
+
+                    editor1.clear();
+                    editor1.apply();
+
+                    startActivity(new Intent(getContext(), LoginActivity.class));
+                    getActivity().finish();
+                    return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
+    }
+
+    private void setRate( ) {
+        Log.d( "inWorkCount",inWorkCount+"" );
+        Log.d( "doneCount",doneCount+"" );
+        Log.d( "jobsCount",jobsCount+"" );
         if (isWorkCountDone && isjobsCountDone && isdoneCountDone) {
             float employmentRate = 0, sum = 0, divide = 0;
 

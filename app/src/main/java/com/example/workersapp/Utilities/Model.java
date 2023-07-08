@@ -8,9 +8,7 @@ public class Model {
     String description;
     List<String> categoriesList;
     String date;
-
     String documentId;
-
 
     public Model() {
     }
