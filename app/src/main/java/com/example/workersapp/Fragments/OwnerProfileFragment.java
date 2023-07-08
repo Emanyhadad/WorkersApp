@@ -8,7 +8,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -19,6 +21,8 @@ import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentWorkOwnerProfileBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -26,6 +30,7 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
@@ -39,26 +44,27 @@ public class OwnerProfileFragment extends Fragment {
     FirebaseUser firebaseUser;
     FirebaseStorage firebaseStorage;
     ShowCategoryAdapter adapter;
-    List <String> categoryList;
-    List< Post > postList;
-    String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
+    List<String> categoryList;
+    List<Post> postList;
+    String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
 
-    int openCount,inWorkCount,doneCount,jobsCount;
-    boolean isWorkCountDone=false;
-    boolean isdoneCountDone=false;
-    boolean isjobsCountDone=false;
+    int openCount, inWorkCount, doneCount, jobsCount;
+    boolean isWorkCountDone = false;
+    boolean isdoneCountDone = false;
+    boolean isjobsCountDone = false;
 
     boolean userData = false;
     boolean jobData = false;
     long addedTime;
-
+    double rate = 0;
+    int count = 0;
 
     public OwnerProfileFragment() {
         // Required empty public constructor
     }
 
 
-    public static OwnerProfileFragment newInstance( ) {
+    public static OwnerProfileFragment newInstance() {
         OwnerProfileFragment fragment = new OwnerProfileFragment();
         Bundle args = new Bundle();
 
@@ -70,32 +76,34 @@ public class OwnerProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
     }
+
     FragmentWorkOwnerProfileBinding binding;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding = FragmentWorkOwnerProfileBinding.inflate(inflater, container, false);
-        firebaseFirestore=FirebaseFirestore.getInstance();
-        auth=FirebaseAuth.getInstance();
+        firebaseFirestore = FirebaseFirestore.getInstance();
+        auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
 
-        categoryList=new ArrayList <>(  );
-        postList = new ArrayList <>(  );
+        categoryList = new ArrayList<>();
+        postList = new ArrayList<>();
 
 
         //For User Data:
         DocumentReference userRef = firebaseFirestore.collection("users").document(firebaseUser.getPhoneNumber());
 
-        userRef.get().addOnCompleteListener( task -> {
+        userRef.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();
                 if (document.exists()) {
-                    binding.ProgressBar.setVisibility( View.GONE );
-                    binding.AppBar.setVisibility( View.VISIBLE );
+                    binding.ProgressBar.setVisibility(View.GONE);
+                    binding.AppBar.setVisibility(View.VISIBLE);
                     String nickName = document.getString("nickName");
-                    binding.tvWorkOwnerNickName.setText( nickName );
+                    binding.tvWorkOwnerNickName.setText(nickName);
                     String city = document.getString("city");
-                    binding.tvWorkOwnerCity.setText( city );
+                    binding.tvWorkOwnerCity.setText(city);
                     String image = document.getString("image");
 
                     if (getContext() != null) {
@@ -103,10 +111,11 @@ public class OwnerProfileFragment extends Fragment {
                                 .load(image)
                                 .circleCrop()
                                 .error(R.drawable.worker)
-                                .into(binding.imgProfileOwner);                    }
+                                .into(binding.imgProfileOwner);
+                    }
 
                     String fullName = document.getString("fullName");
-                    binding.tvWorkOwnerName.setText( fullName );
+                    binding.tvWorkOwnerName.setText(fullName);
                     long timestamp = firebaseUser.getMetadata().getCreationTimestamp();
                     // حولنا long -> date
                     Date date = new Date(timestamp);
@@ -121,17 +130,19 @@ public class OwnerProfileFragment extends Fragment {
             } else {
                 Log.d(TAG, "get failed with ", task.getException());
             }
-        } );
+        });
 
         CollectionReference userPostsRef = firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
                 .collection("userPost");
 
         //For JosCount
-        userPostsRef.get().addOnSuccessListener( queryDocumentSnapshots -> { jobsCount = queryDocumentSnapshots.size();
-            isjobsCountDone=true;
-            setRate(  );
-            binding.tvNumberOfJobs.setText( jobsCount+"" ); } ).addOnFailureListener( e -> Log.d(TAG, "Error getting documents: ", e) );
+        userPostsRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            jobsCount = queryDocumentSnapshots.size();
+            isjobsCountDone = true;
+            setRate();
+            binding.tvNumberOfJobs.setText(jobsCount + "");
+        }).addOnFailureListener(e -> Log.d(TAG, "Error getting documents: ", e));
 
         //For OpenJobs
         Query openJobPostsQuery = userPostsRef.whereEqualTo("jobState", "open");
@@ -152,8 +163,8 @@ public class OwnerProfileFragment extends Fragment {
             if (task.isSuccessful()) {
                 inWorkCount = task.getResult().size();
 
-                isWorkCountDone=true;
-                setRate(  );
+                isWorkCountDone = true;
+                setRate();
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
@@ -164,8 +175,8 @@ public class OwnerProfileFragment extends Fragment {
         doneJobPostsQuery.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 doneCount = task.getResult().size();
-                isdoneCountDone=true;
-                setRate(  );
+                isdoneCountDone = true;
+                setRate();
             } else {
                 Log.d(TAG, "Error getting documents: ", task.getException());
             }
@@ -174,7 +185,7 @@ public class OwnerProfileFragment extends Fragment {
         //For Finished Job:
         firebaseFirestore.collection("posts")
                 .document(firebaseUser.getPhoneNumber())
-                .collection("userPost").whereEqualTo( "jobState","done" )
+                .collection("userPost").whereEqualTo("jobState", "done")
                 .get()
                 .addOnCompleteListener(task -> {
                     jobData = true;
@@ -196,13 +207,13 @@ public class OwnerProfileFragment extends Fragment {
 
                                             jobState = documentSnapshot.getString("jobState");
                                             title = documentSnapshot.getString("title");
-                                            description= documentSnapshot.getString( "description" );
+                                            description = documentSnapshot.getString("description");
                                             List<String> images = (List<String>) documentSnapshot.get("images");
                                             List<String> categoriesList = (List<String>) documentSnapshot.get("categoriesList");
 
-                                            expectedWorkDuration= documentSnapshot.getString( "expectedWorkDuration" );
-                                            projectedBudget= documentSnapshot.getString( "projectedBudget" );
-                                            jobLocation= documentSnapshot.getString( "jobLocation" );
+                                            expectedWorkDuration = documentSnapshot.getString("expectedWorkDuration");
+                                            projectedBudget = documentSnapshot.getString("projectedBudget");
+                                            jobLocation = documentSnapshot.getString("jobLocation");
                                             addedTime = documentSnapshot.getLong("addedTime");
 
                                             Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState ,addedTime);
@@ -211,11 +222,11 @@ public class OwnerProfileFragment extends Fragment {
                                             post.setWorkerId( documentSnapshot.getString( "workerId" ) );
                                             postList.add( post );
 
-                                            binding.rcFinishedJobs.setAdapter( new FinishedJobsAdapter( postList , getContext( ), pos -> {
+                                            binding.rcFinishedJobs.setAdapter(new FinishedJobsAdapter(postList, getContext(), pos -> {
                                                 Intent intent = new Intent(getActivity(), PostActivity2.class);
-                                                intent.putExtra("PostId", postList.get( pos ).getPostId()); // pass data to new activity
+                                                intent.putExtra("PostId", postList.get(pos).getPostId()); // pass data to new activity
                                                 startActivity(intent);
-                                            } ));
+                                            }));
 
                                         } } )
                                     .addOnFailureListener( e -> Log.e( "Field",e.getMessage()) );
@@ -226,34 +237,56 @@ public class OwnerProfileFragment extends Fragment {
                         }}
                 } ).addOnFailureListener( runnable -> {} );
 
-
+////التقيم
+//        firebaseFirestore.collection("posts")
+//                .document(firebaseUser.getPhoneNumber()).
+//                collection("userPost").whereEqualTo("jobState", "done")
+//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()) {
+//                            List<Post> postsDone = task.getResult().toObjects(Post.class);
+//                            count = postsDone.size();
+//
+//                            for (int i = 0; i < postsDone.size(); i++) {
+//                                rate = rate + postsDone.get(i).getRatingClint();
+//                            }
+//
+//                            Log.d("tag", String.valueOf(rate));
+//                            Log.d("tag", String.valueOf(count));
+//
+//                            double tvRate = rate / count;
+//                            binding.tvRate.setText(String.valueOf(tvRate));
+//                        }
+//                    }
+//                });
 
 
         return binding.getRoot();
     }
 
-    private void setRate( ) {
-        Log.d( "inWorkCount",inWorkCount+"" );
-        Log.d( "doneCount",doneCount+"" );
-        Log.d( "jobsCount",jobsCount+"" );
-        if(isWorkCountDone&&isjobsCountDone&&isdoneCountDone) {
+    private void setRate() {
+        Log.d("inWorkCount", inWorkCount + "");
+        Log.d("doneCount", doneCount + "");
+        Log.d("jobsCount", jobsCount + "");
+        if (isWorkCountDone && isjobsCountDone && isdoneCountDone) {
             float employmentRate = 0, sum = 0, divide = 0;
-            
-            if ( jobsCount > 0 ) {
-                sum  =  ( inWorkCount + doneCount )  ;
-                divide =  sum / jobsCount ;
-                employmentRate=divide*100;
+
+            if (jobsCount > 0) {
+                sum = (inWorkCount + doneCount);
+                divide = sum / jobsCount;
+                employmentRate = divide * 100;
             } else {
                 employmentRate = 0;
             }
 
-            Log.d( "sum",sum+"" );
-            Log.d( "divide",divide+"" );
-            Log.d( "employmentRate",employmentRate+"" );
-            int roundedRate = ( int ) Math.round( employmentRate ); // round to nearest integer
-            Log.d( "roundedRate",roundedRate+"" );
+            Log.d("sum", sum + "");
+            Log.d("divide", divide + "");
+            Log.d("employmentRate", employmentRate + "");
+            int roundedRate = (int) Math.round(employmentRate); // round to nearest integer
+            Log.d("roundedRate", roundedRate + "");
             // String rateString = Integer.toString( roundedRate ); // convert to string
-            binding.tvEmploymentRate.setText( roundedRate+"%" );
+            binding.tvEmploymentRate.setText(roundedRate + "%");
         }
     }
 }

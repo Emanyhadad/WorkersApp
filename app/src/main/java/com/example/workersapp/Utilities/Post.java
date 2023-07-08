@@ -17,6 +17,7 @@ public class Post {
     long addedTime;
     private boolean isFavorite;
 
+    int RatingClint;
     public Post(String title, String description, List<String> images, List<String> categoriesList,
                 String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState,long addedTime) {
         this.title = title;
@@ -152,5 +153,13 @@ public class Post {
 
     public void setFavorite(boolean favorite) {
         isFavorite = favorite;
+    }
+
+    public int getRatingClint() {
+        return RatingClint;
+    }
+
+    public void setRatingClint(int ratingClint) {
+        RatingClint = ratingClint;
     }
 }
