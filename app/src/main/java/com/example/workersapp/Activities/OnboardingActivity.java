@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;
@@ -33,7 +34,24 @@ public class OnboardingActivity extends AppCompatActivity {
 
     FirebaseAuth auth;
     FirebaseUser currentUser;
+    @Override
+    protected void onStart( ) {
+        super.onStart( );
+        if ( currentUser != null ) {
+            String accountType = sp.getString( "accountType" , "null" );
+            Toast.makeText(this, accountType, Toast.LENGTH_SHORT).show();
+            if ( accountType.equals( "worker" ) ) {
+                startActivity( new Intent( getBaseContext( ) , WorkerActivities.class ) );
+                finish( );
+            } else if ( accountType.equals( "work owner" ) ) {
+                startActivity( new Intent( getBaseContext( ) , WorkOwnerProfileActivity.class ) );
+                finish( );
+            }else {
 
+            }
+
+        }
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

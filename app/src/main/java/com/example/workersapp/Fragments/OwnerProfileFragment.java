@@ -282,6 +282,36 @@ public class OwnerProfileFragment extends Fragment {
 //                        }
 //                    }
 //                });
+//        firebaseFirestore.collection("posts")
+//                .document(firebaseUser.getPhoneNumber())
+//                .collection("userPost")
+//                .whereEqualTo("jobState", "done")
+//                .get()
+//                .addOnSuccessListener(runnable -> {
+//                    List<Long> RatingWorkerList = new ArrayList<>();
+//                    for (DocumentSnapshot document : runnable.getDocuments()) {
+//                        Long rating = document.getLong("Rating-clint");
+//                        if (rating != null) {
+//                            RatingWorkerList.add(rating);
+//                        }
+//                    }
+//
+//                    long sum = 0;
+//                    for (Long value : RatingWorkerList) {
+//                        sum += value;
+//                    }
+//                    if ( RatingWorkerList.size()!=0 ){
+//                        double y = sum/RatingWorkerList.size();
+//                        int x = (int) y;
+//                        binding.tvRate.setText(String.valueOf(x));
+//                    }
+//
+//                })
+//                .addOnFailureListener(runnable -> {
+//                    binding.tvRate.setText("0");
+//                    Log.e("not", "NoData");
+//                });
+
 
 
         return binding.getRoot();

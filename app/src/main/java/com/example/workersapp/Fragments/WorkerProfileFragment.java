@@ -165,41 +165,41 @@ public class WorkerProfileFragment extends Fragment {
             }
         });
         /////التقيم
-        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> num = new ArrayList<>();
-
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
-
-                    for (DocumentSnapshot document : documents) {
-                         num.add(document.getId());
-                        Log.d("tag", document.getId());
-                    }
-                    Log.d("tag", String.valueOf(num.size()));
-
-                    for (int i = 0; i < num.size(); i++) {
-                        db.collection("posts").document(num.get(i)).collection("userPost")
-                                .whereEqualTo("jobState", "done").whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        List<Integer> rating = task.getResult().toObjects(Integer.class);
-                                        count = count + rating.size();
-                                        for (int j = 0; j < rating.size(); j++) {
-                                            rate = rate + rating.get(j);
-                                        }
-                                    }
-                                });
-                    }
-                }
-                Log.d("tag", String.valueOf(rate));
-                Log.d("tag", String.valueOf(count));
-
-                double pWorkerRate = rate / count;
-                binding.pWorkerRate.setText(String.valueOf(pWorkerRate));
-            }
-        });
+//        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//            @Override
+//            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                if (task.isSuccessful()) {
+//                    List<String> num = new ArrayList<>();
+//
+//                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+//
+//                    for (DocumentSnapshot document : documents) {
+//                         num.add(document.getId());
+//                        Log.d("tag", document.getId());
+//                    }
+//                    Log.d("tag", String.valueOf(num.size()));
+//
+//                    for (int i = 0; i < num.size(); i++) {
+//                        db.collection("posts").document(num.get(i)).collection("userPost")
+//                                .whereEqualTo("jobState", "done").whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                                    @Override
+//                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                        List<Integer> rating = task.getResult().toObjects(Integer.class);
+//                                        count = count + rating.size();
+//                                        for (int j = 0; j < rating.size(); j++) {
+//                                            rate = rate + rating.get(j);
+//                                        }
+//                                    }
+//                                });
+//                    }
+//                }
+//                Log.d("tag", String.valueOf(rate));
+//                Log.d("tag", String.valueOf(count));
+//
+//                double pWorkerRate = rate / count;
+//                binding.pWorkerRate.setText(String.valueOf(pWorkerRate));
+//            }
+//        });
 
         return binding.getRoot();
     }
@@ -234,7 +234,6 @@ public class WorkerProfileFragment extends Fragment {
     }
 
     private void getData() {
-        List decoumtId = new ArrayList();
 
         binding.ProgressBar.setVisibility(View.VISIBLE);
         binding.ScrollView.setVisibility(View.GONE);
@@ -277,7 +276,6 @@ public class WorkerProfileFragment extends Fragment {
                 });
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
-                decoumtId.add(documentSnapshot1);
                 db.collection("posts").document(documentSnapshot1.getId())
                         .collection("userPost").get()
                         .addOnCompleteListener(task -> {
@@ -310,6 +308,28 @@ public class WorkerProfileFragment extends Fragment {
                         })
                         .addOnFailureListener(runnable -> {
                         });
+            }
+        });
+        List<Long> RatingWorkerList = new ArrayList <>(  );
+        db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                db.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").whereEqualTo( "jobState","done" )
+                        .whereEqualTo( "workerId",firebaseUser.getPhoneNumber() ).get()
+                        .addOnCompleteListener(task -> {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                RatingWorkerList.add( document.getLong( "Rating-worker" ) );
+                                long sum = 0;
+                                for (Long value : RatingWorkerList) {
+                                    sum += value; }
+
+                               int x =   (int) (sum / RatingWorkerList.size());
+                                binding.pWorkerRate.setText( x+"" );
+                            }
+                        })
+                        .addOnFailureListener(runnable -> {
+                        });
+
             }
         });
     }
