@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -33,6 +34,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -65,6 +68,9 @@ public class WorkerProfileFragment extends Fragment {
     String workerToken;
     private static final String TOPIC_NAME = "weather";
 
+    double rate = 0;
+    int count = 0;
+
 
     public WorkerProfileFragment() {
         // Required empty public constructor
@@ -92,8 +98,8 @@ public class WorkerProfileFragment extends Fragment {
         ArrayList<Fragment> fragments = new ArrayList<>();
         ArrayList<String> tabs = new ArrayList<>();
 
-        sp = getContext().getSharedPreferences( "MyPreferences" , MODE_PRIVATE );
-        editor = sp.edit( );
+        sp = getContext().getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        editor = sp.edit();
 
         sp1 = getContext().getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
         editor1 = sp1.edit();
@@ -158,7 +164,42 @@ public class WorkerProfileFragment extends Fragment {
                 showPopupMenu(view);
             }
         });
+        /////التقيم
+        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if (task.isSuccessful()) {
+                    List<String> num = new ArrayList<>();
 
+                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+
+                    for (DocumentSnapshot document : documents) {
+                         num.add(document.getId());
+                        Log.d("tag", document.getId());
+                    }
+                    Log.d("tag", String.valueOf(num.size()));
+
+                    for (int i = 0; i < num.size(); i++) {
+                        db.collection("posts").document(num.get(i)).collection("userPost")
+                                .whereEqualTo("jobState", "done").whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        List<Integer> rating = task.getResult().toObjects(Integer.class);
+                                        count = count + rating.size();
+                                        for (int j = 0; j < rating.size(); j++) {
+                                            rate = rate + rating.get(j);
+                                        }
+                                    }
+                                });
+                    }
+                }
+                Log.d("tag", String.valueOf(rate));
+                Log.d("tag", String.valueOf(count));
+
+                double pWorkerRate = rate / count;
+                binding.pWorkerRate.setText(String.valueOf(pWorkerRate));
+            }
+        });
 
         return binding.getRoot();
     }
@@ -198,8 +239,8 @@ public class WorkerProfileFragment extends Fragment {
         binding.ProgressBar.setVisibility(View.VISIBLE);
         binding.ScrollView.setVisibility(View.GONE);
         db.collection("users").document
-                (Objects.requireNonNull(firebaseUser.getPhoneNumber()))
-                .get().addOnSuccessListener( documentSnapshot -> {
+                        (Objects.requireNonNull(firebaseUser.getPhoneNumber()))
+                .get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
 
                     binding.ProgressBar.setVisibility(View.GONE);
@@ -230,10 +271,10 @@ public class WorkerProfileFragment extends Fragment {
                         binding.pWorkerJoinDate.setText(formattedDate);
                         userData = true;
                     }
-                } ).addOnFailureListener(e -> {
-            //Todo Add LLField
+                }).addOnFailureListener(e -> {
+                    //Todo Add LLField
 
-        });
+                });
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
                 decoumtId.add(documentSnapshot1);
