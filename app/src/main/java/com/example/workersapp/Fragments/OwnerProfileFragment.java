@@ -58,9 +58,6 @@ public class OwnerProfileFragment extends Fragment {
     List <String> categoryList;
     List< Post > postList;
     String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
-    List<String> categoryList;
-    List<Post> postList;
-    String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
 
     int openCount, inWorkCount, doneCount, jobsCount;
     boolean isWorkCountDone = false;
