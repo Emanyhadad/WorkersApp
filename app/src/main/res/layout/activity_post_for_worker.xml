@@ -103,8 +103,7 @@
                         android:id="@+id/PWA_tv_projectstate"
                         android:layout_width="wrap_content"
                         android:layout_height="@dimen/_19sdp"
-                        android:background="@drawable/corner"
-                        android:backgroundTint="@color/green"
+                        android:background="@color/green"
                         android:contentDescription="Project state: open"
                         android:focusable="true"
                         android:focusableInTouchMode="true"
@@ -448,10 +447,9 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/et_bg"
                 android:orientation="vertical"
-
                 android:padding="@dimen/_8sdp"
                 android:visibility="gone"
-                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="50dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_writeOffer">
@@ -503,7 +501,6 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/cairo_regular"
                             android:text="مدة التسليم"
-
                             android:textSize="@dimen/_9ssp"
                             tools:ignore="HardcodedText,TextContrastCheck" />
 
@@ -530,7 +527,6 @@
                             android:layout_height="wrap_content"
                             android:fontFamily="@font/cairo_regular"
                             android:text="معرض الأعمال"
-
                             android:textSize="@dimen/_9ssp"
                             tools:ignore="HardcodedText,TextContrastCheck" />
 
@@ -606,6 +602,202 @@
 
 
             </LinearLayout>
+
+
+            <!--++++++++++++++++++++++++++++++++++++++++++++++-->
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/AP_CL_inWork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_marginBottom="@dimen/_20sdp"
+                android:background="@drawable/border_et"
+                android:padding="@dimen/_8sdp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/LLSendedOffer"
+                app:layout_constraintVertical_bias="0.084">
+
+                <LinearLayout
+                    android:id="@+id/linearLayout7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/AP_IWJILE"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:drawablePadding="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_regular"
+                        android:gravity="start"
+                        android:text="@string/ile"
+                        android:textColor="@color/green"
+                        android:textSize="@dimen/_11ssp"
+                        tools:ignore="TextContrastCheck" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/APtv_IWJOfferPrice"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="start"
+                        android:layout_marginStart="@dimen/_4sdp"
+                        android:layout_marginBottom="@dimen/_6sdp"
+                        android:drawablePadding="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_regular"
+                        android:gravity="start"
+                        android:text="@string/_200"
+                        android:textColor="@color/blue"
+                        android:textSize="@dimen/_11ssp" />
+
+                </LinearLayout>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/AP_tv_IWJFinishedDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tv_now"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/green"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0"
+                    tools:ignore="TextContrastCheck" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/AP_tv_IWJStartDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="@dimen/_4sdp"
+                    android:fontFamily="@font/cairo_regular"
+                    android:text="@string/tv_duration"
+                    android:textAlignment="textEnd"
+                    android:textColor="@color/blue"
+                    android:textSize="@dimen/_12ssp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/AP_tv_IWJFinishedDate"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+
+                <LinearLayout
+                    android:id="@+id/linearLayout_rateWorker"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:layout_marginBottom="@dimen/_6sdp"
+                    android:gravity="center_vertical"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout7"
+
+                    >
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tv_WorkerComment"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="عبدالله نجار رائع وملتزم بالوقت" />
+
+                    <me.zhanghai.android.materialratingbar.MaterialRatingBar
+                        android:id="@+id/ratingBar_Worker"
+                        android:layout_width="@dimen/_50sdp"
+                        android:layout_height="@dimen/_10sdp"
+                        android:clickable="false"
+                        android:isIndicator="true"
+                        android:numStars="5" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/LL_InWorkJob"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_6sdp"
+                    android:gravity="right|center_horizontal|center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="visible"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/linearLayout_rateWorker"
+                    tools:ignore="RtlHardcoded">
+
+                    <com.google.android.material.imageview.ShapeableImageView
+                        android:id="@+id/imgIWJ_worker"
+                        android:layout_width="@dimen/_15sdp"
+                        android:layout_height="@dimen/_15sdp"
+                        android:src="@drawable/worker"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="@+id/AP_tv_IWJ_ILE"
+                        app:layout_constraintTop_toBottomOf="@+id/AP_tv_IWJ_ILE"
+                        tools:ignore="ImageContrastCheck" />
+
+                    <com.google.android.material.textview.MaterialTextView
+                        android:id="@+id/tvIWJ_workerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:layout_marginRight="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_semi_bold"
+                        android:text="@string/tv_workerName"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11ssp" />
+
+                    <TextView
+                        android:id="@+id/PAtvIWJ_workerRating"
+                        android:layout_width="@dimen/_40sdp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/_4sdp"
+                        android:layout_marginRight="@dimen/_4sdp"
+                        android:fontFamily="@font/cairo_semi_bold"
+                        android:gravity="center_vertical"
+                        android:text="@string/_4_5i"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/_11ssp"
+                        app:drawableEndCompat="@drawable/baseline_star_24" />
+
+
+                </LinearLayout>
+
+                <!--                <LinearLayout-->
+                <!--                    android:id="@+id/linearLayout_rateClint"-->
+                <!--                    android:layout_width="match_parent"-->
+                <!--                    android:layout_height="wrap_content"-->
+                <!--                    app:layout_constraintTop_toBottomOf="@+id/LL_InWorkJob"-->
+                <!--                    android:gravity="center_vertical"-->
+                <!--                    android:layout_marginTop="@dimen/_6sdp">-->
+
+                <!--                    <com.google.android.material.textview.MaterialTextView-->
+                <!--                        android:id="@+id/tv_ClintComment"-->
+
+                <!--                        android:layout_width="match_parent"-->
+                <!--                        android:layout_height="wrap_content"-->
+                <!--                        android:text="عبدالله نجار رائع وملتزم بالوقت"-->
+                <!--                        android:layout_weight="1"-->
+                <!--                        />-->
+
+                <!--                    <me.zhanghai.android.materialratingbar.MaterialRatingBar-->
+                <!--                        android:id="@+id/ratingBar_Clint"-->
+
+                <!--                        android:layout_width="@dimen/_50sdp"-->
+                <!--                        android:layout_height="@dimen/_10sdp"-->
+                <!--                        android:numStars="5"-->
+                <!--                        android:clickable="false"-->
+                <!--                        android:isIndicator="true"-->
+                <!--                        />-->
+                <!--                </LinearLayout>-->
+
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

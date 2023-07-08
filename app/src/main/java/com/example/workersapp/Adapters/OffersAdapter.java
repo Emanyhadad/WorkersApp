@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatButton;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.Listeneres.OfferListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
@@ -25,14 +26,15 @@ import java.util.List;
 public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> {
     List< Offer > offerList;
     OfferListener listener;
+    ItemClickListener clickListener;
     FirebaseFirestore firestore;
     Context context;
 
-
-    public OffersAdapter( List < Offer > offerList , OfferListener listener , Context context ) {
+    public OffersAdapter( List < Offer > offerList , OfferListener listener , Context context,ItemClickListener clickListener) {
         this.offerList = offerList;
         this.listener = listener;
         this.context = context;
+        this.clickListener = clickListener;
     }
 
     @NonNull
@@ -53,6 +55,14 @@ public class OffersAdapter extends RecyclerView.Adapter<OffersAdapter.myHolder> 
         holder.offerDuration.setText(offerList.get( pos ).offerDuration);
         String workerId =offerList.get( pos ).workerID;
         holder.LL_btn.setVisibility( View.VISIBLE );
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.OnClick(holder.getAdapterPosition());
+            }
+        });
+
         firestore.collection("users").document( workerId)
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {

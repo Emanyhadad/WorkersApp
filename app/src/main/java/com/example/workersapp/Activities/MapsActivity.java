@@ -156,7 +156,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     } else if (title.isEmpty()) {
                         sheet.setError("يرجى تعبئة هذا الحقل");
                     }
-                } else if (intentSource.equals("NewJobFragment")) {
+                }
+                else if (intentSource.equals("NewJobFragment")) {
                     if (!title.isEmpty() && !city.isEmpty()) {
                         Intent intent1 = new Intent();
                         intent1.putExtra("city", city);

@@ -46,9 +46,6 @@ import java.util.Objects;
 public class WorkerProfileFragment extends Fragment {
 
     FragmentWorkerProfileBinding binding;
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
 
@@ -126,7 +123,7 @@ public class WorkerProfileFragment extends Fragment {
         tabs.add(getString(R.string.TvReviews));
         tabs.add(getString(R.string.businessToolBar));
 
-        fragments.add(WorkerReviewsFragment.newInstance());
+        fragments.add(new WorkerReviewsFragment());
         fragments.add(new BusinessModelsFragment());
 
         adapter = new ImageModelFragAdapter(getActivity(), fragments);
@@ -194,13 +191,6 @@ public class WorkerProfileFragment extends Fragment {
         });
         popupMenu.show();
     }
-//
-//
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        setHasOptionsMenu(true);
-//        super.onCreate(savedInstanceState);
-//    }
 
     private void getData() {
         List decoumtId = new ArrayList();

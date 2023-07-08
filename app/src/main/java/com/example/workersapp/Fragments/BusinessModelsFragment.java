@@ -27,14 +27,13 @@ import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class BusinessModelsFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     FragmentBusinessModelsBinding binding;
-    private static final String ARG_PARAM1_IMAGE = "image" ;
+    private static final String ARG_WORKER = "posWorker";
     FirebaseFirestore firebaseFirestore;
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
@@ -42,21 +41,22 @@ public class BusinessModelsFragment extends Fragment {
     List<String> imagesList;
     ImageModelAdapter adapter;
 
-    private String documentId;
+    private String posWorker;
     String firstImageUrl;
     public static SharedPreferences sp;
     public static SharedPreferences.Editor editor;
     List<Model> models;
+    String sourceModel;
 
     public BusinessModelsFragment() {
     }
 
 
     // TODO: Rename and change types and number of parameters
-    public static BusinessModelsFragment newInstance(String documentId) {
+    public static BusinessModelsFragment newInstance(String posWorker) {
         BusinessModelsFragment fragment = new BusinessModelsFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1_IMAGE, documentId);
+        args.putString(ARG_WORKER, posWorker);
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class BusinessModelsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            documentId = getArguments().getString(ARG_PARAM1_IMAGE);
+            posWorker = getArguments().getString(ARG_WORKER);
         }
 
     }
@@ -83,47 +83,96 @@ public class BusinessModelsFragment extends Fragment {
         imagesList = new ArrayList<>();
         models = new ArrayList<>();
 
-
+        getDataWorkerForOwner();
 
         return binding.getRoot();
+    }
+
+    private void getDataWorkerForOwner() {
+
+        if (posWorker != null && !posWorker.equals(firebaseUser.getPhoneNumber())){
+
+            firebaseFirestore.collection("forms").document(posWorker)
+                    .collection("userForm")
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            binding.progressBar.setVisibility(View.GONE);
+                            binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                        }
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            List<String> images = (List<String>) document.get("images");
+                            String doc = (String) document.get("documentId");
+                            if (!images.isEmpty()) {
+                                models.add(new Model(images, doc));
+                                adapter = new ImageModelAdapter(models,
+                                        getContext(),
+                                        documentId -> {
+                                            Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
+                                            intent.putExtra("documentId", documentId);
+                                            intent.putExtra("posWorker",posWorker);
+                                            startActivity(intent);
+                                        });
+                                binding.LLEmptyWorker.setVisibility(View.GONE);
+                                binding.FragRV.setVisibility(View.VISIBLE);
+                                RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
+                                fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                                fragRv.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    });
+        } else if (posWorker == null ) {
+            
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        models.clear();
-        firebaseFirestore.collection("forms").document( Objects.requireNonNull( firebaseUser.getPhoneNumber( ) ) )
-                .collection("userForm")
-                .get()
-                .addOnSuccessListener( queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.isEmpty()){
-                        binding.progressBar.setVisibility(View.GONE);
-                        binding.LLEmptyWorker.setVisibility(View.VISIBLE);
-                    }
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        List<String> images = (List<String>) document.get("images");
-                        String doc = (String) document.get("documentId");
-                        if (!images.isEmpty()) {
-                            models.add(new Model(images, doc));
-                            adapter = new ImageModelAdapter(models,
-                                    getContext(),
-                                    documentId -> {
-                                        Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
-                                        intent.putExtra("documentId", documentId);
-                                        startActivity(intent);
-                                    } );
-                            binding.LLEmptyWorker.setVisibility(View.GONE);
-                            binding.FragRV.setVisibility(View.VISIBLE);
-                            RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
-                            fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
-                            fragRv.setAdapter(adapter);
-                            adapter.notifyDataSetChanged();
-                        } else {
-                            Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
-                        }
-                    }
 
-                } );
+        if (posWorker == null ){
+            models.clear();
+
+            firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
+                    .collection("userForm")
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        if (queryDocumentSnapshots.isEmpty()) {
+                            binding.progressBar.setVisibility(View.GONE);
+                            binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                        }
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            List<String> images = (List<String>) document.get("images");
+                            String doc = (String) document.get("documentId");
+                            if (!images.isEmpty()) {
+                                models.add(new Model(images, doc));
+                                adapter = new ImageModelAdapter(models,
+                                        getContext(),
+                                        documentId -> {
+                                            Intent intent = new Intent(getContext(), DetailsModelsActivity.class);
+                                            intent.putExtra("documentId", documentId);
+                                            startActivity(intent);
+                                        });
+                                binding.LLEmptyWorker.setVisibility(View.GONE);
+                                binding.FragRV.setVisibility(View.VISIBLE);
+                                RecyclerView fragRv = getActivity().findViewById(R.id.FragRV);
+                                fragRv.setLayoutManager(new GridLayoutManager(getContext(), 3));
+                                fragRv.setAdapter(adapter);
+                                adapter.notifyDataSetChanged();
+                            } else {
+                                Toast.makeText(getContext(), "انتظر", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    });
+        }
+        else if (posWorker != null && !posWorker.equals(firebaseUser.getPhoneNumber())){
+
+        }
 
     }
 }
