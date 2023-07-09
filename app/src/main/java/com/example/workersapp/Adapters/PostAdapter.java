@@ -18,12 +18,10 @@ import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemPostBinding;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -92,11 +90,14 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
                         String fullName = documentSnapshot1.getString("fullName");
                         holder.ClintName.setText( fullName );
                         String image = documentSnapshot1.getString("image");
-                        Glide.with(context)
-                                .load(image)
-                                .circleCrop()
-                                .error( R.drawable.worker)
-                                .into(holder.clintImage);
+                        if (context!=null){
+                            Glide.with(context)
+                                    .load(image)
+                                    .circleCrop()
+                                    .error( R.drawable.worker)
+                                    .into(holder.clintImage);
+                        }
+
                     }
                 })
                 .addOnFailureListener(e -> {});

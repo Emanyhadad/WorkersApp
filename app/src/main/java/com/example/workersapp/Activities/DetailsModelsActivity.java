@@ -276,7 +276,6 @@ public class DetailsModelsActivity extends AppCompatActivity {
                         binding.LLData.setVisibility( View.GONE );} );
         }
         else if (posWorker != null && !posWorker.equals(firebaseUser.getPhoneNumber())){
-            Toast.makeText(this, "not", Toast.LENGTH_SHORT).show();
         }
     }
 }

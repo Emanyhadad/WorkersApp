@@ -40,6 +40,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NewModelActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
@@ -261,7 +262,8 @@ public class NewModelActivity extends AppCompatActivity implements DatePickerDia
     }
 
     private void uploadForm(Model model, String documentName) {
-        firebaseFirestore.collection("forms").document(firebaseUser.getPhoneNumber())
+
+        firebaseFirestore.collection("forms").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .collection("userForm").document(documentName)
                 .set(model)
                 .addOnCompleteListener(new OnCompleteListener<Void>() {

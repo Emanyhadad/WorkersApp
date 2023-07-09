@@ -165,6 +165,8 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                     binding.editBtnEditModel.setVisibility(View.GONE);
                     binding.progressBarEdit.setVisibility(View.VISIBLE);
                     for (int i = 0; i < uriList.size(); i++) {
+                        Log.d("document",document);
+
                         StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + document + "/" + "/" + uriList.get(i).getLastPathSegment());
                         UploadTask uploadTask = reference.putFile(uriList.get(i));
                         int finalI = i;

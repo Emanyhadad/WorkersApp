@@ -1,14 +1,11 @@
 package com.example.workersapp.Fragments;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -21,16 +18,8 @@ import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Adapters.ShowCategoryAdapter;
 import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
-import com.example.workersapp.Utilities.AdClass;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.FragmentPostInWorkerBinding;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdLoader;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.LoadAdError;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.nativead.NativeAd;
-import com.google.android.gms.ads.nativead.NativeAdOptions;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -219,9 +208,10 @@ void getData(){
                                     jobLocation = documentSnapshot1.getString("jobLocation");
                                     addedTime = documentSnapshot1.getLong("addedTime");
 
+
                                     Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState,addedTime);
                                     post.setPostId(documentSnapshot1.getId());
-                                    post.setOwnerId(documentSnapshot1.getId());
+                                    post.setOwnerId(documentSnapshot.getId());
 
                                     postList.add(post);
                                     postAdapter = new Post_forWorkerAdapter(postList, getContext(), pos -> {

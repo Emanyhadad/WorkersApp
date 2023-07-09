@@ -14,11 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ActivitySearchBinding;
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
@@ -53,12 +54,14 @@ public class SearchActivity extends AppCompatActivity {
 
         binding.RVSearch.setAdapter(postAdapter);
 
+
         binding.searchEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 if (actionId == EditorInfo.IME_ACTION_DONE) {
                     String searchTerm = binding.searchEt.getText().toString();
                     SearchTitle(searchTerm);
+
                     return true;
                 }
                 return false;
@@ -66,164 +69,138 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    private void SearchTitle(String searchTerm) {
-        try {
-            final AtomicBoolean hasResults = new AtomicBoolean(false);
+    void SearchTitle(String searchTerm) {
+        AtomicBoolean hasMatch = new AtomicBoolean(false); // تعيين قيمة افتراضية للتحقق من وجود تطابقات
 
-            binding.ProgressBarSearch.setVisibility(View.VISIBLE);
+        binding.ProgressBarSearch.setVisibility(View.VISIBLE);
+        postList.clear();
 
-            firebaseFirestore.collection("posts")
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Task<?>> tasks = new ArrayList<>(); // قائمة لتخزين المهام (عمليات الاستعلام) للانتظار عند الحاجة
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                Task<QuerySnapshot> task = firebaseFirestore
+                        .collection("posts")
+                        .document(documentSnapshot.getId())
+                        .collection("userPost")
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots1.getDocuments()) {
+                                String title = documentSnapshot1.getString("title");
+                                String jobState = documentSnapshot1.getString("jobState");
+                                Log.d("title", title);
 
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                String phoneNumber = document.getId();
-                                System.out.println(phoneNumber);
-
-                                firebaseFirestore.collection("posts")
-                                        .document(phoneNumber)
-                                        .collection("userPost")
-                                        .whereEqualTo("title", searchTerm)
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                postList.clear();
-                                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                                    Post post = document.toObject(Post.class);
-                                                    postList.add(post);
-                                                    System.out.println(post.getDescription());
-                                                    Log.d("documentActivity", document.getData().toString());
-                                                }
-
-                                                if (!queryDocumentSnapshots.isEmpty()) {
-                                                    hasResults.set(true);
-                                                }
-
-                                                if (postList.isEmpty() || !hasResults.get()) {
-                                                    SearchDescription(searchTerm);
-                                                } else {
-                                                    updateRecyclerView();
-                                                }
-                                            }
-                                        });
+                                if (title.contains(searchTerm) && jobState.contains("open")) {
+                                    Post post = documentSnapshot1.toObject(Post.class);
+                                    postList.add(post);
+                                    hasMatch.set(true); // يتم تحديث القيمة إلى true في حالة وجود تطابق
+                                    Log.d("documentActivity", documentSnapshot1.getData().toString());
+                                    Log.d("postList", postList.size() + "");
+                                }
                             }
-                        }
-                    });
+                        });
+                tasks.add(task);
+            }
 
-        } catch (Exception e) {
-            System.out.printf(e.toString());
-        }
+            Tasks.whenAllComplete(tasks).addOnCompleteListener(taskSnapshots -> {
+                // التحقق من وجود تطابقات أو عدمها وتحديث واجهة المستخدم
+                if (hasMatch.get() && postList != null) {
+                    // تحديث واجهة المستخدم لعرض العناصر
+                    updateRecyclerView();
+                } else {
+                    SearchDescription(searchTerm);
+                }
+            });
+        });
+    }
 
+    void SearchDescription(String searchTerm) {
+        AtomicBoolean hasMatch = new AtomicBoolean(false); // تعيين قيمة افتراضية للتحقق من وجود تطابقات
+        postList.clear();
+
+
+        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Task<?>> tasks = new ArrayList<>(); // قائمة لتخزين المهام (عمليات الاستعلام) للانتظار عند الحاجة
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                Task<QuerySnapshot> task = firebaseFirestore
+                        .collection("posts")
+                        .document(documentSnapshot.getId())
+                        .collection("userPost")
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots1.getDocuments()) {
+                                String description = documentSnapshot1.getString("description");
+                                String jobState = documentSnapshot1.getString("jobState");
+                                Log.d("description", description);
+
+                                if (description.contains(searchTerm) && jobState != null && jobState.equals("open")) {
+                                    Post post = documentSnapshot1.toObject(Post.class);
+                                    postList.add(post);
+                                    hasMatch.set(true); // يتم تحديث القيمة إلى true في حالة وجود تطابق
+                                    Log.d("documentActivity", documentSnapshot1.getData().toString());
+                                    Log.d("postList", postList.size() + "");
+                                }
+                            }
+                        });
+                tasks.add(task);
+            }
+
+            Tasks.whenAllComplete(tasks).addOnCompleteListener(taskSnapshots -> {
+                // التحقق من وجود تطابقات أو عدمها وتحديث واجهة المستخدم
+                if (hasMatch.get() && postList != null) {
+                    // تحديث واجهة المستخدم لعرض العناصر المطابقة
+                    updateRecyclerView();
+                } else {
+                    SearchCategory(searchTerm);
+                }
+            });
+        });
     }
 
 
-    private void SearchDescription(String searchTerm) {
-        try {
-            final AtomicBoolean hasResults = new AtomicBoolean(false);
+    void SearchCategory(String searchTerm) {
+        AtomicBoolean hasMatch = new AtomicBoolean(false); // تعيين قيمة افتراضية للتحقق من وجود تطابقات
+        postList.clear();
 
-            firebaseFirestore.collection("posts")
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            postList.clear();
+        firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<Task<?>> tasks = new ArrayList<>(); // قائمة لتخزين المهام (عمليات الاستعلام) للانتظار عند الحاجة
+            for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
+                Task<QuerySnapshot> task = firebaseFirestore
+                        .collection("posts")
+                        .document(documentSnapshot.getId())
+                        .collection("userPost")
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots1 -> {
+                            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots1.getDocuments()) {
+                                List<String> categoriesList = (List<String>) documentSnapshot1.get("categoriesList");
+                                String jobState = documentSnapshot1.getString("jobState");
+                                Log.d("categoriesList", categoriesList + "");
 
-
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                String phoneNumber = document.getId();
-                                System.out.println(phoneNumber);
-
-                                firebaseFirestore.collection("posts")
-                                        .document(phoneNumber)
-                                        .collection("userPost")
-                                        .whereEqualTo("description",searchTerm)
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                                    Post post = document.toObject(Post.class);
-                                                    postList.add(post);
-                                                    System.out.println(post.getDescription());
-                                                    Log.d("documentActivity", document.getData().toString());
-                                                }
-
-                                                if (!queryDocumentSnapshots.isEmpty()) {
-                                                    hasResults.set(true);
-                                                }
-
-                                                if (postList.isEmpty() || !hasResults.get()) {
-                                                    SearchCategory(searchTerm);
-                                                } else {
-                                                    updateRecyclerView();
-                                                }
-                                            }
-                                        });
+                                if (categoriesList != null && categoriesList.contains(searchTerm) && jobState != null && jobState.equals("open")) {
+                                    Post post = documentSnapshot1.toObject(Post.class);
+                                    postList.add(post);
+                                    hasMatch.set(true); // يتم تحديث القيمة إلى true في حالة وجود تطابق
+                                    Log.d("documentActivity", documentSnapshot1.getData().toString());
+                                    Log.d("postList", postList.size() + "");
+                                }
                             }
-                        }
-                    });
 
-        } catch (Exception e) {
-            System.out.printf(e.toString());
-        }
+                        });
+                tasks.add(task);
 
-    }
+            }
 
-    private void SearchCategory(String searchTerm) {
-        try {
-            final AtomicBoolean hasResults = new AtomicBoolean(false);
-
-            firebaseFirestore.collection("posts")
-                    .get()
-                    .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                        @Override
-                        public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                            postList.clear();
-
-
-                            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                String phoneNumber = document.getId();
-                                System.out.println(phoneNumber);
-
-                                firebaseFirestore.collection("posts")
-                                        .document(phoneNumber)
-                                        .collection("userPost")
-                                        .whereArrayContains("categoriesList", searchTerm)
-                                        .get()
-                                        .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                                            @Override
-                                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                                for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                                                    Post post = document.toObject(Post.class);
-                                                    postList.add(post);
-                                                    System.out.println(post.getDescription());
-                                                    Log.d("documentActivity", document.getData().toString());
-                                                }
-
-                                                if (!queryDocumentSnapshots.isEmpty()) {
-                                                    hasResults.set(true);
-                                                }
-
-                                                if (postList.isEmpty() || !hasResults.get()) {
-                                                    binding.imageView7.setVisibility(View.VISIBLE);
-                                                    binding.RVSearch.setVisibility(View.GONE);
-                                                    binding.ProgressBarSearch.setVisibility(View.GONE);
-                                                } else {
-                                                    updateRecyclerView();
-                                                }
-                                            }
-                                        });
-                            }
-                        }
-                    });
-
-        } catch (Exception e) {
-            System.out.printf(e.toString());
-        }
-
+            Tasks.whenAllComplete(tasks).addOnCompleteListener(taskSnapshots -> {
+                // التحقق من وجود تطابقات أو عدمها وتحديث واجهة المستخدم
+                if (hasMatch.get() && postList != null) {
+                    // تحديث واجهة المستخدم لعرض العناصر المطابقة
+                    updateRecyclerView();
+                } else {
+                    binding.imageView7.setVisibility(View.VISIBLE);
+                    binding.RVSearch.setVisibility(View.GONE);
+                    binding.ProgressBarSearch.setVisibility(View.GONE);
+                }
+            });
+        });
     }
 
     private void updateRecyclerView() {
@@ -232,12 +209,6 @@ public class SearchActivity extends AppCompatActivity {
         binding.RVSearch.setVisibility(View.VISIBLE);
         binding.imageView7.setVisibility(View.GONE);
         binding.ProgressBarSearch.setVisibility(View.GONE);
-
-        if (postList.isEmpty()) {
-            binding.imageView7.setVisibility(View.VISIBLE);
-            binding.RVSearch.setVisibility(View.GONE);
-            binding.ProgressBarSearch.setVisibility(View.GONE);
-        }
 
     }
 

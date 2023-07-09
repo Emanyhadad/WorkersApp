@@ -45,6 +45,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class NewJobFragment extends Fragment {
 
@@ -331,7 +332,7 @@ public class NewJobFragment extends Fragment {
         post.setPostId( documentName );
         post.setOwnerId( firebaseUser.getPhoneNumber() );
 
-        firebaseFirestore.collection("posts").document(firebaseUser.getPhoneNumber())
+        firebaseFirestore.collection("posts").document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                 .collection("userPost").document(documentName).set(post).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
