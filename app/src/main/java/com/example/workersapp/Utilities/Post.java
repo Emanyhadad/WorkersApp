@@ -16,10 +16,8 @@ public class Post {
     String OwnerId;
     long addedTime;
     private boolean isFavorite;
-
-    int RatingClint;
     public Post(String title, String description, List<String> images, List<String> categoriesList,
-                String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState,long addedTime) {
+                String expectedWorkDuration, String projectedBudget, String jobLocation, String jobState, long addedTime) {
         this.title = title;
         this.description = description;
         this.images = images;
@@ -28,14 +26,14 @@ public class Post {
         this.projectedBudget = projectedBudget;
         this.jobLocation = jobLocation;
         this.jobState = jobState;
-        this.addedTime=addedTime;
+        this.addedTime = addedTime;
     }
 
-    public long getAddedTime( ) {
+    public long getAddedTime() {
         return addedTime;
     }
 
-    public void setAddedTime( long addedTime ) {
+    public void setAddedTime(long addedTime) {
         this.addedTime = addedTime;
     }
 
@@ -46,15 +44,15 @@ public class Post {
         return title;
     }
 
-    public String getPostId( ) {
+    public String getPostId() {
         return postId;
     }
 
-    public void setPostId( String postId ) {
+    public void setPostId(String postId) {
         this.postId = postId;
     }
 
-    public void setTitle( String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
@@ -114,24 +112,24 @@ public class Post {
         this.jobState = jobState;
     }
 
-    public String getWorkerId( ) {
+    public String getWorkerId() {
         return workerId;
     }
 
-    public void setWorkerId( String workerId ) {
+    public void setWorkerId(String workerId) {
         this.workerId = workerId;
     }
 
-    public String getOwnerId( ) {
+    public String getOwnerId() {
         return OwnerId;
     }
 
-    public void setOwnerId( String ownerId ) {
+    public void setOwnerId(String ownerId) {
         OwnerId = ownerId;
     }
 
     @Override
-    public String toString( ) {
+    public String toString() {
         return "Post{" +
                 "title='" + title + '\'' +
                 ", description='" + description + '\'' +
@@ -155,11 +153,4 @@ public class Post {
         isFavorite = favorite;
     }
 
-    public int getRatingClint() {
-        return RatingClint;
-    }
-
-    public void setRatingClint(int ratingClint) {
-        RatingClint = ratingClint;
-    }
 }

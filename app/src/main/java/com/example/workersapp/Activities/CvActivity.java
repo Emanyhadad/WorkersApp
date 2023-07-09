@@ -75,9 +75,7 @@ public class CvActivity extends AppCompatActivity {
                         categoriesListF = (List<String>) task.getResult().get("categories");
                         ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, categoriesListF);
                         binding.CvWork.setAdapter(adapter);
-                    } else {
-                        //Todo Add LLField
-                    }
+                    } else {}
                 } );
     }
 }

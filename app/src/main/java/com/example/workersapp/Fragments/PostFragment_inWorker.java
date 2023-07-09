@@ -135,6 +135,9 @@ public class PostFragment_inWorker extends Fragment {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         //Todo Add LLField
+                        binding.LLNoWifi.setVisibility(View.VISIBLE);
+                        binding.ProgressBar.setVisibility(View.GONE);
+                        binding.RV.setVisibility(View.GONE);
                     }
                 });
     }

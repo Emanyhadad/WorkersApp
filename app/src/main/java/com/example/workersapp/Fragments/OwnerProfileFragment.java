@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.PopupMenu;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -55,9 +56,9 @@ public class OwnerProfileFragment extends Fragment {
     public static SharedPreferences sp1;
     public static SharedPreferences.Editor editor1;
 
-    List <String> categoryList;
-    List< Post > postList;
-    String jobState,title,description,expectedWorkDuration,projectedBudget,jobLocation;
+    List<String> categoryList;
+    List<Post> postList;
+    String jobState, title, description, expectedWorkDuration, projectedBudget, jobLocation;
 
     int openCount, inWorkCount, doneCount, jobsCount;
     boolean isWorkCountDone = false;
@@ -97,8 +98,8 @@ public class OwnerProfileFragment extends Fragment {
         firebaseFirestore = FirebaseFirestore.getInstance();
         auth = FirebaseAuth.getInstance();
         firebaseUser = auth.getCurrentUser();
-        sp = getContext().getSharedPreferences( "MyPreferences" , MODE_PRIVATE );
-        editor = sp.edit( );
+        sp = getContext().getSharedPreferences("MyPreferences", MODE_PRIVATE);
+        editor = sp.edit();
 
         sp1 = getContext().getSharedPreferences("MyPreferencesBoarding", MODE_PRIVATE);
         editor1 = sp1.edit();
@@ -205,20 +206,19 @@ public class OwnerProfileFragment extends Fragment {
                 .get()
                 .addOnCompleteListener(task -> {
                     jobData = true;
-                    if ( task.getResult().isEmpty() ){
-                        binding.PB.setVisibility( View.GONE );
-                        binding.SV.setVisibility( View.GONE );
-                        binding.LL.setVisibility( View.VISIBLE );
-                        binding.LLEmpty.setVisibility( View.VISIBLE );
-                    }
-                    else {
-                        for ( DocumentSnapshot document : task.getResult()) {
-                            firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber()+ "/userPost/" + document.getId()).get()
-                                    .addOnSuccessListener( documentSnapshot -> {
-                                        binding.PB.setVisibility( View.GONE );
-                                        binding.LL.setVisibility( View.VISIBLE );
-                                        binding.LLEmpty.setVisibility( View.GONE );
-                                        binding.SV.setVisibility( View.VISIBLE );
+                    if (task.getResult().isEmpty()) {
+                        binding.PB.setVisibility(View.GONE);
+                        binding.SV.setVisibility(View.GONE);
+                        binding.LL.setVisibility(View.VISIBLE);
+                        binding.LLEmpty.setVisibility(View.VISIBLE);
+                    } else {
+                        for (DocumentSnapshot document : task.getResult()) {
+                            firebaseFirestore.document("posts/" + firebaseUser.getPhoneNumber() + "/userPost/" + document.getId()).get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        binding.PB.setVisibility(View.GONE);
+                                        binding.LL.setVisibility(View.VISIBLE);
+                                        binding.LLEmpty.setVisibility(View.GONE);
+                                        binding.SV.setVisibility(View.VISIBLE);
                                         if (documentSnapshot.exists()) {
 
                                             jobState = documentSnapshot.getString("jobState");
@@ -232,11 +232,11 @@ public class OwnerProfileFragment extends Fragment {
                                             jobLocation = documentSnapshot.getString("jobLocation");
                                             addedTime = documentSnapshot.getLong("addedTime");
 
-                                            Post post = new Post( title,description,images,categoriesList,expectedWorkDuration,projectedBudget,jobLocation,jobState ,addedTime);
-                                            post.setPostId( document.getId() );
-                                            post.setOwnerId( firebaseUser.getPhoneNumber() );
-                                            post.setWorkerId( documentSnapshot.getString( "workerId" ) );
-                                            postList.add( post );
+                                            Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState, addedTime);
+                                            post.setPostId(document.getId());
+                                            post.setOwnerId(firebaseUser.getPhoneNumber());
+                                            post.setWorkerId(documentSnapshot.getString("workerId"));
+                                            postList.add(post);
 
                                             binding.rcFinishedJobs.setAdapter(new FinishedJobsAdapter(postList, getContext(), pos -> {
                                                 Intent intent = new Intent(getActivity(), PostActivity2.class);
@@ -244,14 +244,17 @@ public class OwnerProfileFragment extends Fragment {
                                                 startActivity(intent);
                                             }));
 
-                                        } } )
-                                    .addOnFailureListener( e -> Log.e( "Field",e.getMessage()) );
-                            binding.rcFinishedJobs.setLayoutManager( new LinearLayoutManager(getContext(),
+                                        }
+                                    })
+                                    .addOnFailureListener(e -> Log.e("Field", e.getMessage()));
+                            binding.rcFinishedJobs.setLayoutManager(new LinearLayoutManager(getContext(),
                                     LinearLayoutManager.VERTICAL, false));
 
 
-                        }}
-                } ).addOnFailureListener( runnable -> {} );
+                        }
+                    }
+                }).addOnFailureListener(runnable -> {
+                });
 
         binding.pWorkerImgMenu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -260,28 +263,32 @@ public class OwnerProfileFragment extends Fragment {
             }
         });
 ////التقيم
-//        firebaseFirestore.collection("posts")
-//                .document(firebaseUser.getPhoneNumber()).
-//                collection("userPost").whereEqualTo("jobState", "done")
-//                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()) {
-//                            List<Post> postsDone = task.getResult().toObjects(Post.class);
-//                            count = postsDone.size();
-//
-//                            for (int i = 0; i < postsDone.size(); i++) {
-//                                rate = rate + postsDone.get(i).getRatingClint();
-//                            }
-//
-//                            Log.d("tag", String.valueOf(rate));
-//                            Log.d("tag", String.valueOf(count));
-//
-//                            double tvRate = rate / count;
-//                            binding.tvRate.setText(String.valueOf(tvRate));
-//                        }
-//                    }
-//                });
+
+        firebaseFirestore.collection("posts")
+                .document(firebaseUser.getPhoneNumber()).
+                collection("userPost").whereEqualTo("jobState", "done")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            count = task.getResult().size();
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                rate = rate + document.getLong("Rating-clint");
+                            }
+
+                            Log.d("tag", String.valueOf(rate));
+                            Log.d("tag", String.valueOf(count));
+
+                            if (rate != 0 && count != 0) {
+                                double tvRate = rate / count;
+                                binding.tvRate.setText(String.valueOf(tvRate));
+                            } else {
+                                binding.tvRate.setText("0");
+                            }
+                        }
+                    }
+                });
 
 
         return binding.getRoot();
@@ -316,10 +323,10 @@ public class OwnerProfileFragment extends Fragment {
         popupMenu.show();
     }
 
-    private void setRate( ) {
-        Log.d( "inWorkCount",inWorkCount+"" );
-        Log.d( "doneCount",doneCount+"" );
-        Log.d( "jobsCount",jobsCount+"" );
+    private void setRate() {
+        Log.d("inWorkCount", inWorkCount + "");
+        Log.d("doneCount", doneCount + "");
+        Log.d("jobsCount", jobsCount + "");
         if (isWorkCountDone && isjobsCountDone && isdoneCountDone) {
             float employmentRate = 0, sum = 0, divide = 0;
 

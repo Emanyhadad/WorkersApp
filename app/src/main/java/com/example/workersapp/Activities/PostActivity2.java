@@ -300,6 +300,34 @@ public class PostActivity2 extends AppCompatActivity {
                                         Log.d(TAG, "Error getting document: ", task.getException());
                                 });
                                 //Todo: get Rating
+                                List<Long> RatingWorkerList1 = new ArrayList<>();
+                                firestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+                                    for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                                        firestore.collection("posts").document(documentSnapshot1.getId())
+                                                .collection("userPost").whereEqualTo("jobState", "done")
+                                                .whereEqualTo("workerId", user.getPhoneNumber()).get()
+                                                .addOnCompleteListener(task -> {
+                                                    for (DocumentSnapshot document : task.getResult()) {
+                                                        RatingWorkerList1.add(document.getLong("Rating-worker"));
+
+                                                        Log.d("tag", document.getId());
+
+                                                        long sum = 0;
+                                                        for (Long value : RatingWorkerList1) {
+                                                            sum += value;
+                                                        }
+                                                        if (RatingWorkerList1.size() != 0) {
+                                                            int x = (int) (sum / RatingWorkerList1.size());
+                                                            binding.PAtvIWJWorkerRating.setText(x + "");
+                                                            Log.d("tag", String.valueOf(x));
+                                                        } else {
+                                                            binding.PAtvIWJWorkerRating.setText("0");
+                                                        }
+                                                    }
+                                                });
+                                    }
+                                });
+
                                 break;
 
                         }
@@ -371,12 +399,13 @@ public class PostActivity2 extends AppCompatActivity {
 
 
                     } else {
-                        //Todo Add LLField
-
+                        binding.LLNoWifi.setVisibility(View.VISIBLE);
+                        binding.progressBar.setVisibility(View.GONE);
                     }
                 })
                 .addOnFailureListener(e -> {
-                    //Todo Add LLField
+                    binding.LLNoWifi.setVisibility(View.VISIBLE);
+                    binding.progressBar.setVisibility(View.GONE);
                 });
 
     }
@@ -488,6 +517,7 @@ public class PostActivity2 extends AppCompatActivity {
             // Handle the case when the update fails
         });
     }
+
     private void sendNotification(String workerId, String comment) {
         // استعداد بناء الطلب لإرسال الإشعار عبر FCM
         OkHttpClient client = new OkHttpClient().newBuilder().build();

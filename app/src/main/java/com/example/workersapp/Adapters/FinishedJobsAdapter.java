@@ -24,6 +24,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -56,6 +57,37 @@ public class FinishedJobsAdapter extends RecyclerView.Adapter<FinishedJobsAdapte
         int pos = position;
 
         holder.tvWorkTitle.setText( postList.get( pos ).getTitle() );
+
+        List<Long> RatingWorkerList = new ArrayList<>();
+        firestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                firestore.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").whereEqualTo("jobState", "done")
+                        .whereEqualTo("workerId", postList.get(pos).getWorkerId()).get()
+                        .addOnCompleteListener(task -> {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                RatingWorkerList.add(document.getLong("Rating-worker"));
+
+                                Log.d("tag", document.getId());
+
+                                long sum = 0;
+                                for (Long value : RatingWorkerList) {
+                                    sum += value;
+                                }
+                                if (RatingWorkerList.size() != 0) {
+                                    int x = (int) (sum / RatingWorkerList.size());
+                                    holder.tvRate.setText(x + "");
+                                    Log.d("tag", String.valueOf(x));
+                                } else {
+                                    holder.tvRate.setText("0");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(runnable -> {
+                        });
+            }
+        });
+
 
         firestore.collection("posts").document( postList.get( pos ).getOwnerId() ).
                 collection("userPost").document(Objects.requireNonNull(postList.get( pos ).getPostId())).get()

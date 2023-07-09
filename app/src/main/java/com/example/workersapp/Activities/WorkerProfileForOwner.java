@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -16,11 +17,14 @@ import com.example.workersapp.Fragments.WorkerReviewsFragment;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Model;
 import com.example.workersapp.databinding.ActivityWorkerProfileForOwnerBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.text.SimpleDateFormat;
@@ -129,7 +133,8 @@ public class WorkerProfileForOwner extends AppCompatActivity {
                             userData = true;
                         }
                     }).addOnFailureListener(e -> {
-                        //Todo Add LLField
+                        binding.LLNoWifi.setVisibility(View.VISIBLE);
+                        binding.ProgressBar.setVisibility(View.GONE);
                     });
 
             db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -163,6 +168,36 @@ public class WorkerProfileForOwner extends AppCompatActivity {
                                     binding.pWorkerEndNum.setText(DoneList.size() + "");
                                     binding.pWorkerCurrentNum.setText(inWorkList.size() + "");
 
+                                }
+                            })
+                            .addOnFailureListener(runnable -> {
+                            });
+                }
+            });
+
+            List<Long> RatingWorkerList = new ArrayList<>();
+            db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                    db.collection("posts").document(documentSnapshot1.getId())
+                            .collection("userPost").whereEqualTo("jobState", "done")
+                            .whereEqualTo("workerId", workerID).get()
+                            .addOnCompleteListener(task -> {
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    RatingWorkerList.add(document.getLong("Rating-worker"));
+
+                                    Log.d("tag", document.getId());
+
+                                    long sum = 0;
+                                    for (Long value : RatingWorkerList) {
+                                        sum += value;
+                                    }
+                                    if (RatingWorkerList.size() != 0) {
+                                        int x = (int) (sum / RatingWorkerList.size());
+                                        binding.pWorkerRate.setText(x + "");
+                                        Log.d("tag", String.valueOf(x));
+                                    } else {
+                                        binding.pWorkerRate.setText("0");
+                                    }
                                 }
                             })
                             .addOnFailureListener(runnable -> {
