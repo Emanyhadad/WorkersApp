@@ -224,9 +224,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                             citiesListF = (List<String>) task.getResult().get("cities");
                             ArrayAdapter<String> adapter = new ArrayAdapter<>(getApplicationContext(), android.R.layout.simple_dropdown_item_1line, citiesListF);
                             mySpinner.setAdapter(adapter);
-                        } else {
-                            //Todo Add LLField
-                        }
+                        } else {}
                     }
                 });
     }

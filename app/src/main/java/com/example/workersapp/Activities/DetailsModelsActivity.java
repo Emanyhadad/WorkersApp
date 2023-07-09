@@ -25,6 +25,7 @@ import com.example.workersapp.databinding.ActivityDetailsModelsBinding;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -161,6 +162,35 @@ public class DetailsModelsActivity extends AppCompatActivity {
                     } ).addOnFailureListener( runnable -> {binding.LLNoWifi.setVisibility( View.VISIBLE );
                         binding.PB.setVisibility( View.GONE );
                         binding.LLData.setVisibility( View.GONE );} );
+
+            List<Long> RatingWorkerList = new ArrayList<>();
+            firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                    firebaseFirestore.collection("posts").document(documentSnapshot1.getId())
+                            .collection("userPost").whereEqualTo("jobState", "done")
+                            .whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get()
+                            .addOnCompleteListener(task -> {
+                                for (DocumentSnapshot document : task.getResult()) {
+                                    RatingWorkerList.add(document.getLong("Rating-worker"));
+
+                                    Log.d("tag", document.getId());
+
+                                    long sum = 0;
+                                    for (Long value : RatingWorkerList) {
+                                        sum += value;
+                                    }
+                                    if (RatingWorkerList.size() != 0) {
+                                        int x = (int) (sum / RatingWorkerList.size());
+                                        binding.businessRate.setText(x + "");
+                                        Log.d("tag", String.valueOf(x));
+                                    } else {
+                                        binding.businessRate.setText("0");
+                                    }
+                                }
+                            });
+                }
+            });
+
         }
         else if (posWorker == null ) {
             binding.inculd.editIcon.setVisibility( View.VISIBLE );

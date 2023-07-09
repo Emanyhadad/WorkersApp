@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.PopupMenu;
-import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -34,8 +33,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.storage.FirebaseStorage;
 
@@ -164,40 +161,34 @@ public class WorkerProfileFragment extends Fragment {
                 showPopupMenu(view);
             }
         });
-        /////التقيم
-        db.collection("posts").get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                if (task.isSuccessful()) {
-                    List<String> num = new ArrayList<>();
 
-                    List<DocumentSnapshot> documents = task.getResult().getDocuments();
+        List<Long> RatingWorkerList = new ArrayList<>();
+        db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                db.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").whereEqualTo("jobState", "done")
+                        .whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get()
+                        .addOnCompleteListener(task -> {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                RatingWorkerList.add(document.getLong("Rating-worker"));
 
-                    for (DocumentSnapshot document : documents) {
-                         num.add(document.getId());
-                        Log.d("tag", document.getId());
-                    }
-                    Log.d("tag", String.valueOf(num.size()));
+                                Log.d("tag", document.getId());
 
-                    for (int i = 0; i < num.size(); i++) {
-                        db.collection("posts").document(num.get(i)).collection("userPost")
-                                .whereEqualTo("jobState", "done").whereEqualTo("workerId", firebaseUser.getPhoneNumber()).get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                        List<Integer> rating = task.getResult().toObjects(Integer.class);
-                                        count = count + rating.size();
-                                        for (int j = 0; j < rating.size(); j++) {
-                                            rate = rate + rating.get(j);
-                                        }
-                                    }
-                                });
-                    }
-                }
-                Log.d("tag", String.valueOf(rate));
-                Log.d("tag", String.valueOf(count));
-
-                double pWorkerRate = rate / count;
-                binding.pWorkerRate.setText(String.valueOf(pWorkerRate));
+                                long sum = 0;
+                                for (Long value : RatingWorkerList) {
+                                    sum += value;
+                                }
+                                if (RatingWorkerList.size() != 0) {
+                                    int x = (int) (sum / RatingWorkerList.size());
+                                    binding.pWorkerRate.setText(x + "");
+                                    Log.d("tag", String.valueOf(x));
+                                } else {
+                                    binding.pWorkerRate.setText("0");
+                                }
+                            }
+                        })
+                        .addOnFailureListener(runnable -> {
+                        });
             }
         });
 
@@ -243,21 +234,21 @@ public class WorkerProfileFragment extends Fragment {
                 .get().addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
 
-                    binding.ProgressBar.setVisibility(View.GONE);
-                    binding.ScrollView.setVisibility(View.VISIBLE);
-                    binding.fab.setVisibility( View.VISIBLE );
-                    String fullName = documentSnapshot.getString("fullName");
-                    String nickName = documentSnapshot.getString("nickName");
-                    String work = documentSnapshot.getString("work");
-                    String cv = documentSnapshot.getString("cv");
-                    String city = documentSnapshot.getString("city");
-                    String image = documentSnapshot.getString("image");
-                    binding.pWorkerUserName.setText(fullName);
-                    binding.pWorkerNickName.setText("( " + nickName + " )");
-                    binding.pWorkerJobName.setText(work);
-                    binding.pWorkerCv.setText(cv);
-                    binding.pWorkerLocation.setText(city);
-                    binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
+                        binding.ProgressBar.setVisibility(View.GONE);
+                        binding.ScrollView.setVisibility(View.VISIBLE);
+                        binding.fab.setVisibility(View.VISIBLE);
+                        String fullName = documentSnapshot.getString("fullName");
+                        String nickName = documentSnapshot.getString("nickName");
+                        String work = documentSnapshot.getString("work");
+                        String cv = documentSnapshot.getString("cv");
+                        String city = documentSnapshot.getString("city");
+                        String image = documentSnapshot.getString("image");
+                        binding.pWorkerUserName.setText(fullName);
+                        binding.pWorkerNickName.setText("( " + nickName + " )");
+                        binding.pWorkerJobName.setText(work);
+                        binding.pWorkerCv.setText(cv);
+                        binding.pWorkerLocation.setText(city);
+                        binding.pWorkerPhone.setText(firebaseUser.getPhoneNumber());
 
                         if (getContext() != null) {
                             Glide.with(getContext()).load(image).circleCrop().error(R.drawable.worker).into(binding.pWorkerImg);
@@ -273,7 +264,9 @@ public class WorkerProfileFragment extends Fragment {
                     }
                 }).addOnFailureListener(e -> {
                     //Todo Add LLField
-
+                    binding.LLNoWifi.setVisibility(View.VISIBLE);
+                    binding.ProgressBar.setVisibility(View.GONE);
+                    binding.ScrollView.setVisibility(View.GONE);
                 });
         db.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {

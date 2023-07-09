@@ -50,7 +50,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
     FirebaseFirestore firestore;
     FirebaseAuth firebaseAuth;
     FirebaseUser user;
-    String clintID, postId, path, duration, budget,workerID;
+    String clintID, postId, path, duration, budget, workerID;
     int formsCount;
     private Dialog evaluationDialog;
     float rating;
@@ -90,8 +90,8 @@ public class PostActivity_forWorker extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
 
-        binding.inculd.editIcon.setVisibility( View.GONE );
-        binding.inculd.tvPageTitle.setText( "بيانات الوظيفة" );
+        binding.inculd.editIcon.setVisibility(View.GONE);
+        binding.inculd.tvPageTitle.setText("بيانات الوظيفة");
 
         //GetPost
         clintID = getIntent().getStringExtra("OwnerId").trim();
@@ -116,14 +116,14 @@ public class PostActivity_forWorker extends AppCompatActivity {
 
         path = "posts/" + clintID + "/userPost/" + postId;
         String offerId = user.getPhoneNumber() + ">" + postId;
-        Log.e( "path1",path );
+        Log.e("path1", path);
 
         //Get Post
         getPostData();
 
 
         //store Offer in Worker
-        if (workerID == null ) {
+        if (workerID == null) {
 
             firestore.collection("offers").document(postId).collection("workerOffers").document(user.getPhoneNumber()).get().addOnSuccessListener(
                     documentSnapshot -> {
@@ -189,9 +189,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
                     }
             ).addOnFailureListener(e -> {
             });
-        }
-
-        else if (workerID != null && !workerID.equals(user.getPhoneNumber())){
+        } else if (workerID != null && !workerID.equals(user.getPhoneNumber())) {
             firestore.collection("offers").document(postId).collection("workerOffers").document(workerID).get().addOnSuccessListener(
                     documentSnapshot -> {
                         if (documentSnapshot.exists()) {
@@ -252,12 +250,12 @@ public class PostActivity_forWorker extends AppCompatActivity {
             ).addOnFailureListener(e -> {
             });
         }
-        }
+    }
 
     void GetUserData() {
         // Get user details and set them in the view
 
-        if (workerID == null ) {
+        if (workerID == null) {
             firestore.collection("users").document(Objects.requireNonNull(user.getPhoneNumber()))
                     .get()
                     .addOnSuccessListener(documentSnapshot1 -> {
@@ -277,8 +275,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                     });
-        }
-        else if (workerID != null && !workerID.equals(user.getPhoneNumber())){
+        } else if (workerID != null && !workerID.equals(user.getPhoneNumber())) {
             firestore.collection("users").document(workerID)
                     .get()
                     .addOnSuccessListener(documentSnapshot1 -> {
@@ -300,10 +297,38 @@ public class PostActivity_forWorker extends AppCompatActivity {
                     });
         }
 
+        List<Long> RatingWorkerList = new ArrayList<>();
+        firestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots) {
+                firestore.collection("posts").document(documentSnapshot1.getId())
+                        .collection("userPost").whereEqualTo("jobState", "done")
+                        .whereEqualTo("workerId", user.getPhoneNumber()).get()
+                        .addOnCompleteListener(task -> {
+                            for (DocumentSnapshot document : task.getResult()) {
+                                RatingWorkerList.add(document.getLong("Rating-worker"));
+
+                                Log.d("tag", document.getId());
+
+                                long sum = 0;
+                                for (Long value : RatingWorkerList) {
+                                    sum += value;
+                                }
+                                if (RatingWorkerList.size() != 0) {
+                                    int x = (int) (sum / RatingWorkerList.size());
+                                    binding.tvOfferWorkerRating.setText(x + "");
+                                    Log.d("tag", String.valueOf(x));
+                                } else {
+                                    binding.tvOfferWorkerRating.setText("0");
+                                }
+                            }
+                        });
+            }
+        });
+
     }
 
     void getPostData() {
-        Log.e( "path",path );
+        Log.e("path", path);
         //Get Post
         firestore.document(path).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -385,7 +410,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot2) {
                 String Comment_clint = documentSnapshot2.getString("Comment-clint");
-                if (Comment_clint!=null){
+                if (Comment_clint != null) {
                     evaluationDialog.dismiss();
                     firestore.collection("posts").document(clintID).
                             collection("userPost").document(Objects.requireNonNull(postId)).get()
@@ -394,7 +419,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                 if (documentSnapshot.exists()) {
 
                                     jobState = documentSnapshot.getString("jobState");
-                                    if (jobState.equals("done")){
+                                    if (jobState.equals("done")) {
 
                                         binding.tvWorkerComment.setText(documentSnapshot.getString("Comment-clint"));
                                         double ratingWorker = documentSnapshot.getDouble("Rating-clint");
@@ -435,8 +460,9 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                         });
                                     }
                                 }
-                            }) .addOnFailureListener(e -> {
-                                //Todo Add LLField
+                            }).addOnFailureListener(e -> {
+                                binding.LLNoWifi.setVisibility(View.VISIBLE);
+                                binding.progressBar.setVisibility(View.GONE);
                             });
                 } else {
                     binding.APCLInWork.setVisibility(View.GONE);
@@ -480,25 +506,25 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                             if (ratingWorkerDouble != null) {
                                                 double ratingWorker = ratingWorkerDouble;
 
-                                            binding.ratingBarWorker.setProgress((int) ratingWorker * 2);
-                                            binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
-                                            binding.APTvIWJFinishedDate.setText("-" + documentSnapshot.getString("jobFinishDate"));
-                                            firestore.collection("users")
-                                                    .document(clintID).get()
-                                                    .addOnSuccessListener(documentSnapshot1 -> {
-                                                        if (documentSnapshot1.exists()) {
-                                                            String fullName = documentSnapshot1.getString("fullName");
-                                                            binding.tvIWJWorkerName.setText(fullName);
-                                                            String image = documentSnapshot1.getString("image");
-                                                            Glide.with(getApplicationContext())
-                                                                    .load(image)
-                                                                    .circleCrop()
-                                                                    .error(R.drawable.worker)
-                                                                    .into(binding.imgIWJWorker);
-                                                        }
-                                                    }).addOnFailureListener(e -> {
-                                                    });
-                                        }
+                                                binding.ratingBarWorker.setProgress((int) ratingWorker * 2);
+                                                binding.APTvIWJStartDate.setText(documentSnapshot.getString("jobStartDate"));
+                                                binding.APTvIWJFinishedDate.setText("-" + documentSnapshot.getString("jobFinishDate"));
+                                                firestore.collection("users")
+                                                        .document(clintID).get()
+                                                        .addOnSuccessListener(documentSnapshot1 -> {
+                                                            if (documentSnapshot1.exists()) {
+                                                                String fullName = documentSnapshot1.getString("fullName");
+                                                                binding.tvIWJWorkerName.setText(fullName);
+                                                                String image = documentSnapshot1.getString("image");
+                                                                Glide.with(getApplicationContext())
+                                                                        .load(image)
+                                                                        .circleCrop()
+                                                                        .error(R.drawable.worker)
+                                                                        .into(binding.imgIWJWorker);
+                                                            }
+                                                        }).addOnFailureListener(e -> {
+                                                        });
+                                            }
                                             CollectionReference workerOffersRef1 = firestore.collection("offers").document(postId).collection("workerOffers");
                                             workerOffersRef1.document(Objects.requireNonNull(documentSnapshot.getString("workerId"))).get().addOnCompleteListener(task -> {
                                                 if (task.isSuccessful()) {
@@ -518,8 +544,8 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                             });
                                         }
                                     }
-                                }) .addOnFailureListener(e -> {
-                                    //Todo Add LLField
+                                }).addOnFailureListener(e -> {
+                                    binding.LLNoWifi.setVisibility(View.VISIBLE);
                                 });
                     });
                 }
