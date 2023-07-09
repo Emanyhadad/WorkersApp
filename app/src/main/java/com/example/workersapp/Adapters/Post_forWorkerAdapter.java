@@ -24,9 +24,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
-import com.example.workersapp.Utilities.NativeTemplateStyle;
 import com.example.workersapp.Utilities.Post;
-import com.example.workersapp.Utilities.TemplateView;
 import com.example.workersapp.databinding.ItemPostBinding;
 import com.google.android.gms.ads.nativead.NativeAd;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -172,8 +170,18 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
                         if (task.isSuccessful()) {
                             count = task.getResult().size();
 
+                            // null object
+//                            for (DocumentSnapshot document : task.getResult()) {
+//                                rate = rate + document.getLong("Rating-clint");
+//                            }
+
                             for (DocumentSnapshot document : task.getResult()) {
-                                rate = rate + document.getLong("Rating-clint");
+                                Long rating = document.getLong("Rating-clint");
+                                if (rating != null) {
+                                    rate = rate + rating.longValue();
+                                } else {
+                                    // إجراء للتعامل مع القيمة الناقصة (مثلاً رمي استثناء أو إيقاف الحساب)
+                                }
                             }
 
                             Log.d("tag", String.valueOf(rate));
@@ -223,7 +231,9 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
 
         currentPost.getPostId();
         holder.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
-        firestore.collection("users").document(currentPost.getOwnerId())
+
+        Log.d("owner",postList.get(holder.getAdapterPosition()).getOwnerId()+"");
+        firestore.collection("users").document(postList.get(holder.getAdapterPosition()).getOwnerId())
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
                     if (documentSnapshot1.exists()) {

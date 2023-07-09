@@ -75,7 +75,7 @@ public class WorkerReviewsFragment extends Fragment {
         reviewsList = new ArrayList<>();
         List documentId = new ArrayList();
 
-        if (workerID != null){
+        if (workerID != null) {
             firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
                 List<String> postIdList = new ArrayList<>();
                 List<WorkerReviews> reviewsList = new ArrayList<>();
@@ -134,9 +134,7 @@ public class WorkerReviewsFragment extends Fragment {
                             });
                 }
             });
-        }
-
-        else {
+        } else {
 
             firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
                 List<String> postIdList = new ArrayList<>();
@@ -197,7 +195,6 @@ public class WorkerReviewsFragment extends Fragment {
                 }
             });
         }
-
 
         binding.RV.setLayoutManager(new LinearLayoutManager(getActivity(), RecyclerView.VERTICAL, false));
 

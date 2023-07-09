@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+
 import com.example.workersapp.Adapters.Post_forWorkerAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
@@ -46,11 +49,11 @@ public class GuestActivity extends AppCompatActivity {
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
 
-
         firebaseFirestore.collection("users").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (DocumentSnapshot documentSnapshot : queryDocumentSnapshots) {
                 firebaseFirestore.collection("posts").document(documentSnapshot.getId()).collection("userPost")
-                        .whereEqualTo("jobState", "open").orderBy("addedTime", Query.Direction.DESCENDING)
+                        .whereEqualTo("jobState", "open")
+                        .orderBy("addedTime", Query.Direction.DESCENDING)
                         .get().addOnSuccessListener(queryDocumentSnapshots1 -> {
                             for (DocumentSnapshot documentSnapshot1 : queryDocumentSnapshots1.getDocuments()) {
                                 jobState = documentSnapshot1.getString("jobState");
@@ -74,8 +77,7 @@ public class GuestActivity extends AppCompatActivity {
                                     RegisterDialog();
                                 });
 
-
-                            }
+                                }
                             binding.RV.setAdapter(postAdapter);
                             binding.ProgressBar.setVisibility(View.GONE);
                             binding.RV.setVisibility(View.VISIBLE);

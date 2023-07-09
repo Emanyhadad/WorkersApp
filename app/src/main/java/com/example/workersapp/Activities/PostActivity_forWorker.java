@@ -123,6 +123,8 @@ public class PostActivity_forWorker extends AppCompatActivity {
 
 
         //store Offer in Worker
+
+        //work owner
         if (workerID == null) {
 
             firestore.collection("offers").document(postId).collection("workerOffers").document(user.getPhoneNumber()).get().addOnSuccessListener(
@@ -189,7 +191,11 @@ public class PostActivity_forWorker extends AppCompatActivity {
                     }
             ).addOnFailureListener(e -> {
             });
-        } else if (workerID != null && !workerID.equals(user.getPhoneNumber())) {
+        }
+
+
+        //worker
+        else if (workerID != null && !workerID.equals(user.getPhoneNumber())){
             firestore.collection("offers").document(postId).collection("workerOffers").document(workerID).get().addOnSuccessListener(
                     documentSnapshot -> {
                         if (documentSnapshot.exists()) {
@@ -255,6 +261,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
     void GetUserData() {
         // Get user details and set them in the view
 
+        //work owner
         if (workerID == null) {
             firestore.collection("users").document(Objects.requireNonNull(user.getPhoneNumber()))
                     .get()
@@ -275,7 +282,10 @@ public class PostActivity_forWorker extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> {
                     });
-        } else if (workerID != null && !workerID.equals(user.getPhoneNumber())) {
+        }
+
+        //worker
+        else if (workerID != null && !workerID.equals(user.getPhoneNumber())){
             firestore.collection("users").document(workerID)
                     .get()
                     .addOnSuccessListener(documentSnapshot1 -> {
@@ -339,9 +349,12 @@ public class PostActivity_forWorker extends AppCompatActivity {
                         jobState = documentSnapshot.getString("jobState");
                         projectState = jobState;
 
-                        binding.PWATvProjectstate.setText("مكتمل");
-                        binding.PWATvProjectstate.setBackground(getResources().getDrawable(R.drawable.bg_done));
-
+                        if (projectState.equals("open")){
+                            binding.PWATvProjectstate.setText("مفتوح");
+                        } else if (projectState.equals("done")) {
+                            binding.PWATvProjectstate.setText("مكتمل");
+                            binding.PWATvProjectstate.setBackground(getResources().getDrawable(R.drawable.bg_done));
+                        }
                         title = documentSnapshot.getString("title");
                         binding.tvPostTitle.setText(title);
 
@@ -410,6 +423,8 @@ public class PostActivity_forWorker extends AppCompatActivity {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot2) {
                 String Comment_clint = documentSnapshot2.getString("Comment-clint");
+
+                // العامل قام بتقييم العميل
                 if (Comment_clint != null) {
                     evaluationDialog.dismiss();
                     firestore.collection("posts").document(clintID).

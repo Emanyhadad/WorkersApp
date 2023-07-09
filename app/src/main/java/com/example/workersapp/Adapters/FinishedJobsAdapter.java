@@ -108,10 +108,10 @@ public class FinishedJobsAdapter extends RecyclerView.Adapter<FinishedJobsAdapte
                 } else Log.d(TAG, "No such document");
             } else  Log.d(TAG, "Error getting document: ", task.getException()); });
 
-
         //Todo: Put Post Time her
 
         holder.LL.setOnClickListener( view -> listener.OnClick( pos ) );
+
         firestore.collection("users").document(postList.get( pos ).getWorkerId())
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {

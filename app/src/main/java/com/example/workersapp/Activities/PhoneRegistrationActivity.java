@@ -1,8 +1,5 @@
 package com.example.workersapp.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -22,12 +19,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.chaos.view.PinView;
 import com.example.workersapp.R;
 import com.example.workersapp.databinding.ActivityPhoneRegistrationBinding;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthProvider;
@@ -51,7 +50,10 @@ public class PhoneRegistrationActivity extends AppCompatActivity {
         auth = FirebaseAuth.getInstance();
         binding.btnSendVerificationCode.setOnClickListener(view -> sendCodeVerification());
 
-        binding.imgBack.setOnClickListener(view -> onBackPressed());
+//        binding.imgBack.setOnClickListener(view -> onBackPressed());
+
+        binding.inculd.tvPageTitle.setText("التحقق من رقم الهاتف");
+
     }
 
     private void sendCodeVerification() {
