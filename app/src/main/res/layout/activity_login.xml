@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     android:background="@color/back_activity"
     android:fitsSystemWindows="true"
+    android:layoutDirection="rtl"
     tools:context=".Activities.LoginActivity">
 
     <ScrollView

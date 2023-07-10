@@ -35,7 +35,7 @@
     <string name="businessCat2">أثاث خشبي</string>
     <string name="businessCat3">أثاث خشبي</string>
     <string name="businessCat4">أثاث خشبي</string>
-    <string name="businessRateS">4.8</string>
+    <string name="businessRateS">0</string>
     <string name="businessUserNameS">عبدالله يوسف</string>
     <string name="businessHurtNumS">5</string>
     <string name="businessEyeNumS">12</string>
@@ -46,7 +46,7 @@
     <string name="ProfileUserName">عبد الله يوسف</string>
     <string name="ProfileNickName">(أبو عمر)</string>
     <string name="ProfileJobName">نجار</string>
-    <string name="ProfileRate">4.8</string>
+    <string name="ProfileRate">0</string>
     <string name="ProfileCurrent">الحالية</string>
     <string name="ProfileCurrentNum">1</string>
     <string name="ProfileEnd">المنتهية</string>
@@ -116,7 +116,7 @@
     <string name="tv_projectstate">حالة المشروع</string>
     <string name="tv_now">الآن</string>
     <string name="tv_duration">مايو/2023 -</string>
-    <string name="_4_5i">4</string>
+    <string name="_4_5i">0</string>
     <string name="tv_workerName">عبدالله يوسف</string>
     <string name="_37i">37i</string>
     <string name="tv_finishproject">إنهاء المشروع</string>

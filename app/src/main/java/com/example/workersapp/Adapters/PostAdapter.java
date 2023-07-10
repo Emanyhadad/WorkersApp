@@ -1,6 +1,7 @@
 package com.example.workersapp.Adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,10 +19,14 @@ import com.example.workersapp.Listeneres.ItemClickListener;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Post;
 import com.example.workersapp.databinding.ItemPostBinding;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textview.MaterialTextView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +116,42 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
                     }
                 });
 
+        firestore.collection("posts")
+                .document(firebaseUser.getPhoneNumber()).
+                collection("userPost").whereEqualTo("jobState", "done")
+                .get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            double rate = 0;
+                            int count = 0;
+                            count = task.getResult().size();
+
+                            // null object
+//                            for (DocumentSnapshot document : task.getResult()) {
+//                                rate = rate + document.getLong("Rating-clint");
+//                            }
+
+                            for (DocumentSnapshot document : task.getResult()) {
+                                Long rating = document.getLong("Rating-clint");
+                                if (rating != null) {
+                                    rate = rate + rating.longValue();
+                                } else {
+                                    // إجراء للتعامل مع القيمة الناقصة (مثلاً رمي استثناء أو إيقاف الحساب)
+                                }
+                            }
+
+                            Log.d("tag", String.valueOf(rate));
+                            Log.d("tag", String.valueOf(count));
+                            if (rate != 0 && count != 0) {
+                                int tvRate = (int) (rate / count);
+                                holder.itemTvClintRating.setText(String.valueOf(tvRate));
+                            } else {
+                                holder.itemTvClintRating.setText("0");
+                            }
+                        }
+                    }
+                });
 
     }
 
@@ -128,7 +169,7 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
         AppCompatTextView PostTitle;
         AppCompatTextView PostTime;
         AppCompatTextView PostLoc;
-        TextView ClintName;
+        TextView ClintName ,itemTvClintRating;
         RecyclerView CategoryRecycle;
         ImageView clintImage;
         MaterialTextView OffersCount;
@@ -145,6 +186,7 @@ public class PostAdapter extends RecyclerView.Adapter< PostAdapter.myViewHolder>
             ClintName=binding.tvClintName;
             clintImage=binding.itemImgClint;
             OffersCount = binding.tvCountOffers;
+            itemTvClintRating = binding.itemTvClintRating;
         }
     }
 }
