@@ -78,27 +78,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginTop="@dimen/_14sdp">
+            android:layout_marginTop="@dimen/_14sdp"
+            android:orientation="vertical">
 
             <com.denzcoskun.imageslider.ImageSlider
                 android:id="@+id/imageSlider"
                 android:layout_width="@dimen/_266sdp"
-                android:layout_gravity="center"
                 android:layout_height="@dimen/_209sdp"
-                app:iss_period="4000"
-                app:iss_corner_radius="10"
+                android:layout_gravity="center"
+                android:layoutDirection="ltr"
                 app:iss_auto_cycle="false"
-                android:layoutDirection="ltr"/>
+                app:iss_corner_radius="10"
+                app:iss_period="4000" />
 
             <TextView
                 android:id="@+id/businessNumImg"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="end"
                 android:fontFamily="@font/cairo_regular"
                 android:text="@string/businessNumImages"
                 android:textColor="@color/gray9"
-                android:layout_gravity="end"
                 android:textSize="@dimen/_10ssp" />
         </LinearLayout>
 

@@ -70,7 +70,7 @@
             android:layout_marginLeft="@dimen/_1sdp"
             android:layout_marginTop="@dimen/_9sdp"
             android:fontFamily="@font/cairo_regular"
-            android:text="4.8"
+            android:text="0"
             android:textColor="@color/black2"
             android:textSize="@dimen/_9ssp"
             app:layout_constraintEnd_toStartOf="@+id/ItemImgStar"
