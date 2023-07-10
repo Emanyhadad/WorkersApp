@@ -187,7 +187,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
                             Log.d("tag", String.valueOf(rate));
                             Log.d("tag", String.valueOf(count));
                             if (rate != 0 && count != 0) {
-                                double tvRate = rate / count;
+                                int tvRate = (int) (rate / count);
                                 holder.itemTvClintRating.setText(String.valueOf(tvRate));
                             } else {
                                 holder.itemTvClintRating.setText("0");
