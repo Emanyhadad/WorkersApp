@@ -37,19 +37,11 @@ public class OnboardingActivity extends AppCompatActivity {
     @Override
     protected void onStart( ) {
         super.onStart( );
-        if ( currentUser != null ) {
-            String accountType = sp.getString( "accountType" , "null" );
-            Toast.makeText(this, accountType, Toast.LENGTH_SHORT).show();
-            if ( accountType.equals( "worker" ) ) {
-                startActivity( new Intent( getBaseContext( ) , WorkerActivities.class ) );
-                finish( );
-            } else if ( accountType.equals( "work owner" ) ) {
-                startActivity( new Intent( getBaseContext( ) , WorkOwnerProfileActivity.class ) );
-                finish( );
-            }else {
+        sp = getSharedPreferences( "MyPreferencesBoarding" , MODE_PRIVATE );
 
-            }
-
+        if ( sp.getBoolean( "appUp-lode",false )==true) {
+            startActivity(new Intent(OnboardingActivity.this, LoginActivity.class));
+            finish();
         }
     }
     @Override
@@ -97,7 +89,8 @@ public class OnboardingActivity extends AppCompatActivity {
             int currentItem = viewPager.getCurrentItem();
             if (currentItem == imageResources.length - 1) {
                 if (currentUser != null){
-                    firestore.collection( "users" ).document(currentUser.getPhoneNumber() ).get( ).addOnCompleteListener( task1 -> {
+                    firestore.collection( "users" )
+                            .document(currentUser.getPhoneNumber() ).get( ).addOnCompleteListener( task1 -> {
                         if ( task1.isSuccessful( ) ) {
                             User user = task1.getResult( ).toObject( User.class );
                             if ( user != null ) {

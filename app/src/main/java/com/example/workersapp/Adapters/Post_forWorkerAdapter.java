@@ -179,6 +179,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
 
         currentPost.getPostId();
         ivh.LL_item.setOnClickListener(view -> listener.OnClick(holder.getAdapterPosition()));
+
         firestore.collection("users").document(currentPost.getOwnerId())
                 .get()
                 .addOnSuccessListener(documentSnapshot1 -> {
@@ -192,9 +193,8 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<RecyclerView.Vie
                                 .error(R.drawable.worker)
                                 .into(ivh.clintImage);
                     }
-                })
-                .addOnFailureListener(e -> {
                 });
+
 
 
         firestore.collection("offers").document(currentPost.getPostId()).

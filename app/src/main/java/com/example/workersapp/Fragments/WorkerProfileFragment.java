@@ -322,9 +322,13 @@ public class WorkerProfileFragment extends Fragment {
                                 long sum = 0;
                                 for (Long value : RatingWorkerList) {
                                     sum += value; }
+                                if ( RatingWorkerList.size() != 0 ){
+                                    int x =   (int) (sum / RatingWorkerList.size());
+                                    binding.pWorkerRate.setText( x+"" );
+                                }else {binding.pWorkerRate.setText( "0" );}
 
-                               int x =   (int) (sum / RatingWorkerList.size());
-                                binding.pWorkerRate.setText( x+"" );
+
+
                             }
                         })
                         .addOnFailureListener(runnable -> {

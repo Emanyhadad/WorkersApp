@@ -65,7 +65,8 @@ public class FinishedJobsAdapter extends RecyclerView.Adapter<FinishedJobsAdapte
                         holder.tvRate.setText( documentSnapshot.get( "Rating-worker" )+"" );
                     }});
 
-        CollectionReference workerOffersRef = firestore.collection("offers").document(postList.get( pos ).getPostId()).collection("workerOffers");
+        CollectionReference workerOffersRef = firestore.collection("offers")
+                .document(postList.get( pos ).getPostId()).collection("workerOffers");
         workerOffersRef.document( postList.get( pos ).getWorkerId() ).get().addOnCompleteListener( task -> {
             if (task.isSuccessful()) {
                 DocumentSnapshot document = task.getResult();

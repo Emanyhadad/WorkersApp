@@ -105,7 +105,7 @@ public class OwnerProfileFragment extends Fragment {
 
         categoryList = new ArrayList<>();
         postList = new ArrayList<>();
-
+binding.tvRate.setText( "0" );
 
         //For User Data:
         DocumentReference userRef = firebaseFirestore.collection("users").document(firebaseUser.getPhoneNumber());
