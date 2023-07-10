@@ -147,7 +147,7 @@
                 android:layout_marginRight="@dimen/_4sdp"
                 android:fontFamily="@font/cairo_semi_bold"
                 android:gravity="center_vertical"
-                android:text="@string/_4_5i"
+                android:text="0"
                 android:textColor="@color/black"
                 android:textSize="@dimen/_12ssp"
                 app:drawableEndCompat="@drawable/baseline_star_24" />

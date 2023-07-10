@@ -1,15 +1,12 @@
 package com.example.workersapp.Activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -69,7 +66,7 @@ public class GuestActivity extends AppCompatActivity {
 
                                 Post post = new Post(title, description, images, categoriesList, expectedWorkDuration, projectedBudget, jobLocation, jobState, addedTime);
                                 post.setPostId(documentSnapshot1.getId());
-                                post.setOwnerId(documentSnapshot1.getId());
+                                post.setOwnerId(documentSnapshot.getId());
 
                                 postList.add(post);
                                 postAdapter = new Post_forWorkerAdapter(postList, getBaseContext(), pos -> {
