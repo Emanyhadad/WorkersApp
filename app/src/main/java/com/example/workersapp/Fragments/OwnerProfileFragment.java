@@ -273,20 +273,30 @@ public class OwnerProfileFragment extends Fragment {
                         if (task.isSuccessful()) {
                             count = task.getResult().size();
 
+                            // null object
+//                            for (DocumentSnapshot document : task.getResult()) {
+//                                rate = rate + document.getLong("Rating-clint");
+//                            }
+
                             for (DocumentSnapshot document : task.getResult()) {
-                                rate = rate + document.getLong("Rating-clint");
+                                Long rating = document.getLong("Rating-clint");
+                                if (rating != null) {
+                                    rate = rate + rating.longValue();
+                                } else {
+                                    // إجراء للتعامل مع القيمة الناقصة (مثلاً رمي استثناء أو إيقاف الحساب)
+                                }
                             }
 
                             Log.d("tag", String.valueOf(rate));
                             Log.d("tag", String.valueOf(count));
-
                             if (rate != 0 && count != 0) {
-                                double tvRate = rate / count;
+                                int tvRate = (int) (rate / count);
                                 binding.tvRate.setText(String.valueOf(tvRate));
                             } else {
                                 binding.tvRate.setText("0");
                             }
                         }
+
                     }
                 });
 
