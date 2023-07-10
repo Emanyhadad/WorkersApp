@@ -40,6 +40,7 @@ public class WorkerSubmittedJobFragment extends Fragment {
 
     public WorkerSubmittedJobFragment() { }
 
+
     public static WorkerSubmittedJobFragment newInstance() {
         WorkerSubmittedJobFragment fragment = new WorkerSubmittedJobFragment();
         Bundle args = new Bundle();
@@ -69,6 +70,7 @@ void getData(){
             firebaseFirestore.collection("posts")
                     .document(documentSnapshot.getId())
                     .collection("userPost")
+                    .whereEqualTo( "jobState","open" )
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots1 -> {
                         for (DocumentSnapshot postDocumentSnapshot : queryDocumentSnapshots1) {
@@ -78,36 +80,38 @@ void getData(){
                                     .document(Objects.requireNonNull(firebaseUser.getPhoneNumber()))
                                     .get()
                                     .addOnSuccessListener(documentSnapshot2 -> {
-                                        String clintID = documentSnapshot2.getString("clintID");
-                                        String offerBudget = documentSnapshot2.getString("offerBudget");
-                                        String offerDescription = documentSnapshot2.getString("offerDescription");
-                                        String offerDuration = documentSnapshot2.getString("offerDuration");
-                                        String postID = documentSnapshot2.getString("postID");
-                                        String workerID = documentSnapshot2.getString("workerID");
-                                        Offer offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clintID, postID);
-                                        if (offerBudget != null) {
-                                            offerList.add(offer);
-                                        }
-                                        Log.e("offers", offer.toString());
-                                        Log.e("OffersList", offerList.size() + "");
+                                                String clintID = documentSnapshot2.getString("clintID");
+                                                String offerBudget = documentSnapshot2.getString("offerBudget");
+                                                String offerDescription = documentSnapshot2.getString("offerDescription");
+                                                String offerDuration = documentSnapshot2.getString("offerDuration");
+                                                String postID = documentSnapshot2.getString("postID");
 
-                                        binding.RV.setAdapter(new SubmittedJobAdapter(offerList, getContext(), pos -> {
-                                            Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
-                                            intent.putExtra("PostId", offerList.get(pos).getPostID());
-                                            intent.putExtra("OwnerId", offerList.get(pos).getClintID());
-                                            startActivity(intent);
-                                        }));
-                                        if (offerList.size() == 0) {
-                                            binding.progressBar4.setVisibility(View.GONE);
-                                            binding.RV.setVisibility(View.GONE);
-                                            binding.LLEmptyWorker.setVisibility(View.VISIBLE);
-                                        } else {
-                                            binding.RV.setVisibility(View.VISIBLE);
-                                            binding.LLEmptyWorker.setVisibility(View.GONE);
-                                            binding.progressBar4.setVisibility(View.GONE);
-                                        }
-                                        Log.e( "offerList.size()",offerList.size()+"" );
-                                    }
+
+                                                String workerID = documentSnapshot2.getString("workerID");
+                                                Offer offer = new Offer(offerBudget, offerDuration, offerDescription, workerID, clintID, postID);
+                                                if (offerBudget != null) {
+                                                    offerList.add(offer);
+                                                }
+                                                Log.e("offers", offer.toString());
+                                                Log.e("OffersList", offerList.size() + "");
+
+                                                binding.RV.setAdapter(new SubmittedJobAdapter(offerList, getContext(), pos -> {
+                                                    Intent intent = new Intent(getActivity(), PostActivity_forWorker.class);
+                                                    intent.putExtra("PostId", offerList.get(pos).getPostID());
+                                                    intent.putExtra("OwnerId", offerList.get(pos).getClintID());
+                                                    startActivity(intent);
+                                                }));
+                                                if (offerList.size() == 0) {
+                                                    binding.progressBar4.setVisibility(View.GONE);
+                                                    binding.RV.setVisibility(View.GONE);
+                                                    binding.LLEmptyWorker.setVisibility(View.VISIBLE);
+                                                } else {
+                                                    binding.RV.setVisibility(View.VISIBLE);
+                                                    binding.LLEmptyWorker.setVisibility(View.GONE);
+                                                    binding.progressBar4.setVisibility(View.GONE);
+                                                }
+                                                Log.e( "offerList.size()",offerList.size()+"" );
+                                            }
                                     )
                                     .addOnFailureListener(runnable -> {
                                         binding.LLEmptyWorker.setVisibility(View.VISIBLE);

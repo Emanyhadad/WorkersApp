@@ -278,6 +278,10 @@ public class OwnerProfileFragment extends Fragment {
 //                                rate = rate + document.getLong("Rating-clint");
 //                            }
 
+//                            for (DocumentSnapshot document : task.getResult()) {
+//                                rate = rate + document.getLong("Rating-clint");
+//                            }
+
                             for (DocumentSnapshot document : task.getResult()) {
                                 Long rating = document.getLong("Rating-clint");
                                 if (rating != null) {

@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -26,6 +25,7 @@ import com.example.workersapp.Adapters.ShowImagesAdapter;
 import com.example.workersapp.R;
 import com.example.workersapp.Utilities.Offer;
 import com.example.workersapp.databinding.ActivityPostForWorkerBinding;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -96,7 +96,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
         //GetPost
         clintID = getIntent().getStringExtra("OwnerId").trim();
         postId = getIntent().getStringExtra("PostId").trim();
-        workerID = getIntent().getStringExtra("workerID");
+        workerID = getIntent().getStringExtra("posWorker");
 
 
         //Get userForms Count
@@ -126,18 +126,36 @@ public class PostActivity_forWorker extends AppCompatActivity {
 
         //work owner
         if (workerID == null) {
-
             firestore.collection("offers").document(postId).collection("workerOffers").document(user.getPhoneNumber()).get().addOnSuccessListener(
                     documentSnapshot -> {
                         if (documentSnapshot.exists()) {
                             binding.PB2.setVisibility(View.GONE);
-                            Toast.makeText(getApplicationContext(), "You have already applied for a job", Toast.LENGTH_SHORT).show();binding.tvWriteOffer.setText("العرض الخاص بك");
                             binding.LLWriteOffer.setVisibility(View.GONE);
 
                             //Get Worker Data
                             binding.APCLInWork.setVisibility(View.VISIBLE);
 
-                            Rating();
+                            firestore.collection("posts").document(clintID).
+                                    collection("userPost").document(Objects.requireNonNull(postId)).get()
+                                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                                @Override
+                                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                                    if (documentSnapshot.exists()){
+                                                       String jobStateRate = documentSnapshot.getString("jobState");
+                                                        if (jobStateRate.equals("done")) {
+                                                            Rating();
+                                                        }
+                                                        else {
+                                                            binding.APCLInWork.setVisibility(View.GONE);
+                                                        }
+                                                    }
+                                                }
+                                            }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+
+                                        }
+                                    });
                             GetUserData();
                             binding.tvSendOfferDuration.setText(documentSnapshot.getString("offerDuration"));
                             binding.tvSendOfferDec.setText(documentSnapshot.getString("offerDescription"));
@@ -196,6 +214,7 @@ public class PostActivity_forWorker extends AppCompatActivity {
 
         //worker
         else if (workerID != null && !workerID.equals(user.getPhoneNumber())){
+
             firestore.collection("offers").document(postId).collection("workerOffers").document(workerID).get().addOnSuccessListener(
                     documentSnapshot -> {
                         if (documentSnapshot.exists()) {
@@ -479,7 +498,9 @@ public class PostActivity_forWorker extends AppCompatActivity {
                                 binding.LLNoWifi.setVisibility(View.VISIBLE);
                                 binding.progressBar.setVisibility(View.GONE);
                             });
-                } else {
+                }
+
+                else {
                     binding.APCLInWork.setVisibility(View.GONE);
 
                     evaluationDialog.show();

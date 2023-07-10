@@ -32,8 +32,6 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -159,37 +157,39 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                  description = binding.editEtDescription.getText().toString();
                  date = binding.editTvCalender.getText().toString();
                 String userPhoneNumber = firebaseUser.getPhoneNumber();
-                if (uriList.size() != 0) {
-                    //نرفع الصور ونخزنهم
-                    uriFromStorage = new ArrayList<>();
-                    binding.editBtnEditModel.setVisibility(View.GONE);
-                    binding.progressBarEdit.setVisibility(View.VISIBLE);
-                    for (int i = 0; i < uriList.size(); i++) {
-                        Log.d("document",document);
 
-                        StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + document + "/" + "/" + uriList.get(i).getLastPathSegment());
-                        UploadTask uploadTask = reference.putFile(uriList.get(i));
-                        int finalI = i;
-                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                                    @Override
-                                    public void onSuccess(Uri uri) {
-                                        String uriString = uri.toString();
-                                        uriFromStorage.add(uriString);
-                                        if (finalI == uriList.size() - 1) {
-                                            updateModel();
-                                            startActivity(new Intent(getBaseContext(),EditModelActivity.class));
-                                        }
-                                    }
-                                });
-                            }
-                        });
-                    }
-
-                } else {
-                }
+                updateModel();
+//                if (uriList.size() != 0) {
+//                    //نرفع الصور ونخزنهم
+//                    uriFromStorage = new ArrayList<>();
+//                    binding.editBtnEditModel.setVisibility(View.GONE);
+//                    binding.progressBarEdit.setVisibility(View.VISIBLE);
+//                    for (int i = 0; i < uriList.size(); i++) {
+//                        Log.d("document",document);
+//
+//                        StorageReference reference = firebaseStorage.getReference("forms/" + userPhoneNumber + "/" + document + "/" + "/" + uriList.get(i).getLastPathSegment());
+//                        UploadTask uploadTask = reference.putFile(uriList.get(i));
+//                        int finalI = i;
+//                        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//                            @Override
+//                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                                reference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+//                                    @Override
+//                                    public void onSuccess(Uri uri) {
+//                                        String uriString = uri.toString();
+//                                        uriFromStorage.add(uriString);
+//                                        if (finalI == uriList.size() - 1) {
+//                                            updateModel();
+//                                            startActivity(new Intent(getBaseContext(),EditModelActivity.class));
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        });
+//                    }
+//
+//                } else {
+//                }
 
             }
         });
@@ -373,12 +373,12 @@ public class EditModelActivity extends AppCompatActivity implements DatePickerDi
                         map.put("description", description);
                         map.put("date", date);
                         List<String> images = (List<String>) documentSnapshot.get("images");
-                        if (images != null) {
-                            uriFromStorage.addAll(images);
-                        }
-                        if (!uriFromStorage.isEmpty()) {
-                            map.put("images", uriFromStorage);
-                        }
+//                        if (images != null) {
+//                            uriFromStorage.addAll(images);
+//                        }
+//                        if (!uriFromStorage.isEmpty()) {
+//                            map.put("images", uriFromStorage);
+//                        }
                         if (!jobCategory.isEmpty()) {
                             map.put("categoriesList", jobCategory);
                         }

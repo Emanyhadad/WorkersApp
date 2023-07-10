@@ -446,30 +446,10 @@ public class PostActivity2 extends AppCompatActivity {
             });
 
             evaluationDialog.dismiss();
+            getData();
         });
 
     }
-
-//    private void sendNoti() {
-//        ApiUtils.getClients().sendNotification(new PushNotification(new NotificationData(titleFCM,body), TO))
-//                .enqueue(new Callback<PushNotification>() {
-//                    @Override
-//                    public void onResponse(Call<PushNotification> call, Response<PushNotification> response) {
-//                        if (response.isSuccessful()){
-//                            Toast.makeText(PostActivity2.this, "Notification Sent", Toast.LENGTH_SHORT).show();
-//                            Log.d("NotificationActivity","Notification Sent");
-//                        }else {
-//                            Toast.makeText(PostActivity2.this, "Failed", Toast.LENGTH_SHORT).show();
-//                            Log.d("NotificationActivityF","Failed");
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<PushNotification> call, Throwable t) {
-//                        Toast.makeText(PostActivity2.this, t.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
-//    }
 
     void DeleteJob() {
 

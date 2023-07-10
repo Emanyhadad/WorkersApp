@@ -112,6 +112,7 @@ public class WorkerReviewsFragment extends Fragment {
                                                 String postIdPos = postIdList.get(pos);
 
                                                 intent.putExtra("PostId", postIdPos);
+                                                intent.putExtra("posWorker",workerID);
                                                 intent.putExtra("OwnerId", documentSnapshot1.getId()); // pass data to new activity
                                                 startActivity(intent);
                                             }));

@@ -53,8 +53,7 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
 
     FirebaseAuth auth;
     FirebaseUser firebaseUser;
-    double rate = 0;
-    int count = 0;
+
     //
     private static final int IS_AD = 0;
     private static final int NOT_Ad = 1;
@@ -168,6 +167,8 @@ public class Post_forWorkerAdapter extends RecyclerView.Adapter<Post_forWorkerAd
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                            double rate = 0;
+                            int count = 0;
                             count = task.getResult().size();
 
                             // null object
